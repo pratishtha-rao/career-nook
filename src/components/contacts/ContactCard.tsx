@@ -115,7 +115,7 @@ Edit
 
 <button
 
-onClick={()=>onDelete(contact.id)}
+onClick={()=>contact.id && onDelete(contact.id)}
 
 className="
 rounded-lg

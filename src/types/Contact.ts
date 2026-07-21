@@ -15,3 +15,5 @@ export type Contact = {
   email?: string;
   notes?: string;
 };
+
+export type CreateContact = Omit<Contact, "id">;

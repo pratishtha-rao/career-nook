@@ -1,14 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Contact, ContactType } from "@/types/Contact";
-
+import { CreateContact, ContactType } from "@/types/Contact";
 
 type Props = {
-  onAddContact:(contact:Contact)=>void;
+  onAddContact:(contact:CreateContact)=>void;
 };
-
-
 
 export default function ContactForm({
   onAddContact
@@ -29,10 +26,8 @@ function submit(e:React.FormEvent){
 e.preventDefault();
 
 
-const newContact:Contact = {
-
-id:Date.now(),
-
+const newContact:CreateContact = {
+  
 name,
 
 company,

@@ -11,17 +11,18 @@ export type TaskPriority =
 
 
 export type Task = {
+  id: number;
 
-id:number;
+  title: string;
 
-title:string;
+  description: string;
 
-description?:string;
+  dueDate: string;
 
-dueDate:string;
+  priority: "High" | "Medium" | "Low";
 
-priority:TaskPriority;
-
-status:TaskStatus;
-
+  status: "Not Started" | "In Progress" | "Completed";
 };
+
+
+export type CreateTask = Omit<Task,"id">;

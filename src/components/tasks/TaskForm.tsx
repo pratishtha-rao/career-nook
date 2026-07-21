@@ -4,20 +4,17 @@
 import { useState } from "react";
 
 import {
-Task,
+CreateTask,
 TaskPriority,
 TaskStatus
 } from "@/types/Task";
 
 
-
 type Props={
 
-onAddTask:(task:Task)=>void;
+onAddTask:(task:CreateTask)=>void;
 
 };
-
-
 
 export default function TaskForm({
 
@@ -45,9 +42,7 @@ function submit(e:React.FormEvent){
 e.preventDefault();
 
 
-const newTask:Task={
-
-id:Date.now(),
+const newTask:CreateTask={
 
 title,
 
@@ -60,7 +55,6 @@ priority,
 status,
 
 };
-
 
 onAddTask(newTask);
 

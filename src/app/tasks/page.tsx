@@ -1,9 +1,9 @@
 "use client";
 
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { Task } from "@/types/Task";
+import { Task, CreateTask } from "@/types/Task";
 
 import TaskCard from "@/components/tasks/TaskCard";
 
@@ -16,56 +16,66 @@ import EditTaskForm from "@/components/tasks/EditTaskForm";
 export default function TasksPage(){
 
 
-
-const [tasks,setTasks]=useState<Task[]>([
-
-
-{
-id:1,
-title:"Follow up with recruiter",
-description:"Send thank-you email after interview",
-dueDate:"2026-07-25",
-priority:"High",
-status:"In Progress",
-},
-
-
-{
-id:2,
-title:"Update resume",
-description:"Add new project experience",
-dueDate:"2026-07-22",
-priority:"Medium",
-status:"Completed",
-}
-
-
-]);
-
+const [tasks,setTasks]=useState<Task[]>([]);
 
 
 const [editingTask,setEditingTask]=useState<Task | null>(null);
 
 
 
+useEffect(()=>{
+
+async function loadTasks(){
+
+const response = await fetch("/api/tasks");
+
+const data = await response.json();
+
+setTasks(data);
+
+}
 
 
-function addTask(task:Task){
+loadTasks();
+
+
+},[]);
+
+
+async function addTask(task:CreateTask){
+
+const response = await fetch("/api/tasks",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify(task)
+
+});
+
+
+const savedTask = await response.json();
+
 
 setTasks(previous=>[
-
 ...previous,
-
-task
-
+savedTask
 ]);
 
 }
 
 
+async function deleteTask(id:number){
 
+await fetch(`/api/tasks/${id}`,{
 
-function deleteTask(id:number){
+method:"DELETE"
+
+});
+
 
 setTasks(previous =>
 
@@ -80,7 +90,24 @@ previous.filter(
 }
 
 
-function saveEditedTask(updatedTask:Task){
+
+
+async function saveEditedTask(updatedTask:Task){
+
+
+await fetch(`/api/tasks/${updatedTask.id}`,{
+
+method:"PUT",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify(updatedTask)
+
+});
+
+
 
 setTasks(previous =>
 
@@ -101,13 +128,11 @@ task
 );
 
 
+
 setEditingTask(null);
 
+
 }
-
-
-
-
 
 return (
 
@@ -233,3 +258,4 @@ onDelete={deleteTask}
 
 
 }
+
