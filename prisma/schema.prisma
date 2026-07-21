@@ -2,15 +2,15 @@ generator client {
   provider = "prisma-client-js"
 }
 
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Job {
-
   id Int @id @default(autoincrement())
+
+  userId String
 
   company String
 
@@ -21,17 +21,15 @@ model Job {
   dateApplied String
 
   url String?
-  
+
   notes String?
 
   createdAt DateTime @default(now())
 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-
-
 model Contact {
-
   id Int @id @default(autoincrement())
 
   name String
@@ -48,12 +46,12 @@ model Contact {
 
   createdAt DateTime @default(now())
 
+  userId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-
-
 model Task {
-
   id Int @id @default(autoincrement())
 
   title String
@@ -68,22 +66,43 @@ model Task {
 
   createdAt DateTime @default(now())
 
+  userId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-
-
 model Material {
-
   id Int @id @default(autoincrement())
 
-  title String
+  name String
 
   type String
 
-  description String
+  description String?
 
   link String?
 
   createdAt DateTime @default(now())
 
+  userId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id String @id
+
+  name String?
+
+  email String @unique
+
+  createdAt DateTime @default(now())
+
+  jobs Job[]
+
+  contacts Contact[]
+
+  tasks Task[]
+
+  materials Material[]
 }

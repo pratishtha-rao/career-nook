@@ -1,7 +1,7 @@
 "use client";
 
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Material } from "@/types/Material";
 
@@ -16,48 +16,109 @@ import EditMaterialForm from "@/components/materials/EditMaterialForm";
 export default function MaterialsPage(){
 
 
+const [materials,setMaterials] = useState<Material[]>([]);
 
-const [materials,setMaterials]=useState<Material[]>([
+const [editingMaterial,setEditingMaterial] = useState<Material | null>(null);
 
-
-{
-id:1,
-name:"Software Engineer Resume",
-type:"Resume",
-description:"Frontend focused resume",
-link:"https://example.com",
-},
+const [loading,setLoading] = useState(true);
 
 
-{
-id:2,
-name:"Google Cover Letter",
-type:"Cover Letter",
-description:"Customized cover letter example",
-link:"",
+
+
+useEffect(()=>{
+
+
+async function loadMaterials(){
+
+
+try{
+
+
+const response = await fetch("/api/materials");
+
+
+const data = await response.json();
+
+
+setMaterials(data);
+
+
+
+}
+
+catch(error){
+
+
+console.error(
+"Failed to load materials:",
+error
+);
+
+
+}
+
+finally{
+
+
+setLoading(false);
+
+
 }
 
 
-]);
+}
+
+
+
+loadMaterials();
+
+
+},[]);
 
 
 
 
-const [editingMaterial,setEditingMaterial]=useState<Material | null>(null);
+
+
+async function addMaterial(material:Material){
+
+
+
+const response = await fetch("/api/materials",{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":"application/json",
+
+},
+
+body:JSON.stringify({
+  name: material.name,
+  type: material.type,
+  description: material.description ?? "",
+  link: material.link ?? "",
+}),
+
+});
 
 
 
 
+const newMaterial = await response.json();
 
-function addMaterial(material:Material){
+
 
 setMaterials(previous=>[
 
-...previous,
+newMaterial,
 
-material
+...previous
 
 ]);
+
+
 
 }
 
@@ -65,9 +126,24 @@ material
 
 
 
-function deleteMaterial(id:number){
 
-setMaterials(previous =>
+
+async function deleteMaterial(id:number){
+
+
+
+await fetch(`/api/materials/${id}`,{
+
+
+method:"DELETE",
+
+
+});
+
+
+
+
+setMaterials(previous=>
 
 previous.filter(
 
@@ -77,33 +153,126 @@ previous.filter(
 
 );
 
+
+
 }
 
 
-function saveEditedMaterial(updatedMaterial:Material){
 
-setMaterials(previous =>
 
-previous.map(material =>
 
-material.id === updatedMaterial.id
+
+
+
+
+async function saveEditedMaterial(updatedMaterial:Material){
+
+
+
+const response = await fetch(
+
+`/api/materials/${updatedMaterial.id}`,
+
+{
+
+
+method:"PUT",
+
+
+headers:{
+
+
+"Content-Type":"application/json",
+
+
+},
+
+
+body:JSON.stringify(updatedMaterial),
+
+
+}
+
+);
+
+
+
+
+const savedMaterial = await response.json();
+
+
+
+
+
+setMaterials(previous=>
+
+
+previous.map(material=>
+
+
+material.id === savedMaterial.id
 
 ?
 
-updatedMaterial
+savedMaterial
 
 :
 
 material
+
 
 )
 
 );
 
 
+
+
+
 setEditingMaterial(null);
 
+
+
 }
+
+
+
+
+
+
+
+
+
+if(loading){
+
+
+return (
+
+<main className="
+min-h-screen
+flex
+items-center
+justify-center
+bg-slate-100
+">
+
+
+<p className="text-lg text-black">
+
+Loading materials...
+
+</p>
+
+
+</main>
+
+);
+
+
+}
+
+
+
 
 
 
@@ -125,6 +294,7 @@ py-12
 ">
 
 
+
 <h1 className="
 text-4xl
 font-bold
@@ -137,6 +307,8 @@ Application Materials
 
 
 
+
+
 <p className="
 mt-3
 text-slate-600
@@ -145,6 +317,10 @@ text-slate-600
 Manage resumes, cover letters, and portfolio items.
 
 </p>
+
+
+
+
 
 
 
@@ -166,9 +342,15 @@ onAddMaterial={addMaterial}
 
 
 
+
+
+
 {
 
 editingMaterial && (
+
+<div className="mt-8">
+
 
 <EditMaterialForm
 
@@ -180,9 +362,15 @@ onCancel={()=>setEditingMaterial(null)}
 
 />
 
+
+</div>
+
 )
 
 }
+
+
+
 
 
 
@@ -196,36 +384,56 @@ gap-6
 ">
 
 
+
+
+
 {
 
-materials
+materials.map(material=>(
 
-.map(material=>(
 
 
 <MaterialCard
 
+
 key={material.id}
+
 
 material={material}
 
+
+
 onEdit={(material)=>
+
 
 setEditingMaterial(material)
 
+
 }
 
+
+
 onDelete={deleteMaterial}
+
 
 />
 
 
+
 ))
+
 
 }
 
 
+
+
+
+
 </div>
+
+
+
 
 
 
@@ -235,6 +443,7 @@ onDelete={deleteMaterial}
 </main>
 
 );
+
 
 
 }

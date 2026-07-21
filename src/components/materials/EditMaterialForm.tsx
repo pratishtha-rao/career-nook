@@ -33,7 +33,7 @@ onCancel
 }:Props){
 
 
-const [name,setName]=useState(material.name);
+const [title,setTitle]=useState(material.name);
 
 const [type,setType]=useState<MaterialType>(material.type);
 
@@ -53,7 +53,7 @@ onSave({
 
 ...material,
 
-name,
+name:title,
 
 type,
 
@@ -99,9 +99,9 @@ Edit Material
 
 <input
 
-value={name}
+value={title}
 
-onChange={(e)=>setName(e.target.value)}
+onChange={(e)=>setTitle(e.target.value)}
 
 className="
 w-full

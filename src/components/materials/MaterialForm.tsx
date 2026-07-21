@@ -25,16 +25,10 @@ onAddMaterial
 }:Props){
 
 
-const [name,setName]=useState("");
-
-const [type,setType]=useState<MaterialType>("Resume");
-
-const [description,setDescription]=useState("");
-
-const [link,setLink]=useState("");
-
-
-
+const [name,setName] = useState("");
+const [type,setType] = useState<MaterialType>("Resume");
+const [description,setDescription] = useState("");
+const [link,setLink] = useState("");
 
 function submit(e:React.FormEvent){
 
@@ -42,19 +36,12 @@ e.preventDefault();
 
 
 const newMaterial:Material={
-
 id:Date.now(),
-
 name,
-
 type,
-
-description,
-
+description: description || "",
 link,
-
 };
-
 
 onAddMaterial(newMaterial);
 
@@ -99,13 +86,9 @@ Add Material
 
 
 <input
-
 placeholder="Material name"
-
 value={name}
-
 onChange={(e)=>setName(e.target.value)}
-
 className="
 w-full
 rounded-lg
@@ -113,11 +96,7 @@ border
 p-3
 text-black
 "
-
 />
-
-
-
 
 <select
 
@@ -166,28 +145,18 @@ text-black
 
 />
 
-
-
-
 <input
-
-placeholder="Link"
-
-value={link}
-
-onChange={(e)=>setLink(e.target.value)}
-
-className="
-w-full
-rounded-lg
-border
-p-3
-text-black
-"
-
+  placeholder="Link / URL"
+  value={link}
+  onChange={(e)=>setLink(e.target.value)}
+  className="
+  w-full
+  rounded-lg
+  border
+  p-3
+  text-black
+  "
 />
-
-
 
 
 <button

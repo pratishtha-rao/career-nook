@@ -7,14 +7,17 @@ export type MaterialType =
 
 export type Material = {
 
-id:number;
+  id:number;
 
-name:string;
+  name:string;
 
-type:MaterialType;
+  type:MaterialType;
 
-description?:string;
+  description:string;
 
-link?:string;
+  link?:string;
 
 };
+
+
+export type CreateMaterial = Omit<Material,"id">;

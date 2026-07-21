@@ -1,6 +1,11 @@
 import Link from "next/link";
 
 const links = [
+    {
+    name: "Dashboard",
+    href: "/dashboard",
+  },
+
   {
     name: "Jobs",
     href: "/jobs",
@@ -16,6 +21,14 @@ const links = [
   {
     name: "Materials",
     href: "/materials",
+  },
+  {
+    name:"Sign Up",
+    href:"/signup"
+  },
+  {
+    name:"Login",
+    href:"/login"
   },
 ];
 

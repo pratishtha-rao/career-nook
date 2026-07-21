@@ -37,10 +37,23 @@ const newJob = await response.json();
   useEffect(() => {
   async function loadJobs() {
     try {
-      const response = await fetch("/api/jobs");
-      const data = await response.json();
+const response = await fetch("/api/jobs");
 
-      setJobs(data);
+const data = await response.json();
+
+
+if(Array.isArray(data)){
+
+setJobs(data);
+
+}
+else{
+
+console.error("Jobs API Error:", data);
+
+setJobs([]);
+
+}
     } catch (error) {
       console.error("Failed to load jobs:", error);
     } finally {
