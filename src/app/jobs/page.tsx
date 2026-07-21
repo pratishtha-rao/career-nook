@@ -1,92 +1,89 @@
 "use client";
 
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
 import { Job } from "@/types/Job";
-
 import JobCard from "@/components/jobs/JobCard";
-
 import JobForm from "@/components/jobs/JobForm";
-
 import EditJobForm from "@/components/jobs/EditJobForm";
 
 export default function JobsPage() {
 
-const [jobs,setJobs] = useState<Job[]>([
+const [jobs, setJobs] = useState<Job[]>([]);
+const [loading, setLoading] = useState(true);
 
-{
-id:1,
-company:"Google",
-position:"Software Engineer",
-status:"Applied",
-dateApplied:"2026-07-20",
-notes:"Waiting for response"
-},
-
-{
-id:2,
-company:"Microsoft",
-position:"Frontend Developer",
-status:"Interview",
-dateApplied:"2026-07-18",
-notes:"Technical interview scheduled"
-}
-
-]);
 
   const [editingJob,setEditingJob] = useState<Job | null>(null);
 
-  function addJob(job: Job) {
+async function addJob(job: Job) {
+  const response = await fetch("/api/jobs", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(job),
+  });
 
-    setJobs((previous) => [
+  const newJob = await response.json();
 
-      ...previous,
-
-      job,
-
-    ]);
-
-  }
-
-  function deleteJob(id: number) {
-
-    setJobs((previous) =>
-
-      previous.filter(
-        (job) => job.id !== id
-      )
-
-    );
-
-  }
-
-
-
-function saveEditedJob(updatedJob:Job){
-
-setJobs(previous =>
-
-previous.map(job =>
-
-job.id === updatedJob.id
-
-?
-
-updatedJob
-
-:
-
-job
-
-)
-
-);
-
-
-setEditingJob(null);
-
+  setJobs(previous => [newJob, ...previous]);
 }
 
+  useEffect(() => {
+  async function loadJobs() {
+    try {
+      const response = await fetch("/api/jobs");
+      const data = await response.json();
+
+      setJobs(data);
+    } catch (error) {
+      console.error("Failed to load jobs:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  loadJobs();
+}, []);
+
+
+async function deleteJob(id: number) {
+  await fetch(`/api/jobs/${id}`, {
+    method: "DELETE",
+  });
+
+  setJobs(previous =>
+    previous.filter(job => job.id !== id)
+  );
+}
+
+async function saveEditedJob(updatedJob: Job) {
+  const response = await fetch(`/api/jobs/${updatedJob.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(updatedJob),
+  });
+
+  const job = await response.json();
+
+  setJobs(previous =>
+    previous.map(item =>
+      item.id === job.id ? job : item
+    )
+  );
+
+  setEditingJob(null);
+}
+
+
+if (loading) {
+  return (
+    <main className="min-h-screen flex items-center justify-center">
+      <p className="text-lg">Loading jobs...</p>
+    </main>
+  );
+}
 
   return (
 
