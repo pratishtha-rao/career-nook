@@ -1,9 +1,29 @@
 import Link from "next/link";
 
+const links = [
+  {
+    name: "Jobs",
+    href: "/jobs",
+  },
+  {
+    name: "Contacts",
+    href: "/contacts",
+  },
+  {
+    name: "Tasks",
+    href: "/tasks",
+  },
+  {
+    name: "Materials",
+    href: "/materials",
+  },
+];
+
 export default function Navbar() {
   return (
-    <nav className="border-b bg-white shadow-sm">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-4">
+    <nav className="border-b bg-white">
+
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-5">
 
         <Link
           href="/"
@@ -12,29 +32,23 @@ export default function Navbar() {
           Career Nook
         </Link>
 
-        <div className="flex gap-8">
 
-          <Link href="/">Home</Link>
+        <div className="flex gap-8 text-sm font-medium">
 
-          <Link href="/jobs">
-            Jobs
-          </Link>
-
-          <Link href="/contacts">
-            Contacts
-          </Link>
-
-          <Link href="/tasks">
-            Tasks
-          </Link>
-
-          <Link href="/materials">
-            Materials
-          </Link>
+          {links.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-slate-600 transition hover:text-blue-600"
+            >
+              {link.name}
+            </Link>
+          ))}
 
         </div>
 
       </div>
+
     </nav>
   );
 }
