@@ -2,79 +2,170 @@ import { Contact } from "@/types/Contact";
 
 
 type Props = {
-  contact: Contact;
+
+contact:Contact;
+
+onEdit:(contact:Contact)=>void;
+
+onDelete:(id:number)=>void;
+
+onArchive:(id:number)=>void;
+
 };
 
 
+
 export default function ContactCard({
-  contact,
-}: Props) {
 
-  return (
+contact,
 
-    <div className="rounded-xl border bg-white p-6 shadow-sm">
+onEdit,
 
+onDelete,
 
-      <div className="flex justify-between">
+onArchive,
 
-
-        <div>
-
-          <h2 className="text-xl font-bold">
-            {contact.name}
-          </h2>
+}:Props){
 
 
-          <p className="text-slate-600">
-            {contact.role}
-          </p>
+return (
+
+<div className="
+rounded-xl
+border
+bg-white
+p-6
+shadow-sm
+text-black
+">
 
 
-          <p className="text-slate-500">
-            {contact.company}
-          </p>
+<h2 className="
+text-xl
+font-bold
+">
 
-        </div>
+{contact.name}
 
-
-        <span
-          className="
-          rounded-full
-          bg-purple-100
-          px-3
-          py-1
-          text-sm
-          text-purple-700
-          "
-        >
-          {contact.type}
-        </span>
-
-
-      </div>
+</h2>
 
 
 
-      {contact.email && (
-
-        <p className="mt-4 text-sm text-slate-600">
-          {contact.email}
-        </p>
-
-      )}
+<p className="mt-2">
+Company: {contact.company}
+</p>
 
 
-
-      {contact.notes && (
-
-        <p className="mt-3 text-sm text-slate-500">
-          {contact.notes}
-        </p>
-
-      )}
+<p>
+Role: {contact.role}
+</p>
 
 
-    </div>
+<p>
+Type: {contact.type}
+</p>
 
-  );
+
+
+{
+contact.email && (
+
+<p>
+Email: {contact.email}
+</p>
+
+)
+}
+
+
+
+{
+contact.notes && (
+
+<p>
+Notes: {contact.notes}
+</p>
+
+)
+}
+
+
+
+
+<div className="
+mt-5
+flex
+gap-3
+">
+
+
+<button
+
+onClick={()=>onEdit(contact)}
+
+className="
+rounded-lg
+bg-yellow-500
+px-4
+py-2
+text-white
+"
+
+>
+
+Edit
+
+</button>
+
+
+
+
+<button
+
+onClick={()=>onArchive(contact.id)}
+
+className="
+rounded-lg
+bg-purple-600
+px-4
+py-2
+text-white
+"
+
+>
+
+Archive
+
+</button>
+
+
+
+
+<button
+
+onClick={()=>onDelete(contact.id)}
+
+className="
+rounded-lg
+bg-red-600
+px-4
+py-2
+text-white
+"
+
+>
+
+Delete
+
+</button>
+
+
+</div>
+
+
+
+</div>
+
+);
+
 }

@@ -12,26 +12,34 @@ MaterialType
 
 type Props={
 
-onAddMaterial:(material:Material)=>void;
+material:Material;
+
+onSave:(material:Material)=>void;
+
+onCancel:()=>void;
 
 };
 
 
 
-export default function MaterialForm({
+export default function EditMaterialForm({
 
-onAddMaterial
+material,
+
+onSave,
+
+onCancel
 
 }:Props){
 
 
-const [name,setName]=useState("");
+const [name,setName]=useState(material.name);
 
-const [type,setType]=useState<MaterialType>("Resume");
+const [type,setType]=useState<MaterialType>(material.type);
 
-const [description,setDescription]=useState("");
+const [description,setDescription]=useState(material.description ?? "");
 
-const [link,setLink]=useState("");
+const [link,setLink]=useState(material.link ?? "");
 
 
 
@@ -41,9 +49,9 @@ function submit(e:React.FormEvent){
 e.preventDefault();
 
 
-const newMaterial:Material={
+onSave({
 
-id:Date.now(),
+...material,
 
 name,
 
@@ -51,21 +59,10 @@ type,
 
 description,
 
-link,
+link
 
-archived:false
+});
 
-};
-
-
-onAddMaterial(newMaterial);
-
-
-setName("");
-
-setDescription("");
-
-setLink("");
 
 }
 
@@ -94,15 +91,13 @@ font-bold
 text-black
 ">
 
-Add Material
+Edit Material
 
 </h2>
 
 
 
 <input
-
-placeholder="Material name"
 
 value={name}
 
@@ -117,7 +112,6 @@ text-black
 "
 
 />
-
 
 
 
@@ -152,8 +146,6 @@ text-black
 
 <textarea
 
-placeholder="Description"
-
 value={description}
 
 onChange={(e)=>setDescription(e.target.value)}
@@ -172,8 +164,6 @@ text-black
 
 
 <input
-
-placeholder="Link"
 
 value={link}
 
@@ -204,13 +194,38 @@ text-white
 
 >
 
-Add Material
+Save
 
 </button>
+
+
+
+<button
+
+type="button"
+
+onClick={onCancel}
+
+className="
+ml-3
+rounded-lg
+border
+px-5
+py-2
+text-black
+"
+
+>
+
+Cancel
+
+</button>
+
 
 
 </form>
 
 );
+
 
 }

@@ -2,15 +2,30 @@ import { Task } from "@/types/Task";
 
 
 type Props = {
-  task: Task;
-  onToggle: (id:number)=>void;
+
+task:Task;
+
+onEdit:(task:Task)=>void;
+
+onDelete:(id:number)=>void;
+
+onArchive:(id:number)=>void;
+
 };
 
 
+
 export default function TaskCard({
-  task,
-  onToggle,
-}: Props) {
+
+task,
+
+onEdit,
+
+onDelete,
+
+onArchive
+
+}:Props){
 
 
 return (
@@ -21,88 +36,121 @@ border
 bg-white
 p-6
 shadow-sm
+text-black
 ">
 
 
-<div className="flex justify-between">
+<h2 className="
+text-xl
+font-bold
+">
 
-
-<div>
-
-
-<h2
-className={`text-xl font-bold ${
-task.completed
-? "line-through text-slate-400"
-: ""
-}`}
->
 {task.title}
+
 </h2>
 
 
-<p className="mt-2 text-slate-600">
+
+<p className="mt-2">
+
 {task.description}
+
 </p>
 
 
-</div>
 
+<p>
 
-
-<span
-className="
-rounded-full
-bg-orange-100
-px-3
-py-1
-text-sm
-text-orange-700
-"
->
-{task.priority}
-</span>
-
-
-
-</div>
-
-
-
-<div className="mt-5 flex items-center justify-between">
-
-
-<p className="text-sm text-slate-500">
 Due: {task.dueDate}
+
 </p>
+
+
+
+<p>
+
+Priority: {task.priority}
+
+</p>
+
+
+
+<p>
+
+Status: {task.status}
+
+</p>
+
+
+
+
+<div className="
+mt-5
+flex
+gap-3
+">
+
+
+<button
+
+onClick={()=>onEdit(task)}
+
+className="
+rounded-lg
+bg-yellow-500
+px-4
+py-2
+text-white
+"
+
+>
+
+Edit
+
+</button>
+
 
 
 
 <button
 
-onClick={()=>onToggle(task.id)}
+onClick={()=>onArchive(task.id)}
 
 className="
 rounded-lg
-bg-green-600
+bg-purple-600
 px-4
 py-2
-text-sm
-font-semibold
 text-white
-hover:bg-green-700
 "
 
 >
 
-{
-task.completed
-? "Completed"
-: "Mark Done"
-}
-
+Archive
 
 </button>
+
+
+
+
+<button
+
+onClick={()=>onDelete(task.id)}
+
+className="
+rounded-lg
+bg-red-600
+px-4
+py-2
+text-white
+"
+
+>
+
+Delete
+
+</button>
+
 
 
 </div>
@@ -111,6 +159,5 @@ task.completed
 </div>
 
 );
-
 
 }

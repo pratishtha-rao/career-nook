@@ -2,77 +2,168 @@ import { Material } from "@/types/Material";
 
 
 type Props = {
-  material: Material;
+
+material:Material;
+
+onEdit:(material:Material)=>void;
+
+onDelete:(id:number)=>void;
+
+onArchive:(id:number)=>void;
+
 };
 
 
+
 export default function MaterialCard({
-  material,
-}: Props) {
 
-  return (
+material,
 
-    <div className="
-      rounded-xl
-      border
-      bg-white
-      p-6
-      shadow-sm
-    ">
+onEdit,
+
+onDelete,
+
+onArchive
+
+}:Props){
 
 
-      <div className="flex justify-between">
+return (
+
+<div className="
+rounded-xl
+border
+bg-white
+p-6
+shadow-sm
+text-black
+">
 
 
-        <div>
+<h2 className="
+text-xl
+font-bold
+">
 
-          <h2 className="text-xl font-bold">
-            {material.title}
-          </h2>
+{material.name}
 
-
-          <p className="mt-2 text-slate-600">
-            {material.description}
-          </p>
-
-        </div>
-
-
-        <span className="
-          rounded-full
-          bg-blue-100
-          px-3
-          py-1
-          text-sm
-          text-blue-700
-        ">
-          {material.type}
-        </span>
-
-
-      </div>
+</h2>
 
 
 
-      {material.link && (
+<p className="mt-2">
 
-        <a
-          href={material.link}
-          target="_blank"
-          className="
-          mt-4
-          block
-          text-blue-600
-          hover:underline
-          "
-        >
-          Open Link
-        </a>
+Type: {material.type}
 
-      )}
+</p>
 
 
-    </div>
 
-  );
+{
+material.description && (
+
+<p>
+
+Description: {material.description}
+
+</p>
+
+)
+
+}
+
+
+
+{
+material.link && (
+
+<p>
+
+Link: {material.link}
+
+</p>
+
+)
+
+}
+
+
+
+
+<div className="
+mt-5
+flex
+gap-3
+">
+
+
+<button
+
+onClick={()=>onEdit(material)}
+
+className="
+rounded-lg
+bg-yellow-500
+px-4
+py-2
+text-white
+"
+
+>
+
+Edit
+
+</button>
+
+
+
+
+<button
+
+onClick={()=>onArchive(material.id)}
+
+className="
+rounded-lg
+bg-purple-600
+px-4
+py-2
+text-white
+"
+
+>
+
+Archive
+
+</button>
+
+
+
+
+<button
+
+onClick={()=>onDelete(material.id)}
+
+className="
+rounded-lg
+bg-red-600
+px-4
+py-2
+text-white
+"
+
+>
+
+Delete
+
+</button>
+
+
+
+</div>
+
+
+</div>
+
+);
+
 }

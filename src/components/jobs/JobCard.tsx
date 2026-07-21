@@ -1,50 +1,148 @@
 import { Job } from "@/types/Job";
 
+import Button from "@/components/ui/Button";
+
 
 type Props = {
-  job: Job;
+
+job: Job;
+
+onArchive:(id:number)=>void;
+
+onDelete:(id:number)=>void;
+
+onEdit:(job:Job)=>void;
+
 };
 
 
-export default function JobCard({ job }: Props) {
+export default function JobCard({
 
-  return (
-    <div className="rounded-xl border bg-white p-6 shadow-sm">
+job,
 
-      <div className="flex justify-between">
+onArchive,
 
-        <div>
+onDelete,
 
-          <h2 className="text-xl font-bold">
-            {job.position}
-          </h2>
+onEdit,
 
-          <p className="text-slate-600">
-            {job.company}
-          </p>
-
-        </div>
+}:Props){
 
 
-        <span className="
-          rounded-full
-          bg-blue-100
-          px-3
-          py-1
-          text-sm
-          text-blue-700
-        ">
-          {job.status}
-        </span>
+return (
 
-      </div>
+<div className="
+rounded-xl
+border
+bg-white
+p-6
+shadow-sm
+">
 
 
-      <p className="mt-4 text-sm text-slate-500">
-        Applied: {job.dateApplied}
-      </p>
+<div className="flex justify-between">
 
 
-    </div>
-  );
+<div>
+
+<h2 className="text-xl font-bold">
+{job.company}
+</h2>
+
+
+<p className="text-slate-600">
+{job.position}
+</p>
+
+
+</div>
+
+
+
+<span className="
+rounded-full
+bg-blue-100
+px-3
+py-1
+text-sm
+text-blue-700
+">
+
+{job.status}
+
+</span>
+
+
+</div>
+
+
+
+
+<div className="
+mt-6
+flex
+gap-3
+">
+
+
+<Button
+
+onClick={()=>onEdit(job)}
+
+className="
+bg-yellow-500
+text-white
+"
+
+>
+
+Edit
+
+</Button>
+
+
+
+<Button
+
+onClick={()=>onArchive(job.id)}
+
+className="
+bg-purple-600
+text-white
+"
+
+>
+
+Archive
+
+</Button>
+
+
+
+<Button
+
+onClick={()=>onDelete(job.id)}
+
+className="
+bg-red-600
+text-white
+"
+
+>
+
+Delete
+
+</Button>
+
+
+
+</div>
+
+
+
+</div>
+
+);
+
+
 }

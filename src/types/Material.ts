@@ -6,9 +6,17 @@ export type MaterialType =
 
 
 export type Material = {
-  id: number;
-  title: string;
-  type: MaterialType;
-  description: string;
-  link?: string;
+
+id:number;
+
+name:string;
+
+type:MaterialType;
+
+description?:string;
+
+link?:string;
+
+archived:boolean;
+
 };

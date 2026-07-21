@@ -14,4 +14,5 @@ export type Job = {
   dateApplied: string;
   url?: string;
   notes?: string;
+  archived:boolean;
 };

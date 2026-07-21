@@ -10,33 +10,38 @@ TaskStatus
 } from "@/types/Task";
 
 
-
 type Props={
 
-onAddTask:(task:Task)=>void;
+task:Task;
+
+onSave:(task:Task)=>void;
+
+onCancel:()=>void;
 
 };
 
 
 
-export default function TaskForm({
+export default function EditTaskForm({
 
-onAddTask
+task,
+
+onSave,
+
+onCancel
 
 }:Props){
 
 
+const [title,setTitle]=useState(task.title);
 
-const [title,setTitle]=useState("");
+const [description,setDescription]=useState(task.description ?? "");
 
-const [description,setDescription]=useState("");
+const [dueDate,setDueDate]=useState(task.dueDate);
 
-const [dueDate,setDueDate]=useState("");
+const [priority,setPriority]=useState<TaskPriority>(task.priority);
 
-const [priority,setPriority]=useState<TaskPriority>("Medium");
-
-const [status,setStatus]=useState<TaskStatus>("Not Started");
-
+const [status,setStatus]=useState<TaskStatus>(task.status);
 
 
 
@@ -45,9 +50,9 @@ function submit(e:React.FormEvent){
 e.preventDefault();
 
 
-const newTask:Task={
+onSave({
 
-id:Date.now(),
+...task,
 
 title,
 
@@ -57,22 +62,10 @@ dueDate,
 
 priority,
 
-status,
+status
 
-archived:false
+});
 
-};
-
-
-onAddTask(newTask);
-
-
-
-setTitle("");
-
-setDescription("");
-
-setDueDate("");
 
 }
 
@@ -101,16 +94,13 @@ font-bold
 text-black
 ">
 
-Add Task
+Edit Task
 
 </h2>
 
 
 
-
 <input
-
-placeholder="Task title"
 
 value={title}
 
@@ -128,10 +118,7 @@ text-black
 
 
 
-
 <textarea
-
-placeholder="Description"
 
 value={description}
 
@@ -146,7 +133,6 @@ text-black
 "
 
 />
-
 
 
 
@@ -170,7 +156,6 @@ text-black
 
 
 
-
 <select
 
 value={priority}
@@ -187,21 +172,13 @@ text-black
 
 >
 
-<option>
-Low
-</option>
+<option>Low</option>
 
-<option>
-Medium
-</option>
+<option>Medium</option>
 
-<option>
-High
-</option>
-
+<option>High</option>
 
 </select>
-
 
 
 
@@ -222,21 +199,13 @@ text-black
 
 >
 
-<option>
-Not Started
-</option>
+<option>Not Started</option>
 
-<option>
-In Progress
-</option>
+<option>In Progress</option>
 
-<option>
-Completed
-</option>
-
+<option>Completed</option>
 
 </select>
-
 
 
 
@@ -252,7 +221,30 @@ text-white
 
 >
 
-Add Task
+Save
+
+</button>
+
+
+
+<button
+
+type="button"
+
+onClick={onCancel}
+
+className="
+ml-3
+rounded-lg
+border
+px-5
+py-2
+text-black
+"
+
+>
+
+Cancel
 
 </button>
 
