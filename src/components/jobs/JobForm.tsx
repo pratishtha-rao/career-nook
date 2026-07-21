@@ -1,13 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Job, JobStatus } from "@/types/Job";
-
+import { CreateJob, JobStatus } from "@/types/Job";
 
 type Props = {
-  onAddJob: (job: Job) => void;
+  onAddJob: (job: CreateJob) => void;
 };
-
 
 export default function JobForm({ onAddJob }: Props) {
 
@@ -15,30 +13,33 @@ export default function JobForm({ onAddJob }: Props) {
   const [position, setPosition] = useState("");
   const [status, setStatus] = useState<JobStatus>("Applied");
   const [dateApplied, setDateApplied] = useState("");
+  const [url,setUrl] = useState("");
 
+  const [notes,setNotes] = useState("");
 
   function handleSubmit(e: React.FormEvent) {
 
     e.preventDefault();
 
 
-    const newJob: Job = {
-      id: Date.now(),
-      company,
-      position,
-      status,
-      dateApplied,
-    };
+const newJob: CreateJob = {
+  company,
+  position,
+  status,
+  dateApplied,
+  url,
+  notes,
+};
 
-
-    onAddJob(newJob);
+onAddJob(newJob);
 
 
     setCompany("");
     setPosition("");
     setStatus("Applied");
     setDateApplied("");
-
+    setUrl("");
+    setNotes("");
   }
 
 
@@ -104,6 +105,20 @@ export default function JobForm({ onAddJob }: Props) {
         </select>
 
 
+      <input
+        placeholder="Job URL"
+        value={url}
+onChange={(e)=>setUrl(e.target.value)}
+className="rounded-lg border p-3"
+/>
+
+
+<textarea
+placeholder="Notes"
+value={notes}
+onChange={(e)=>setNotes(e.target.value)}
+className="rounded-lg border p-3"
+/>
 
 
         <input

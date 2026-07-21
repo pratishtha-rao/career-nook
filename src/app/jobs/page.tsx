@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Job } from "@/types/Job";
 import JobCard from "@/components/jobs/JobCard";
 import JobForm from "@/components/jobs/JobForm";
 import EditJobForm from "@/components/jobs/EditJobForm";
+import { Job, CreateJob } from "@/types/Job";
 
 export default function JobsPage() {
 
@@ -14,8 +14,8 @@ const [loading, setLoading] = useState(true);
 
   const [editingJob,setEditingJob] = useState<Job | null>(null);
 
-async function addJob(job: Job) {
-  const response = await fetch("/api/jobs", {
+async function addJob(job: CreateJob) {
+    const response = await fetch("/api/jobs", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -23,7 +23,13 @@ async function addJob(job: Job) {
     body: JSON.stringify(job),
   });
 
-  const newJob = await response.json();
+if(!response.ok){
+const error = await response.text();
+console.log(error);
+return;
+}
+
+const newJob = await response.json();
 
   setJobs(previous => [newJob, ...previous]);
 }
@@ -65,7 +71,13 @@ async function saveEditedJob(updatedJob: Job) {
     body: JSON.stringify(updatedJob),
   });
 
-  const job = await response.json();
+if(!response.ok){
+const error = await response.text();
+console.log(error);
+return;
+}
+
+const job = await response.json();
 
   setJobs(previous =>
     previous.map(item =>

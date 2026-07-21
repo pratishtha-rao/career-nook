@@ -15,3 +15,5 @@ export type Job = {
   url?: string;
   notes?: string;
 };
+
+export type CreateJob = Omit<Job,"id">;

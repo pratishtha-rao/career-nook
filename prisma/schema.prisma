@@ -20,6 +20,8 @@ model Job {
 
   dateApplied String
 
+  url String?
+  
   notes String?
 
   createdAt DateTime @default(now())

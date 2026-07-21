@@ -54,6 +54,29 @@ shadow-sm
 </div>
 
 
+<p className="mt-3 text-slate-600">
+Applied: {job.dateApplied}
+</p>
+
+
+{
+job.url && (
+<p className="text-blue-600">
+{job.url}
+</p>
+)
+}
+
+
+{
+job.notes && (
+<p className="mt-2">
+Notes: {job.notes}
+</p>
+)
+}
+
+</div>
 
 <span className="
 rounded-full
@@ -67,11 +90,6 @@ text-blue-700
 {job.status}
 
 </span>
-
-
-</div>
-
-
 
 
 <div className="

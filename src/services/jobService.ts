@@ -13,6 +13,7 @@ export async function createJob(data: {
   position: string;
   status: string;
   dateApplied: string;
+  url?: string;
   notes?: string;
 }) {
   return prisma.job.create({
@@ -22,13 +23,14 @@ export async function createJob(data: {
 
 export async function updateJob(
   id: number,
-  data: {
-    company: string;
-    position: string;
-    status: string;
-    dateApplied: string;
-    notes?: string;
-  }
+data: {
+company:string;
+position:string;
+status:string;
+dateApplied:string;
+url?:string;
+notes?:string;
+}
 ) {
   return prisma.job.update({
     where: { id },

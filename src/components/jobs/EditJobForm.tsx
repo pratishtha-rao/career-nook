@@ -37,7 +37,9 @@ const [status,setStatus] = useState(job.status);
 
 const [dateApplied,setDateApplied] = useState(job.dateApplied);
 
+const [url,setUrl] = useState(job.url ?? "");
 
+const [notes,setNotes] = useState(job.notes ?? "");
 
 function handleSubmit(e:React.FormEvent){
 
@@ -56,12 +58,13 @@ status,
 
 dateApplied,
 
+url,
+
+notes,
+
 });
 
-
 }
-
-
 
 
 return (
@@ -128,7 +131,42 @@ placeholder:text-slate-500
 
 />
 
+<input
 
+value={url}
+
+onChange={(e)=>setUrl(e.target.value)}
+
+placeholder="Job URL"
+
+className="
+w-full
+rounded-lg
+border
+p-3
+text-black
+"
+
+/>
+
+
+<textarea
+
+value={notes}
+
+onChange={(e)=>setNotes(e.target.value)}
+
+placeholder="Notes"
+
+className="
+w-full
+rounded-lg
+border
+p-3
+text-black
+"
+
+/>
 
 <select
 
