@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 
 import { getCurrentUser } from "@/lib/getUser";
+import { createJob } from "@/services/jobService";
 
 
 
@@ -75,24 +76,10 @@ status:401
 
 const body = await request.json();
 
-
-
-
-const job = await prisma.job.create({
-
-data:{
-
-
-...body,
-
-
-userId:user.id
-
-
-}
-
-});
-
+const job = await createJob(
+user.id,
+body
+);
 
 
 return Response.json(job);

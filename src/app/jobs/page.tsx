@@ -5,10 +5,12 @@ import JobCard from "@/components/jobs/JobCard";
 import JobForm from "@/components/jobs/JobForm";
 import EditJobForm from "@/components/jobs/EditJobForm";
 import { Job, CreateJob } from "@/types/Job";
+import { useRouter } from "next/navigation";
 
 export default function JobsPage() {
 
 const [jobs, setJobs] = useState<Job[]>([]);
+const router = useRouter();
 const [loading, setLoading] = useState(true);
 
 
@@ -34,36 +36,68 @@ const newJob = await response.json();
   setJobs(previous => [newJob, ...previous]);
 }
 
-  useEffect(() => {
-  async function loadJobs() {
-    try {
-const response = await fetch("/api/jobs");
+useEffect(() => {
+
+async function loadJobs(){
+
+try{
+
+const response = await fetch("/api/jobs",{
+cache:"no-store"
+});
+
 
 const data = await response.json();
 
 
-if(Array.isArray(data)){
 
-setJobs(data);
+if(response.status === 401){
+
+router.push("/login");
+
+return;
 
 }
-else{
 
-console.error("Jobs API Error:", data);
+
+
+if(!response.ok){
+
+console.error(data);
 
 setJobs([]);
 
+return;
+
 }
-    } catch (error) {
-      console.error("Failed to load jobs:", error);
-    } finally {
-      setLoading(false);
-    }
-  }
 
-  loadJobs();
-}, []);
 
+
+setJobs(Array.isArray(data) ? data : []);
+
+
+}
+
+catch(error){
+
+console.error(error);
+
+}
+
+finally{
+
+setLoading(false);
+
+}
+
+
+}
+
+
+loadJobs();
+
+
+},[router]);
 
 async function deleteJob(id: number) {
   await fetch(`/api/jobs/${id}`, {

@@ -2,9 +2,8 @@
 
 
 import { useEffect,useState } from "react";
-
+import { useRouter } from "next/navigation";
 import StatCard from "@/components/dashboard/StatCard";
-
 
 type DashboardData = {
 
@@ -54,38 +53,49 @@ export default function DashboardPage(){
 
 
 const [stats,setStats] = useState<DashboardData | null>(null);
-
+const router = useRouter();
 
 const [loading,setLoading] = useState(true);
 
 
 
-useEffect(()=>{
+useEffect(() => {
 
+  async function loadDashboard() {
 
-async function loadDashboard(){
+    const response = await fetch("/api/dashboard");
 
+    const data = await response.json();
 
-const response = await fetch("/api/dashboard");
+    if (response.status === 401) {
 
+      router.push("/login");
 
-const data = await response.json();
+      return;
 
+    }
 
-setStats(data);
+    if (!response.ok) {
 
+      console.error(data);
 
-setLoading(false);
+      setStats(null);
 
+      setLoading(false);
 
-}
+      return;
 
+    }
 
-loadDashboard();
+    setStats(data);
 
+    setLoading(false);
 
-},[]);
+  }
 
+  loadDashboard();
+
+}, [router]);
 
 
 
@@ -128,16 +138,19 @@ py-12
 ">
 
 
-<h1 className="
-text-4xl
-font-bold
-text-black
-">
+<div className="flex items-center justify-between">
 
-Dashboard
+  <h1
+    className="
+    text-4xl
+    font-bold
+    text-black
+    "
+  >
+    Dashboard
+  </h1>
 
-</h1>
-
+</div>
 
 <p className="
 mt-3
@@ -252,8 +265,7 @@ space-y-4
 
 {
 
-stats?.recentJobs.map(job=>(
-
+(stats?.recentJobs ?? []).map(job => (
 
 <div
 

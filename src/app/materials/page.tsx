@@ -3,20 +3,20 @@
 
 import { useEffect, useState } from "react";
 
-import { Material } from "@/types/Material";
-
 import MaterialCard from "@/components/materials/MaterialCard";
 
 import MaterialForm from "@/components/materials/MaterialForm";
 
 import EditMaterialForm from "@/components/materials/EditMaterialForm";
 
+import { useRouter } from "next/navigation";
 
+import { Material, CreateMaterial } from "@/types/Material";
 
 export default function MaterialsPage(){
 
-
 const [materials,setMaterials] = useState<Material[]>([]);
+const router = useRouter();
 
 const [editingMaterial,setEditingMaterial] = useState<Material | null>(null);
 
@@ -25,63 +25,76 @@ const [loading,setLoading] = useState(true);
 
 
 
-useEffect(()=>{
+useEffect(() => {
+
+  async function loadMaterials() {
+
+    try {
+
+      const response = await fetch("/api/materials", {
+        cache:"no-store",
+      });
 
 
-async function loadMaterials(){
-
-
-try{
-
-
-const response = await fetch("/api/materials");
-
-
-const data = await response.json();
-
-
-setMaterials(data);
+      const data = await response.json();
 
 
 
-}
+      if (response.status === 401) {
 
-catch(error){
+        router.push("/login");
 
+        return;
 
-console.error(
-"Failed to load materials:",
-error
-);
-
-
-}
-
-finally{
-
-
-setLoading(false);
-
-
-}
-
-
-}
+      }
 
 
 
-loadMaterials();
+      if (!response.ok) {
+
+        console.error(data);
+
+        setMaterials([]);
+
+        return;
+
+      }
 
 
-},[]);
+
+      setMaterials(
+        Array.isArray(data)
+        ? data
+        : []
+      );
 
 
+    } catch(error){
+
+      console.error(
+        "Failed loading materials:",
+        error
+      );
+
+      setMaterials([]);
+
+    }
+    finally {
+
+      setLoading(false);
+
+    }
 
 
+  }
 
 
-async function addMaterial(material:Material){
+  loadMaterials();
 
+
+},[router]);
+
+async function addMaterial(material:CreateMaterial){
 
 
 const response = await fetch("/api/materials",{
@@ -89,43 +102,32 @@ const response = await fetch("/api/materials",{
 method:"POST",
 
 headers:{
-
-"Content-Type":"application/json",
-
+"Content-Type":"application/json"
 },
 
-body:JSON.stringify({
-  name: material.name,
-  type: material.type,
-  description: material.description ?? "",
-  link: material.link ?? "",
-}),
+body:JSON.stringify(material)
 
 });
 
 
+const savedMaterial = await response.json();
 
 
-const newMaterial = await response.json();
+if(!response.ok){
 
+console.log(savedMaterial);
 
-
-setMaterials(previous=>[
-
-newMaterial,
-
-...previous
-
-]);
-
-
+return;
 
 }
 
 
+setMaterials(previous=>[
+savedMaterial,
+...previous
+]);
 
-
-
+}
 
 
 async function deleteMaterial(id:number){

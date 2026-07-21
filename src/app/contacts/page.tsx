@@ -7,35 +7,44 @@ import { Contact, CreateContact } from "@/types/Contact";
 import ContactCard from "@/components/contacts/ContactCard";
 import ContactForm from "@/components/contacts/ContactForm";
 import EditContactForm from "@/components/contacts/EditContactForm";
-
+import { useRouter } from "next/navigation";
 
 export default function ContactsPage(){
 
 
 const [contacts,setContacts] = useState<Contact[]>([]);
+const router = useRouter();
 
 const [editingContact,setEditingContact] = useState<Contact | null>(null);
 
 
 
-useEffect(()=>{
+useEffect(() => {
 
-async function loadContacts(){
+  async function loadContacts() {
 
-const response = await fetch("/api/contacts");
+    const response = await fetch("/api/contacts");
 
-const data = await response.json();
+    const data = await response.json();
 
-setContacts(data);
+    if (response.status === 401) {
+      router.push("/login");
+      return;
+    }
 
-}
+    if (!response.ok) {
+      console.error(data);
+      setContacts([]);
+      return;
+    }
 
-loadContacts();
+    setContacts(Array.isArray(data) ? data : []);
 
-},[]);
+  }
 
+  loadContacts();
 
-
+}, [router]);
 
 async function addContact(contact:CreateContact){
 

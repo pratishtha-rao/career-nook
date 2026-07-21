@@ -11,36 +11,45 @@ import TaskForm from "@/components/tasks/TaskForm";
 
 import EditTaskForm from "@/components/tasks/EditTaskForm";
 
+import { useRouter } from "next/navigation";
 
 
 export default function TasksPage(){
 
 
 const [tasks,setTasks]=useState<Task[]>([]);
-
+const router = useRouter();
 
 const [editingTask,setEditingTask]=useState<Task | null>(null);
 
 
 
-useEffect(()=>{
+useEffect(() => {
 
-async function loadTasks(){
+  async function loadTasks() {
 
-const response = await fetch("/api/tasks");
+    const response = await fetch("/api/tasks");
 
-const data = await response.json();
+    const data = await response.json();
 
-setTasks(data);
+    if (response.status === 401) {
+      router.push("/login");
+      return;
+    }
 
-}
+    if (!response.ok) {
+      console.error(data);
+      setTasks([]);
+      return;
+    }
 
+    setTasks(Array.isArray(data) ? data : []);
 
-loadTasks();
+  }
 
+  loadTasks();
 
-},[]);
-
+}, [router]);
 
 async function addTask(task:CreateTask){
 

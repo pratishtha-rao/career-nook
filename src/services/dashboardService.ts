@@ -1,130 +1,114 @@
 import { prisma } from "@/lib/prisma";
 
+export async function getDashboardStats(userId: string) {
 
-export async function getDashboardStats(){
+  const totalJobs = await prisma.job.count({
+    where: {
+      userId,
+    },
+  });
 
-const totalJobs = await prisma.job.count();
+  const applied = await prisma.job.count({
+    where: {
+      status: "Applied",
+      userId,
+    },
+  });
 
+  const interviews = await prisma.job.count({
+    where: {
+      status: "Interview",
+      userId,
+    },
+  });
 
-const applied = await prisma.job.count({
-where:{
-status:"Applied",
-},
-});
+  const offers = await prisma.job.count({
+    where: {
+      status: "Offer",
+      userId,
+    },
+  });
 
+  const rejected = await prisma.job.count({
+    where: {
+      status: "Rejected",
+      userId,
+    },
+  });
 
-const interviews = await prisma.job.count({
-where:{
-status:"Interview",
-},
-});
+  const totalTasks = await prisma.task.count({
+    where: {
+      userId,
+    },
+  });
 
+  const completedTasks = await prisma.task.count({
+    where: {
+      status: "Completed",
+      userId,
+    },
+  });
 
-const offers = await prisma.job.count({
-where:{
-status:"Offer",
-},
-});
+  const remainingTasks = totalTasks - completedTasks;
 
+  const totalMaterials = await prisma.material.count({
+    where: {
+      userId,
+    },
+  });
 
-const rejected = await prisma.job.count({
-where:{
-status:"Rejected",
-},
-});
+  const resumes = await prisma.material.count({
+    where: {
+      type: "Resume",
+      userId,
+    },
+  });
 
+  const coverLetters = await prisma.material.count({
+    where: {
+      type: "Cover Letter",
+      userId,
+    },
+  });
 
+  const portfolios = await prisma.material.count({
+    where: {
+      type: "Portfolio",
+      userId,
+    },
+  });
 
-const totalTasks = await prisma.task.count();
+  const recentJobs = await prisma.job.findMany({
+    where: {
+      userId,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 5,
+  });
 
+  return {
+    totalJobs,
+    applied,
+    interviews,
+    offers,
+    rejected,
 
-const completedTasks = await prisma.task.count({
-where:{
-status:"Completed",
-},
-});
+    interviewRate:
+      totalJobs === 0
+        ? 0
+        : Math.round((interviews / totalJobs) * 100),
 
+    totalTasks,
+    completedTasks,
+    remainingTasks,
 
-const remainingTasks = totalTasks - completedTasks;
+    totalMaterials,
+    resumes,
+    coverLetters,
+    portfolios,
 
-
-
-const totalMaterials = await prisma.material.count();
-
-
-const resumes = await prisma.material.count({
-where:{
-type:"Resume",
-},
-});
-
-
-const coverLetters = await prisma.material.count({
-where:{
-type:"Cover Letter",
-},
-});
-
-
-const portfolios = await prisma.material.count({
-where:{
-type:"Portfolio",
-},
-});
-
-
-
-const recentJobs = await prisma.job.findMany({
-
-orderBy:{
-createdAt:"desc",
-},
-
-take:5,
-
-});
-
-
-
-return {
-
-totalJobs,
-
-applied,
-
-interviews,
-
-offers,
-
-rejected,
-
-interviewRate:
-totalJobs === 0
-?
-0
-:
-Math.round((interviews / totalJobs) * 100),
-
-
-totalTasks,
-
-completedTasks,
-
-remainingTasks,
-
-
-totalMaterials,
-
-resumes,
-
-coverLetters,
-
-portfolios,
-
-
-recentJobs,
-
-};
-
-
+    recentJobs,
+  };
 }

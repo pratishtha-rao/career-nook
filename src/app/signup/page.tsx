@@ -5,7 +5,6 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 
-
 export default function SignupPage(){
 
 
@@ -22,6 +21,8 @@ const [name,setName]=useState("");
 
 const [error,setError]=useState("");
 
+const [message,setMessage]=useState("");
+
 const [loading,setLoading]=useState(false);
 
 
@@ -33,6 +34,8 @@ e.preventDefault();
 setLoading(true);
 
 setError("");
+
+setMessage("");
 
 
 
@@ -65,7 +68,7 @@ return;
 if(data.user){
 
 
-await fetch("/api/users",{
+const response = await fetch("/api/users",{
 
 method:"POST",
 
@@ -86,14 +89,35 @@ name
 });
 
 
+
+if(!response.ok){
+
+setError(
+"Account created but profile creation failed."
+);
+
+setLoading(false);
+
+return;
+
+}
+
+
 }
 
 
 
-router.push("/dashboard");
+setMessage(
+"Account created. Please sign in with your credentials."
+);
+
+
+setLoading(false);
+
 
 
 }
+
 
 
 
@@ -119,6 +143,7 @@ p-8
 rounded-xl
 space-y-4
 w-96
+shadow
 "
 
 
@@ -148,6 +173,7 @@ className="
 border
 p-3
 w-full
+rounded
 "
 
 />
@@ -158,6 +184,8 @@ w-full
 
 placeholder="Email"
 
+type="email"
+
 value={email}
 
 onChange={(e)=>setEmail(e.target.value)}
@@ -166,6 +194,7 @@ className="
 border
 p-3
 w-full
+rounded
 "
 
 />
@@ -186,6 +215,7 @@ className="
 border
 p-3
 w-full
+rounded
 "
 
 />
@@ -206,16 +236,43 @@ w-full
 
 >
 
-{loading ? "Creating..." : "Sign Up"}
+{
+loading
+?
+"Creating..."
+:
+"Sign Up"
+}
 
 </button>
+
+
+
+
+{
+message && (
+
+<p className="
+text-green-600
+">
+
+{message}
+
+</p>
+
+)
+
+}
+
 
 
 
 {
 error && (
 
-<p className="text-red-500">
+<p className="
+text-red-500
+">
 
 {error}
 

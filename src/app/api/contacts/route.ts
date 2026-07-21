@@ -1,29 +1,84 @@
-import { NextResponse } from "next/server";
-
-import {
-  getContacts,
-  createContact,
-} from "@/services/contactService";
+import { prisma } from "@/lib/prisma";
+import { getCurrentUser } from "@/lib/getUser";
 
 
+// GET contacts
 export async function GET(){
 
-  const contacts = await getContacts();
+const user = await getCurrentUser();
 
-  return NextResponse.json(contacts);
+
+if(!user){
+
+return Response.json(
+{
+error:"Unauthorized"
+},
+{
+status:401
+}
+);
+
+}
+
+
+const contacts = await prisma.contact.findMany({
+
+where:{
+userId:user.id
+},
+
+orderBy:{
+id:"desc"
+}
+
+});
+
+
+return Response.json(contacts);
 
 }
 
 
 
-export async function POST(
-  request:Request
-){
 
-  const body = await request.json();
 
-  const contact = await createContact(body);
+// CREATE contact
+export async function POST(request:Request){
 
-  return NextResponse.json(contact);
+const user = await getCurrentUser();
+
+
+if(!user){
+
+return Response.json(
+{
+error:"Unauthorized"
+},
+{
+status:401
+}
+);
+
+}
+
+
+const body = await request.json();
+
+
+const contact = await prisma.contact.create({
+
+data:{
+
+...body,
+
+userId:user.id
+
+}
+
+});
+
+
+return Response.json(contact);
 
 }

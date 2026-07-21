@@ -4,7 +4,7 @@
 import {useState} from "react";
 import {createClient} from "@/lib/supabase";
 import {useRouter} from "next/navigation";
-
+import { getAuthErrorMessage } from "@/lib/authErrors";
 
 export default function LoginPage(){
 
@@ -20,20 +20,15 @@ const [password,setPassword] = useState("");
 
 const [error,setError] = useState("");
 
-const [loading,setLoading] = useState(false);
-
+const [loading,setLoading]=useState(false);
 
 
 async function login(e:React.FormEvent){
 
 e.preventDefault();
 
-
-setError("");
-
 setLoading(true);
-
-
+setError("");
 
 const {
 error
@@ -49,15 +44,17 @@ password
 
 if(error){
 
-setError(error.message);
-
 setLoading(false);
+
+setError(
+getAuthErrorMessage(error.message)
+);
 
 return;
 
 }
 
-
+setLoading(false);
 
 router.push("/jobs");
 
@@ -93,18 +90,6 @@ w-96
 "
 
 >
-
-
-<h1 className="
-text-2xl
-font-bold
-">
-
-Login
-
-</h1>
-
-
 
 <input
 

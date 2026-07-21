@@ -1,32 +1,92 @@
-import { NextResponse } from "next/server";
-
-import {
-getTasks,
-createTask
-} from "@/services/taskService";
+import { prisma } from "@/lib/prisma";
+import { getCurrentUser } from "@/lib/getUser";
 
 
 
 export async function GET(){
 
-const tasks = await getTasks();
 
-return NextResponse.json(tasks);
+const user = await getCurrentUser();
+
+
+if(!user){
+
+return Response.json(
+{
+error:"Unauthorized"
+},
+{
+status:401
+}
+);
 
 }
 
 
 
-export async function POST(
-request:Request
-){
+const tasks = await prisma.task.findMany({
+
+where:{
+userId:user.id
+},
+
+orderBy:{
+id:"desc"
+}
+
+});
+
+
+return Response.json(tasks);
+
+}
+
+
+
+
+
+export async function POST(request:Request){
+
+
+const user = await getCurrentUser();
+
+
+if(!user){
+
+return Response.json(
+{
+error:"Unauthorized"
+},
+{
+status:401
+}
+);
+
+}
+
+
 
 const body = await request.json();
 
 
-const task = await createTask(body);
+
+const task = await prisma.task.create({
+
+data:{
 
 
-return NextResponse.json(task);
+...body,
+
+
+userId:user.id
+
+
+}
+
+});
+
+
+
+return Response.json(task);
 
 }

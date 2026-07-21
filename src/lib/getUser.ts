@@ -8,12 +8,12 @@ const supabase = await createClient();
 
 const {
 data:{
-user
+session
 }
 
-}=await supabase.auth.getUser();
+}=await supabase.auth.getSession();
 
 
-return user;
+return session?.user ?? null;
 
 }

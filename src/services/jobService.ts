@@ -8,38 +8,67 @@ export async function getJobs() {
   });
 }
 
-export async function createJob(data: {
-  company: string;
-  position: string;
-  status: string;
-  dateApplied: string;
-  url?: string;
-  notes?: string;
-}) {
-  return prisma.job.create({
-    data,
-  });
+export async function createJob(
+userId:string,
+data:{
+  company:string;
+  position:string;
+  status:string;
+  dateApplied:string;
+  url?:string;
+  notes?:string;
+}
+){
+
+return prisma.job.create({
+
+data:{
+  ...data,
+  userId,
+}
+
+});
+
 }
 
 export async function updateJob(
-  id: number,
-data: {
-company:string;
-position:string;
-status:string;
-dateApplied:string;
-url?:string;
-notes?:string;
+id:number,
+userId:string,
+data:{
+  company:string;
+  position:string;
+  status:string;
+  dateApplied:string;
+  url?:string;
+  notes?:string;
 }
-) {
-  return prisma.job.update({
-    where: { id },
-    data,
-  });
+){
+
+return prisma.job.update({
+
+where:{
+id,
+userId
+},
+
+data
+
+});
+
 }
 
-export async function deleteJob(id: number) {
-  return prisma.job.delete({
-    where: { id },
-  });
+export async function deleteJob(
+id:number,
+userId:string
+){
+
+return prisma.job.delete({
+
+where:{
+id,
+userId
+}
+
+});
+
 }

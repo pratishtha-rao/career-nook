@@ -1,13 +1,17 @@
-import { NextResponse } from "next/server";
-
+import { getCurrentUser } from "@/lib/getUser";
 import { getDashboardStats } from "@/services/dashboardService";
 
+export async function GET() {
+  const user = await getCurrentUser();
 
-export async function GET(){
+  if (!user) {
+    return Response.json(
+      { error: "Unauthorized" },
+      { status: 401 }
+    );
+  }
 
-const stats = await getDashboardStats();
+  const stats = await getDashboardStats(user.id);
 
-
-return NextResponse.json(stats);
-
+  return Response.json(stats);
 }

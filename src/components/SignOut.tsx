@@ -1,49 +1,31 @@
 "use client";
 
+import { createClient } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
 
-import {createClient} from "@/lib/supabase";
+export default function SignOutButton() {
+  const router = useRouter();
 
-import {useRouter} from "next/navigation";
+  async function handleSignOut() {
+    const supabase = createClient();
 
+    const { error } = await supabase.auth.signOut();
 
-export default function SignOut(){
+    if (error) {
+      console.error(error);
+      return;
+    }
 
+    router.push("/login");
+    router.refresh();
+  }
 
-const router=useRouter();
-
-
-
-async function logout(){
-
-
-const supabase=createClient();
-
-
-await supabase.auth.signOut();
-
-
-router.push("/login");
-
-
-}
-
-
-
-return (
-
-<button
-
-onClick={logout}
-
-className="text-red-600"
-
->
-
-Sign Out
-
-</button>
-
-);
-
-
+  return (
+    <button
+      onClick={handleSignOut}
+      className="rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+    >
+      Sign Out
+    </button>
+  );
 }

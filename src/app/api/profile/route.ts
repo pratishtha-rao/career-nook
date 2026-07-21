@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/getUser";
-import { createMaterial } from "@/services/materialService";
 
 
 
@@ -8,6 +7,7 @@ export async function GET(){
 
 
 const user = await getCurrentUser();
+
 
 
 if(!user){
@@ -25,20 +25,26 @@ status:401
 
 
 
-const materials = await prisma.material.findMany({
+const profile = await prisma.user.findUnique({
 
 where:{
-userId:user.id,
+id:user.id
 },
 
-orderBy:{
-id:"desc",
-},
+select:{
+
+id:true,
+name:true,
+email:true,
+createdAt:true
+
+}
 
 });
 
 
-return Response.json(materials);
+
+return Response.json(profile);
 
 
 }
@@ -47,10 +53,7 @@ return Response.json(materials);
 
 
 
-
-
-export async function POST(request:Request){
-
+export async function PUT(request:Request){
 
 const user = await getCurrentUser();
 
@@ -74,14 +77,25 @@ const body = await request.json();
 
 
 
-const material = await createMaterial(
-user.id,
-body
-);
+const updatedUser = await prisma.user.update({
+
+where:{
+id:user.id
+},
+
+data:{
+
+
+name: body.name,
+
+
+}
+
+});
 
 
 
-return Response.json(material);
+return Response.json(updatedUser);
 
 
 }

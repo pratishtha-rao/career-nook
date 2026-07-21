@@ -3,45 +3,52 @@ updateJob,
 deleteJob,
 } from "@/services/jobService";
 
-import { NextResponse } from "next/server";
-
+import { getCurrentUser } from "@/lib/getUser";
 
 
 export async function PUT(
 request:Request,
-{params}:{params:Promise<{id:string}>}
+{
+params
+}:{
+params:Promise<{id:string}>
+}
 ){
 
-try {
+const user = await getCurrentUser();
+
+
+if(!user){
+
+return Response.json(
+{
+error:"Unauthorized"
+},
+{
+status:401
+}
+);
+
+}
+
+
 
 const {id}=await params;
+
 
 const body=await request.json();
 
 
-const job=await updateJob(
+
+const job = await updateJob(
 Number(id),
+user.id,
 body
 );
 
 
-return NextResponse.json(job);
 
-
-}catch(error){
-
-console.error(error);
-
-return NextResponse.json(
-{
-error:"Failed to update job"
-},
-{
-status:500
-}
-);
-
-}
+return Response.json(job);
 
 }
 
@@ -50,35 +57,44 @@ status:500
 
 export async function DELETE(
 request:Request,
-{params}:{params:Promise<{id:string}>}
+{
+params
+}:{
+params:Promise<{id:string}>
+}
 ){
 
-try{
-
-const {id}=await params;
+const user = await getCurrentUser();
 
 
-await deleteJob(Number(id));
+if(!user){
 
-
-return NextResponse.json({
-success:true
-});
-
-
-}catch(error){
-
-console.error(error);
-
-return NextResponse.json(
+return Response.json(
 {
-error:"Failed to delete job"
+error:"Unauthorized"
 },
 {
-status:500
+status:401
 }
 );
 
 }
+
+
+
+const {id}=await params;
+
+
+
+await deleteJob(
+Number(id),
+user.id
+);
+
+
+
+return Response.json({
+success:true
+});
 
 }
