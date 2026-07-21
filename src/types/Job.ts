@@ -1,4 +1,5 @@
 export type JobStatus =
+  | "Saved"
   | "Applied"
   | "Interview"
   | "Offer"
@@ -11,4 +12,6 @@ export type Job = {
   position: string;
   status: JobStatus;
   dateApplied: string;
+  url?: string;
+  notes?: string;
 };

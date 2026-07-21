@@ -1,99 +1,403 @@
 export default function Home() {
+
   return (
-    <main className="bg-slate-100">
 
-      <section className="mx-auto flex min-h-[85vh] max-w-7xl flex-col justify-center px-8">
+    <main className="min-h-screen bg-slate-100">
 
-        <h1 className="text-6xl font-extrabold text-slate-900">
-          Organize Your Entire Job Search
+
+      {/* HERO */}
+
+      <section className="
+        mx-auto
+        max-w-7xl
+        px-8
+        py-20
+        text-center
+      ">
+
+
+        <h1 className="
+          text-5xl
+          font-bold
+          tracking-tight
+          text-slate-900
+        ">
+          Your Career Search,
+          <br />
+          Organized in One Place.
         </h1>
 
-        <p className="mt-8 max-w-3xl text-xl leading-9 text-slate-600">
-          Career Nook keeps your applications,
-          networking contacts,
-          interview tasks,
-          and application materials
-          all in one place.
+
+
+        <p className="
+          mx-auto
+          mt-6
+          max-w-2xl
+          text-lg
+          text-slate-600
+        ">
+          Career Nook helps you manage job applications,
+          professional contacts, tasks, and career materials
+          from one powerful dashboard.
         </p>
 
-        <div className="mt-10 flex gap-4">
 
-          <button className="rounded-xl bg-blue-600 px-8 py-4 font-semibold text-white hover:bg-blue-700">
+
+        <div className="mt-8 flex justify-center gap-4">
+
+
+          <a
+            href="/jobs"
+            className="
+              rounded-lg
+              bg-blue-600
+              px-6
+              py-3
+              font-semibold
+              text-white
+              hover:bg-blue-700
+            "
+          >
             Start Tracking Jobs
-          </button>
+          </a>
 
-          <button className="rounded-xl border border-slate-300 bg-white px-8 py-4 font-semibold hover:bg-slate-50">
-            Learn More
-          </button>
+
+
+          <a
+            href="/tasks"
+            className="
+              rounded-lg
+              border
+              border-slate-300
+              bg-white
+              px-6
+              py-3
+              font-semibold
+              text-slate-700
+              hover:bg-slate-50
+            "
+          >
+            Manage Tasks
+          </a>
+
 
         </div>
 
+
       </section>
 
-<section className="mx-auto grid max-w-7xl gap-8 px-8 pb-20 md:grid-cols-2 lg:grid-cols-4">
 
-  <div className="rounded-2xl bg-white p-8 shadow">
 
-    <h2 className="mb-4 text-2xl font-bold">
-      Jobs
-    </h2>
 
-    <p className="text-slate-600">
-      Track every application,
-      interview,
-      salary,
-      and status.
-    </p>
 
-  </div>
+      {/* FEATURES */}
 
-  <div className="rounded-2xl bg-white p-8 shadow">
 
-    <h2 className="mb-4 text-2xl font-bold">
-      Contacts
-    </h2>
+      <section className="
+        mx-auto
+        max-w-7xl
+        px-8
+        py-16
+      ">
 
-    <p className="text-slate-600">
-      Store recruiters,
-      hiring managers,
-      mentors,
-      and networking connections.
-    </p>
 
-  </div>
+        <h2 className="
+          text-center
+          text-3xl
+          font-bold
+        ">
+          Everything You Need For Your Career Search
+        </h2>
 
-  <div className="rounded-2xl bg-white p-8 shadow">
 
-    <h2 className="mb-4 text-2xl font-bold">
-      Tasks
-    </h2>
 
-    <p className="text-slate-600">
-      Never forget
-      follow-ups,
-      interviews,
-      or deadlines.
-    </p>
 
-  </div>
+        <div className="
+          mt-10
+          grid
+          gap-6
+          md:grid-cols-2
+          lg:grid-cols-4
+        ">
 
-  <div className="rounded-2xl bg-white p-8 shadow">
 
-    <h2 className="mb-4 text-2xl font-bold">
-      Application Materials
-    </h2>
 
-    <p className="text-slate-600">
-      Organize resumes,
-      cover letters,
-      portfolios,
-      and documents.
-    </p>
+          <FeatureCard
 
-  </div>
+            title="Job Tracking"
 
-</section>
+            description="Track applications, interviews, offers, and opportunities."
+
+          />
+
+
+
+          <FeatureCard
+
+            title="Networking"
+
+            description="Manage recruiters, mentors, and professional contacts."
+
+          />
+
+
+
+          <FeatureCard
+
+            title="Task Management"
+
+            description="Never miss deadlines, interviews, or follow-ups."
+
+          />
+
+
+
+          <FeatureCard
+
+            title="Career Materials"
+
+            description="Organize resumes, cover letters, and portfolios."
+
+          />
+
+
+
+        </div>
+
+
+      </section>
+
+
+
+
+
+      {/* HOW IT WORKS */}
+
+
+
+      <section className="
+        bg-white
+        px-8
+        py-16
+      ">
+
+
+        <div className="
+          mx-auto
+          max-w-5xl
+        ">
+
+
+          <h2 className="
+            text-center
+            text-3xl
+            font-bold
+          ">
+            How Career Nook Works
+          </h2>
+
+
+
+          <div className="
+            mt-10
+            grid
+            gap-8
+            md:grid-cols-3
+          ">
+
+
+            <Step
+
+              number="1"
+
+              text="Save your opportunities"
+
+            />
+
+
+            <Step
+
+              number="2"
+
+              text="Organize your career workflow"
+
+            />
+
+
+            <Step
+
+              number="3"
+
+              text="Use AI tools to improve"
+
+            />
+
+
+          </div>
+
+
+        </div>
+
+
+      </section>
+
+
+
+
+
+      {/* AI SECTION */}
+
+
+      <section className="
+        mx-auto
+        max-w-5xl
+        px-8
+        py-16
+        text-center
+      ">
+
+
+        <h2 className="
+          text-3xl
+          font-bold
+        ">
+          AI Career Assistant Coming Soon
+        </h2>
+
+
+        <p className="
+          mt-4
+          text-slate-600
+        ">
+          Future AI features will help improve resumes,
+          analyze job descriptions, and generate personalized
+          career materials.
+        </p>
+
+
+      </section>
+
 
     </main>
+
   );
+
+}
+
+
+
+
+
+function FeatureCard({
+
+title,
+
+description
+
+}:{
+
+title:string;
+
+description:string;
+
+}){
+
+
+return (
+
+<div className="
+rounded-xl
+border
+bg-white
+p-6
+shadow-sm
+">
+
+
+<h3 className="
+text-xl
+font-bold
+">
+
+{title}
+
+</h3>
+
+
+<p className="
+mt-3
+text-slate-600
+">
+
+{description}
+
+</p>
+
+
+</div>
+
+);
+
+
+}
+
+
+
+
+
+function Step({
+
+number,
+
+text
+
+}:{
+
+number:string;
+
+text:string;
+
+}){
+
+
+return (
+
+<div className="
+text-center
+">
+
+
+<div className="
+mx-auto
+flex
+h-12
+w-12
+items-center
+justify-center
+rounded-full
+bg-blue-600
+font-bold
+text-white
+">
+
+{number}
+
+</div>
+
+
+<p className="
+mt-4
+font-medium
+">
+
+{text}
+
+</p>
+
+
+</div>
+
+);
+
+
 }
