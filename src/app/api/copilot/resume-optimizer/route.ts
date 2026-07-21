@@ -3,12 +3,12 @@ import { NextResponse } from "next/server";
 import { openai } from "@/lib/openai";
 
 import {
-  COVER_LETTER_SYSTEM_PROMPT
+RESUME_OPTIMIZER_SYSTEM_PROMPT
 } from "@/lib/prompts/copilotPrompts";
 
 
 
-export async function POST(request: Request){
+export async function POST(request:Request){
 
 
 try{
@@ -19,13 +19,31 @@ const body = await request.json();
 
 
 const {
-company,
-position,
+resume,
 jobDescription,
-draft
+company,
+position
 
 }=body;
 
+
+
+
+if(!resume){
+
+return NextResponse.json(
+
+{
+error:"Resume is required"
+},
+
+{
+status:400
+}
+
+);
+
+}
 
 
 
@@ -48,9 +66,10 @@ status:400
 
 
 
+
 if(
 !process.env.OPENAI_API_KEY ||
-process.env.OPENAI_API_KEY === "replace_with_key_later"
+process.env.OPENAI_API_KEY==="replace_with_key_later"
 ){
 
 
@@ -72,6 +91,7 @@ status:503
 
 
 
+
 const completion =
 await openai.chat.completions.create({
 
@@ -79,15 +99,14 @@ await openai.chat.completions.create({
 model:"gpt-4.1-mini",
 
 
-
 messages:[
 
 
-
 {
+
 role:"system",
 
-content:COVER_LETTER_SYSTEM_PROMPT
+content:RESUME_OPTIMIZER_SYSTEM_PROMPT
 
 },
 
@@ -102,7 +121,7 @@ content:
 
 `
 
-Create a personalized cover letter using the information below.
+Optimize this resume for the following job.
 
 
 Company:
@@ -123,9 +142,11 @@ ${jobDescription}
 
 
 
-Existing Draft:
+Current Resume:
 
-${draft || "No existing draft provided"}
+${resume}
+
+
 
 `
 
@@ -140,8 +161,7 @@ ${draft || "No existing draft provided"}
 
 
 
-
-const letter =
+const optimizedResume =
 completion
 .choices[0]
 .message
@@ -149,13 +169,11 @@ completion
 
 
 
-
 return NextResponse.json({
 
-letter
+optimizedResume
 
 });
-
 
 
 
@@ -164,7 +182,7 @@ letter
 
 
 console.error(
-"Cover Letter Generation Error:",
+"Resume optimizer error:",
 error
 );
 
@@ -173,7 +191,7 @@ error
 return NextResponse.json(
 
 {
-error:"Failed to generate cover letter"
+error:"Failed to optimize resume"
 },
 
 {

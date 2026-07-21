@@ -92,6 +92,8 @@ model Material {
 
   link String?
 
+  source String?
+
   createdAt DateTime @default(now())
 
   userId String
@@ -120,4 +122,18 @@ model User {
   tasks Task[]
 
   materials Material[]
+}
+
+model AIUsage {
+
+id Int @id @default(autoincrement())
+
+userId String
+
+feature String
+
+createdAt DateTime @default(now())
+
+user User @relation(fields:[userId], references:[id], onDelete:Cascade)
+
 }

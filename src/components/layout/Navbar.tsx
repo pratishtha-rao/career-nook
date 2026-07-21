@@ -44,6 +44,10 @@ const privateLinks = [
     href: "/materials",
   },
   {
+    name: "Nook Copilot",
+    href: "/copilot",
+  },
+  {
     name:"Profile",
     href:"/profile",
   },

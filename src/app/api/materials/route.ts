@@ -10,6 +10,7 @@ export async function GET(){
 const user = await getCurrentUser();
 
 
+
 if(!user){
 
 return Response.json(
@@ -38,6 +39,7 @@ id:"desc",
 });
 
 
+
 return Response.json(materials);
 
 
@@ -53,6 +55,7 @@ export async function POST(request:Request){
 
 
 const user = await getCurrentUser();
+
 
 
 if(!user){
