@@ -24,6 +24,4 @@ priority:TaskPriority;
 
 status:TaskStatus;
 
-archived:boolean;
-
 };

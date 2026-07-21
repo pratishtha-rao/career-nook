@@ -27,7 +27,6 @@ description:"Send thank-you email after interview",
 dueDate:"2026-07-25",
 priority:"High",
 status:"In Progress",
-archived:false
 },
 
 
@@ -38,7 +37,6 @@ description:"Add new project experience",
 dueDate:"2026-07-22",
 priority:"Medium",
 status:"Completed",
-archived:false
 }
 
 
@@ -80,41 +78,6 @@ previous.filter(
 );
 
 }
-
-
-
-
-
-function archiveTask(id:number){
-
-setTasks(previous =>
-
-previous.map(task =>
-
-task.id === id
-
-?
-
-{
-
-...task,
-
-archived:true
-
-}
-
-:
-
-task
-
-)
-
-);
-
-}
-
-
-
 
 
 function saveEditedTask(updatedTask:Task){
@@ -232,16 +195,7 @@ gap-6
 
 {
 
-tasks
-
-.filter(
-
-(task)=>!task.archived
-
-)
-
-.map(task=>(
-
+tasks.map(task=>(
 
 <TaskCard
 
@@ -256,8 +210,6 @@ setEditingTask(task)
 }
 
 onDelete={deleteTask}
-
-onArchive={archiveTask}
 
 />
 

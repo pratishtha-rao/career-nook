@@ -17,6 +17,4 @@ description?:string;
 
 link?:string;
 
-archived:boolean;
-
 };

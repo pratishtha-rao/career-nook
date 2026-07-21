@@ -45,8 +45,6 @@ email,
 
 notes,
 
-archived:false
-
 };
 
 

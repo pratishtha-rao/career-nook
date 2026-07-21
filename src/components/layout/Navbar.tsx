@@ -17,10 +17,6 @@ const links = [
     name: "Materials",
     href: "/materials",
   },
-  {
-    name: "Archive",
-    href: "/archive",
-  }
 ];
 
 export default function Navbar() {

@@ -53,8 +53,6 @@ description,
 
 link,
 
-archived:false
-
 };
 
 

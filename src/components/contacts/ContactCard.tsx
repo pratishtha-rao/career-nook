@@ -9,8 +9,6 @@ onEdit:(contact:Contact)=>void;
 
 onDelete:(id:number)=>void;
 
-onArchive:(id:number)=>void;
-
 };
 
 
@@ -22,8 +20,6 @@ contact,
 onEdit,
 
 onDelete,
-
-onArchive,
 
 }:Props){
 
@@ -116,30 +112,6 @@ text-white
 Edit
 
 </button>
-
-
-
-
-<button
-
-onClick={()=>onArchive(contact.id)}
-
-className="
-rounded-lg
-bg-purple-600
-px-4
-py-2
-text-white
-"
-
->
-
-Archive
-
-</button>
-
-
-
 
 <button
 

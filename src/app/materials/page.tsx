@@ -26,7 +26,6 @@ name:"Software Engineer Resume",
 type:"Resume",
 description:"Frontend focused resume",
 link:"https://example.com",
-archived:false
 },
 
 
@@ -36,7 +35,6 @@ name:"Google Cover Letter",
 type:"Cover Letter",
 description:"Customized cover letter example",
 link:"",
-archived:false
 }
 
 
@@ -80,41 +78,6 @@ previous.filter(
 );
 
 }
-
-
-
-
-
-function archiveMaterial(id:number){
-
-setMaterials(previous =>
-
-previous.map(material =>
-
-material.id === id
-
-?
-
-{
-
-...material,
-
-archived:true
-
-}
-
-:
-
-material
-
-)
-
-);
-
-}
-
-
-
 
 
 function saveEditedMaterial(updatedMaterial:Material){
@@ -237,12 +200,6 @@ gap-6
 
 materials
 
-.filter(
-
-(material)=>!material.archived
-
-)
-
 .map(material=>(
 
 
@@ -259,8 +216,6 @@ setEditingMaterial(material)
 }
 
 onDelete={deleteMaterial}
-
-onArchive={archiveMaterial}
 
 />
 

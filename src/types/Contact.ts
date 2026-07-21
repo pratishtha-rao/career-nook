@@ -14,5 +14,4 @@ export type Contact = {
   type: ContactType;
   email?: string;
   notes?: string;
-  archived:boolean;
 };

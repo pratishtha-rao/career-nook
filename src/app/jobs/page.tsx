@@ -12,30 +12,27 @@ import EditJobForm from "@/components/jobs/EditJobForm";
 
 export default function JobsPage() {
 
+const [jobs,setJobs] = useState<Job[]>([
 
-  const [jobs, setJobs] = useState<Job[]>([
+{
+id:1,
+company:"Google",
+position:"Software Engineer",
+status:"Applied",
+dateApplied:"2026-07-20",
+notes:"Waiting for response"
+},
 
-    {
-      id: 1,
-      company: "Google",
-      position: "Software Engineer",
-      status: "Applied",
-      dateApplied: "2026-07-20",
-      notes: "Waiting for response",
-      archived: false,
-    },
+{
+id:2,
+company:"Microsoft",
+position:"Frontend Developer",
+status:"Interview",
+dateApplied:"2026-07-18",
+notes:"Technical interview scheduled"
+}
 
-    {
-      id: 2,
-      company: "Microsoft",
-      position: "Frontend Developer",
-      status: "Interview",
-      dateApplied: "2026-07-18",
-      notes: "Technical interview scheduled",
-      archived: false,
-    },
-
-  ]);
+]);
 
   const [editingJob,setEditingJob] = useState<Job | null>(null);
 
@@ -51,9 +48,6 @@ export default function JobsPage() {
 
   }
 
-
-
-
   function deleteJob(id: number) {
 
     setJobs((previous) =>
@@ -65,35 +59,6 @@ export default function JobsPage() {
     );
 
   }
-
-
-
-
-  function archiveJob(id: number) {
-
-    setJobs((previous) =>
-
-      previous.map((job) =>
-
-        job.id === id
-
-          ?
-
-          {
-            ...job,
-            archived: true,
-          }
-
-          :
-
-          job
-
-      )
-
-    );
-
-  }
-
 
 
 
@@ -194,9 +159,6 @@ setEditingJob(null);
 
           {
             jobs
-              .filter(
-                (job) => !job.archived
-              )
               .map((job) => (
 
 
@@ -207,8 +169,6 @@ setEditingJob(null);
                   job={job}
 
                   onDelete={deleteJob}
-
-                  onArchive={archiveJob}
 
                   onEdit={(job)=>setEditingJob(job)}
                 />

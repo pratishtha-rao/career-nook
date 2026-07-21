@@ -28,7 +28,6 @@ export default function JobForm({ onAddJob }: Props) {
       position,
       status,
       dateApplied,
-      archived: false
     };
 
 

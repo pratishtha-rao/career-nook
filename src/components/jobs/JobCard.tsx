@@ -7,8 +7,6 @@ type Props = {
 
 job: Job;
 
-onArchive:(id:number)=>void;
-
 onDelete:(id:number)=>void;
 
 onEdit:(job:Job)=>void;
@@ -19,8 +17,6 @@ onEdit:(job:Job)=>void;
 export default function JobCard({
 
 job,
-
-onArchive,
 
 onDelete,
 
@@ -99,25 +95,6 @@ text-white
 Edit
 
 </Button>
-
-
-
-<Button
-
-onClick={()=>onArchive(job.id)}
-
-className="
-bg-purple-600
-text-white
-"
-
->
-
-Archive
-
-</Button>
-
-
 
 <Button
 

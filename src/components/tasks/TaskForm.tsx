@@ -59,8 +59,6 @@ priority,
 
 status,
 
-archived:false
-
 };
 
 

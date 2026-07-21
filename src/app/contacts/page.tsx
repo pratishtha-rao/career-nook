@@ -24,7 +24,6 @@ const [contacts,setContacts] = useState<Contact[]>([
     role: "Recruiter",
     email: "sarah@google.com",
     notes: "Met at career fair",
-    archived: false,
     type: "Recruiter"
 },
 
@@ -35,7 +34,6 @@ const [contacts,setContacts] = useState<Contact[]>([
     role: "Engineering Manager",
     email: "mike@microsoft.com",
     notes: "Interested in networking",
-    archived: false,
     type: "Recruiter"
 }
 
@@ -56,35 +54,6 @@ previous.filter(
 );
 
 }
-
-
-
-function archiveContact(id:number){
-
-setContacts(previous =>
-
-previous.map(contact =>
-
-contact.id === id
-
-?
-
-{
-...contact,
-archived:true
-}
-
-:
-
-contact
-
-)
-
-);
-
-}
-
-
 
 function saveEditedContact(updatedContact:Contact){
 
@@ -193,9 +162,6 @@ gap-6
 
 contacts
 
-.filter(
-(contact)=>!contact.archived
-)
 
 .map(contact => (
 
@@ -209,8 +175,6 @@ contact={contact}
 onEdit={setEditingContact}
 
 onDelete={deleteContact}
-
-onArchive={archiveContact}
 
 />
 
