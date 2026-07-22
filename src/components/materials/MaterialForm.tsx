@@ -1,18 +1,16 @@
 "use client";
 
-
 import { useState } from "react";
 
 import {
-Material,
-MaterialType
+  CreateMaterial,
+  MaterialType,
 } from "@/types/Material";
 
 
+type Props = {
 
-type Props={
-
-onAddMaterial:(material:Material)=>void;
+  onAddMaterial:(material:CreateMaterial)=>void;
 
 };
 
@@ -20,30 +18,38 @@ onAddMaterial:(material:Material)=>void;
 
 export default function MaterialForm({
 
-onAddMaterial
+  onAddMaterial
 
 }:Props){
 
 
 const [name,setName] = useState("");
-const [type,setType] = useState<MaterialType>("Resume");
+
+const [type,setType] =
+useState<MaterialType>("Resume");
+
 const [description,setDescription] = useState("");
+
 const [link,setLink] = useState("");
+
+
 
 function submit(e:React.FormEvent){
 
 e.preventDefault();
 
 
-const newMaterial:Material={
-id:Date.now(),
-name,
-type,
-description: description || "",
-link,
-};
+onAddMaterial({
 
-onAddMaterial(newMaterial);
+name,
+
+type,
+
+description,
+
+link,
+
+});
 
 
 setName("");
@@ -63,20 +69,28 @@ return (
 onSubmit={submit}
 
 className="
-rounded-xl
 border
+border-blue-100
 bg-white
 p-6
-space-y-4
+shadow-sm
 "
 
 >
 
 
+<div className="
+mb-6
+flex
+items-center
+justify-between
+">
+
+
 <h2 className="
-text-xl
+text-2xl
 font-bold
-text-black
+text-slate-900
 ">
 
 Add Material
@@ -84,35 +98,71 @@ Add Material
 </h2>
 
 
+<span className="
+bg-blue-50
+px-3
+py-1
+text-sm
+font-medium
+text-blue-600
+">
+
+Library
+
+</span>
+
+
+</div>
+
+
+
+
+
+<div className="
+grid
+gap-4
+md:grid-cols-2
+">
+
 
 <input
+
 placeholder="Material name"
+
 value={name}
+
 onChange={(e)=>setName(e.target.value)}
+
 className="
-w-full
-rounded-lg
 border
+border-slate-200
 p-3
-text-black
+outline-none
+focus:border-blue-500
 "
+
 />
+
+
 
 <select
 
 value={type}
 
-onChange={(e)=>setType(e.target.value as MaterialType)}
+onChange={(e)=>
+setType(e.target.value as MaterialType)
+}
 
 className="
-w-full
-rounded-lg
 border
+border-slate-200
 p-3
-text-black
+outline-none
+focus:border-blue-500
 "
 
 >
+
 
 <option>Resume</option>
 
@@ -122,7 +172,11 @@ text-black
 
 <option>Other</option>
 
+
 </select>
+
+
+</div>
 
 
 
@@ -136,37 +190,56 @@ value={description}
 onChange={(e)=>setDescription(e.target.value)}
 
 className="
+mt-4
+min-h-[120px]
 w-full
-rounded-lg
 border
+border-slate-200
 p-3
-text-black
+outline-none
+focus:border-blue-500
 "
 
 />
 
+
+
+
+
 <input
-  placeholder="Link / URL"
-  value={link}
-  onChange={(e)=>setLink(e.target.value)}
-  className="
-  w-full
-  rounded-lg
-  border
-  p-3
-  text-black
-  "
+
+placeholder="Resource URL"
+
+value={link}
+
+onChange={(e)=>setLink(e.target.value)}
+
+className="
+mt-4
+w-full
+border
+border-slate-200
+p-3
+outline-none
+focus:border-blue-500
+"
+
 />
+
+
 
 
 <button
 
 className="
-rounded-lg
+mt-5
 bg-blue-600
-px-5
-py-2
+px-8
+py-3
+font-semibold
 text-white
+hover:bg-blue-700
+transition
 "
 
 >
@@ -181,3 +254,4 @@ Add Material
 );
 
 }
+

@@ -1,52 +1,81 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
-import { Contact, CreateContact } from "@/types/Contact";
+import {
+  Contact,
+  CreateContact
+} from "@/types/Contact";
 
 import ContactCard from "@/components/contacts/ContactCard";
 import ContactForm from "@/components/contacts/ContactForm";
 import EditContactForm from "@/components/contacts/EditContactForm";
-import { useRouter } from "next/navigation";
+
 
 export default function ContactsPage(){
 
-
 const [contacts,setContacts] = useState<Contact[]>([]);
-const router = useRouter();
-
 const [editingContact,setEditingContact] = useState<Contact | null>(null);
 
+const router = useRouter();
 
 
-useEffect(() => {
 
-  async function loadContacts() {
+useEffect(()=>{
 
-    const response = await fetch("/api/contacts");
 
-    const data = await response.json();
+async function loadContacts(){
 
-    if (response.status === 401) {
-      router.push("/login");
-      return;
-    }
+const response = await fetch("/api/contacts");
 
-    if (!response.ok) {
-      console.error(data);
-      setContacts([]);
-      return;
-    }
+const data = await response.json();
 
-    setContacts(Array.isArray(data) ? data : []);
 
-  }
 
-  loadContacts();
+if(response.status === 401){
 
-}, [router]);
+router.push("/login");
+
+return;
+
+}
+
+
+
+if(!response.ok){
+
+setContacts([]);
+
+return;
+
+}
+
+
+
+setContacts(
+Array.isArray(data)
+?
+data
+:
+[]
+);
+
+
+}
+
+
+loadContacts();
+
+
+},[router]);
+
+
+
+
 
 async function addContact(contact:CreateContact){
+
 
 const response = await fetch("/api/contacts",{
 
@@ -61,12 +90,13 @@ body:JSON.stringify(contact)
 });
 
 
-const savedContact = await response.json();
+const saved = await response.json();
+
 
 
 setContacts(previous=>[
-...previous,
-savedContact
+saved,
+...previous
 ]);
 
 
@@ -75,7 +105,9 @@ savedContact
 
 
 
+
 async function deleteContact(id:number){
+
 
 await fetch(`/api/contacts/${id}`,{
 
@@ -87,17 +119,20 @@ method:"DELETE"
 setContacts(previous=>
 
 previous.filter(
-(contact)=>contact.id !== id
+contact=>contact.id!==id
 )
 
 );
+
 
 }
 
 
 
 
+
 async function saveEditedContact(contact:Contact){
+
 
 await fetch(`/api/contacts/${contact.id}`,{
 
@@ -112,18 +147,15 @@ body:JSON.stringify(contact)
 });
 
 
+
 setContacts(previous=>
 
 previous.map(item=>
 
-item.id === contact.id
-
+item.id===contact.id
 ?
-
 contact
-
 :
-
 item
 
 )
@@ -131,45 +163,72 @@ item
 );
 
 
+
 setEditingContact(null);
+
 
 }
 
 
 
 
+
 return (
 
-<main className="min-h-screen bg-slate-100">
+<main className="
+min-h-screen
+bg-[#f5f9ff]
+">
 
-<div className="mx-auto max-w-6xl px-8 py-12">
+
+<div className="
+mx-auto
+max-w-6xl
+px-8
+py-10
+">
 
 
-<h1 className="text-4xl font-bold text-black">
-Contacts
+<div className="mb-8">
+
+
+<h1 className="
+text-4xl
+font-bold
+text-slate-950
+">
+
+Network
+
 </h1>
 
 
-<p className="mt-3 text-slate-600">
-Manage your professional connections.
+<p className="
+mt-2
+text-slate-600
+">
+
+Manage recruiters, mentors, referrals, and professional relationships.
+
 </p>
 
-
-
-<div className="mt-8">
-
-<ContactForm
-
-onAddContact={addContact}
-
-/>
 
 </div>
 
 
 
+
+<ContactForm
+onAddContact={addContact}
+/>
+
+
+
+
 {
 editingContact && (
+
+<div className="mt-6">
 
 <EditContactForm
 
@@ -181,6 +240,8 @@ onCancel={()=>setEditingContact(null)}
 
 />
 
+</div>
+
 )
 
 }
@@ -188,11 +249,16 @@ onCancel={()=>setEditingContact(null)}
 
 
 
-<div className="mt-10 grid gap-6">
+
+<div className="
+mt-8
+grid
+gap-5
+md:grid-cols-2
+">
 
 
 {
-
 contacts.map(contact=>(
 
 
@@ -202,9 +268,7 @@ key={contact.id}
 
 contact={contact}
 
-onEdit={(contact)=>
-setEditingContact(contact)
-}
+onEdit={setEditingContact}
 
 onDelete={deleteContact}
 
@@ -228,3 +292,4 @@ onDelete={deleteContact}
 
 
 }
+

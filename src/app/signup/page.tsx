@@ -5,6 +5,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 
+
 export default function SignupPage(){
 
 
@@ -24,6 +25,7 @@ const [error,setError]=useState("");
 const [message,setMessage]=useState("");
 
 const [loading,setLoading]=useState(false);
+
 
 
 
@@ -62,6 +64,7 @@ setLoading(false);
 return;
 
 }
+
 
 
 
@@ -115,9 +118,7 @@ setMessage(
 setLoading(false);
 
 
-
 }
-
 
 
 
@@ -129,8 +130,48 @@ min-h-screen
 flex
 items-center
 justify-center
-bg-slate-100
+bg-[#f5f9ff]
+px-6
 ">
+
+
+<div className="
+w-full
+max-w-md
+">
+
+
+<div className="
+mb-8
+text-center
+">
+
+
+<h1 className="
+text-4xl
+font-bold
+text-slate-950
+">
+
+Create Account
+
+</h1>
+
+
+<p className="
+mt-3
+text-slate-600
+">
+
+Start organizing your career journey with Career Nook.
+
+</p>
+
+
+</div>
+
+
+
 
 
 <form
@@ -139,50 +180,78 @@ onSubmit={signup}
 
 className="
 bg-white
+border
+border-blue-100
 p-8
-rounded-xl
-space-y-4
-w-96
-shadow
+shadow-sm
+space-y-5
 "
 
 
 >
 
 
-<h1 className="
-text-2xl
-font-bold
+
+
+
+<div>
+
+<label className="
+text-sm
+font-medium
+text-slate-700
 ">
 
-Create Account
+Name
 
-</h1>
-
+</label>
 
 
 <input
 
-placeholder="Name"
+placeholder="Your name"
 
 value={name}
 
 onChange={(e)=>setName(e.target.value)}
 
 className="
-border
-p-3
+mt-2
 w-full
-rounded
+border
+border-slate-200
+p-3
+text-slate-900
+outline-none
+focus:border-blue-500
+transition
 "
 
 />
 
+</div>
+
+
+
+
+
+
+<div>
+
+<label className="
+text-sm
+font-medium
+text-slate-700
+">
+
+Email
+
+</label>
 
 
 <input
 
-placeholder="Email"
+placeholder="you@example.com"
 
 type="email"
 
@@ -191,19 +260,42 @@ value={email}
 onChange={(e)=>setEmail(e.target.value)}
 
 className="
-border
-p-3
+mt-2
 w-full
-rounded
+border
+border-slate-200
+p-3
+text-slate-900
+outline-none
+focus:border-blue-500
+transition
 "
 
 />
 
+</div>
+
+
+
+
+
+
+<div>
+
+<label className="
+text-sm
+font-medium
+text-slate-700
+">
+
+Password
+
+</label>
 
 
 <input
 
-placeholder="Password"
+placeholder="Create a password"
 
 type="password"
 
@@ -212,13 +304,23 @@ value={password}
 onChange={(e)=>setPassword(e.target.value)}
 
 className="
-border
-p-3
+mt-2
 w-full
-rounded
+border
+border-slate-200
+p-3
+text-slate-900
+outline-none
+focus:border-blue-500
+transition
 "
 
 />
+
+</div>
+
+
+
 
 
 
@@ -227,24 +329,36 @@ rounded
 disabled={loading}
 
 className="
-bg-blue-600
-text-white
-rounded-lg
-p-3
 w-full
+bg-blue-600
+px-5
+py-3
+font-semibold
+text-white
+hover:bg-blue-700
+transition
+disabled:opacity-50
 "
 
 >
 
 {
+
 loading
+
 ?
-"Creating..."
+
+"Creating Account..."
+
 :
-"Sign Up"
+
+"Create Account"
+
 }
 
 </button>
+
+
 
 
 
@@ -253,7 +367,12 @@ loading
 message && (
 
 <p className="
-text-green-600
+border
+border-green-200
+bg-green-50
+p-3
+text-sm
+text-green-700
 ">
 
 {message}
@@ -267,11 +386,17 @@ text-green-600
 
 
 
+
 {
 error && (
 
 <p className="
-text-red-500
+border
+border-red-200
+bg-red-50
+p-3
+text-sm
+text-red-600
 ">
 
 {error}
@@ -283,7 +408,42 @@ text-red-500
 }
 
 
+
+
+<p className="
+text-center
+text-sm
+text-slate-600
+">
+
+Already have an account?
+
+<a
+
+href="/login"
+
+className="
+ml-1
+font-semibold
+text-blue-600
+hover:text-blue-700
+"
+
+>
+
+Login
+
+</a>
+
+</p>
+
+
+
+
 </form>
+
+
+</div>
 
 
 </main>

@@ -16,12 +16,13 @@ onAddTask:(task:CreateTask)=>void;
 
 };
 
+
+
 export default function TaskForm({
 
 onAddTask
 
 }:Props){
-
 
 
 const [title,setTitle]=useState("");
@@ -37,12 +38,13 @@ const [status,setStatus]=useState<TaskStatus>("Not Started");
 
 
 
+
 function submit(e:React.FormEvent){
 
 e.preventDefault();
 
 
-const newTask:CreateTask={
+onAddTask({
 
 title,
 
@@ -52,12 +54,9 @@ dueDate,
 
 priority,
 
-status,
+status
 
-};
-
-onAddTask(newTask);
-
+});
 
 
 setTitle("");
@@ -77,20 +76,20 @@ return (
 onSubmit={submit}
 
 className="
-rounded-xl
 border
+border-blue-100
 bg-white
 p-6
-space-y-4
+shadow-sm
 "
 
 >
 
 
 <h2 className="
-text-xl
+text-2xl
 font-bold
-text-black
+mb-5
 ">
 
 Add Task
@@ -99,6 +98,12 @@ Add Task
 
 
 
+<div className="
+grid
+gap-4
+md:grid-cols-2
+">
+
 
 <input
 
@@ -106,35 +111,13 @@ placeholder="Task title"
 
 value={title}
 
-onChange={(e)=>setTitle(e.target.value)}
+onChange={e=>setTitle(e.target.value)}
 
 className="
-w-full
-rounded-lg
 border
 p-3
-text-black
-"
-
-/>
-
-
-
-
-<textarea
-
-placeholder="Description"
-
-value={description}
-
-onChange={(e)=>setDescription(e.target.value)}
-
-className="
-w-full
-rounded-lg
-border
-p-3
-text-black
+focus:border-blue-500
+outline-none
 "
 
 />
@@ -148,18 +131,14 @@ type="date"
 
 value={dueDate}
 
-onChange={(e)=>setDueDate(e.target.value)}
+onChange={e=>setDueDate(e.target.value)}
 
 className="
-w-full
-rounded-lg
 border
 p-3
-text-black
 "
 
 />
-
 
 
 
@@ -167,33 +146,21 @@ text-black
 
 value={priority}
 
-onChange={(e)=>setPriority(e.target.value as TaskPriority)}
+onChange={e=>setPriority(e.target.value as TaskPriority)}
 
 className="
-w-full
-rounded-lg
 border
 p-3
-text-black
 "
 
 >
 
-<option>
-Low
-</option>
-
-<option>
-Medium
-</option>
-
-<option>
-High
-</option>
+<option>Low</option>
+<option>Medium</option>
+<option>High</option>
 
 
 </select>
-
 
 
 
@@ -202,32 +169,47 @@ High
 
 value={status}
 
-onChange={(e)=>setStatus(e.target.value as TaskStatus)}
+onChange={e=>setStatus(e.target.value as TaskStatus)}
 
 className="
-w-full
-rounded-lg
 border
 p-3
-text-black
 "
 
 >
 
-<option>
-Not Started
-</option>
-
-<option>
-In Progress
-</option>
-
-<option>
-Completed
-</option>
+<option>Not Started</option>
+<option>In Progress</option>
+<option>Completed</option>
 
 
 </select>
+
+
+</div>
+
+
+
+
+
+<textarea
+
+placeholder="Description"
+
+value={description}
+
+onChange={e=>setDescription(e.target.value)}
+
+className="
+mt-4
+h-28
+w-full
+border
+p-3
+"
+
+/>
+
 
 
 
@@ -235,11 +217,13 @@ Completed
 <button
 
 className="
-rounded-lg
+mt-5
 bg-blue-600
-px-5
-py-2
+px-8
+py-3
+font-semibold
 text-white
+hover:bg-blue-700
 "
 
 >

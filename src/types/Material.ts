@@ -1,18 +1,25 @@
+export type MaterialType =
+  | "Resume"
+  | "Cover Letter"
+  | "Portfolio"
+  | "Other";
+
+
 export type Material = {
 
-id:number;
+  id:number;
 
-name:string;
+  name:string;
 
-type:string;
+  type:MaterialType;
 
-description?:string;
+  description?:string;
 
-link?:string;
+  link?:string;
 
-createdAt:string;
+  createdAt:string;
 
-userId:string;
+  userId:string;
 
 };
 
@@ -20,12 +27,12 @@ userId:string;
 
 export type CreateMaterial = {
 
-name:string;
+  name:string;
 
-type:string;
+  type:MaterialType;
 
-description?:string;
+  description?:string;
 
-link?:string;
+  link?:string;
 
 };

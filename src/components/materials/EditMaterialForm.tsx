@@ -1,22 +1,20 @@
 "use client";
 
-
 import { useState } from "react";
 
 import {
-Material,
-MaterialType
+  Material,
+  MaterialType,
 } from "@/types/Material";
 
 
+type Props = {
 
-type Props={
+  material: Material;
 
-material:Material;
+  onSave: (material: Material) => void;
 
-onSave:(material:Material)=>void;
-
-onCancel:()=>void;
+  onCancel: () => void;
 
 };
 
@@ -24,208 +22,279 @@ onCancel:()=>void;
 
 export default function EditMaterialForm({
 
-material,
+  material,
 
-onSave,
+  onSave,
 
-onCancel
+  onCancel,
 
-}:Props){
+}: Props) {
 
 
-const [title,setTitle]=useState(material.name);
+  const [name, setName] = useState(material.name);
 
-const [type,setType]=useState<MaterialType>(material.type);
+  const [type, setType] = useState<MaterialType>(
+    material.type
+  );
 
-const [description,setDescription]=useState(material.description ?? "");
+  const [description, setDescription] = useState(
+    material.description ?? ""
+  );
 
-const [link,setLink]=useState(material.link ?? "");
+  const [link, setLink] = useState(
+    material.link ?? ""
+  );
 
 
 
+  function submit(e: React.FormEvent) {
 
-function submit(e:React.FormEvent){
+    e.preventDefault();
 
-e.preventDefault();
 
+    onSave({
 
-onSave({
+      ...material,
 
-...material,
+      name,
 
-name:title,
+      type,
 
-type,
+      description,
 
-description,
+      link,
 
-link
+    });
 
-});
+  }
 
 
-}
 
+  return (
 
+    <form
 
-return (
+      onSubmit={submit}
 
-<form
+      className="
+        border
+        border-blue-100
+        bg-white
+        p-6
+        shadow-sm
+      "
 
-onSubmit={submit}
+    >
 
-className="
-rounded-xl
-border
-bg-white
-p-6
-space-y-4
-"
 
->
+      <div className="
+        mb-6
+        flex
+        items-center
+        justify-between
+      ">
 
 
-<h2 className="
-text-xl
-font-bold
-text-black
-">
+        <h2 className="
+          text-2xl
+          font-bold
+          text-slate-900
+        ">
+          Edit Material
+        </h2>
 
-Edit Material
 
-</h2>
+        <span className="
+          bg-blue-50
+          px-3
+          py-1
+          text-sm
+          font-medium
+          text-blue-600
+        ">
+          Update
+        </span>
 
 
+      </div>
 
-<input
 
-value={title}
 
-onChange={(e)=>setTitle(e.target.value)}
 
-className="
-w-full
-rounded-lg
-border
-p-3
-text-black
-"
+      <div className="
+        grid
+        gap-4
+      ">
 
-/>
 
+        <input
 
+          value={name}
 
-<select
+          onChange={(e)=>setName(e.target.value)}
 
-value={type}
+          placeholder="Material name"
 
-onChange={(e)=>setType(e.target.value as MaterialType)}
+          className="
+            border
+            border-slate-200
+            p-3
+            outline-none
+            focus:border-blue-500
+          "
 
-className="
-w-full
-rounded-lg
-border
-p-3
-text-black
-"
+        />
 
->
 
-<option>Resume</option>
 
-<option>Cover Letter</option>
+        <select
 
-<option>Portfolio</option>
+          value={type}
 
-<option>Other</option>
+          onChange={(e)=>
+            setType(
+              e.target.value as MaterialType
+            )
+          }
 
-</select>
+          className="
+            border
+            border-slate-200
+            p-3
+            outline-none
+            focus:border-blue-500
+          "
 
+        >
 
+          <option>
+            Resume
+          </option>
 
+          <option>
+            Cover Letter
+          </option>
 
-<textarea
+          <option>
+            Portfolio
+          </option>
 
-value={description}
+          <option>
+            Other
+          </option>
 
-onChange={(e)=>setDescription(e.target.value)}
+        </select>
 
-className="
-w-full
-rounded-lg
-border
-p-3
-text-black
-"
 
-/>
 
 
 
+        <textarea
 
-<input
+          value={description}
 
-value={link}
+          onChange={(e)=>setDescription(e.target.value)}
 
-onChange={(e)=>setLink(e.target.value)}
+          placeholder="Description"
 
-className="
-w-full
-rounded-lg
-border
-p-3
-text-black
-"
+          className="
+            min-h-[120px]
+            border
+            border-slate-200
+            p-3
+            outline-none
+            focus:border-blue-500
+          "
 
-/>
+        />
 
 
 
 
-<button
 
-className="
-rounded-lg
-bg-blue-600
-px-5
-py-2
-text-white
-"
+        <input
 
->
+          value={link}
 
-Save
+          onChange={(e)=>setLink(e.target.value)}
 
-</button>
+          placeholder="Resource URL"
 
+          className="
+            border
+            border-slate-200
+            p-3
+            outline-none
+            focus:border-blue-500
+          "
 
+        />
 
-<button
 
-type="button"
+      </div>
 
-onClick={onCancel}
 
-className="
-ml-3
-rounded-lg
-border
-px-5
-py-2
-text-black
-"
 
->
 
-Cancel
 
-</button>
+      <div className="
+        mt-6
+        flex
+        gap-3
+      ">
 
 
+        <button
 
-</form>
+          type="submit"
 
-);
+          className="
+            bg-blue-600
+            px-7
+            py-3
+            font-semibold
+            text-white
+            transition
+            hover:bg-blue-700
+          "
 
+        >
+
+          Save Changes
+
+        </button>
+
+
+
+        <button
+
+          type="button"
+
+          onClick={onCancel}
+
+          className="
+            border
+            border-slate-300
+            px-7
+            py-3
+            font-semibold
+            text-slate-700
+            hover:border-blue-500
+            hover:text-blue-600
+          "
+
+        >
+
+          Cancel
+
+        </button>
+
+
+      </div>
+
+
+    </form>
+
+  );
 
 }

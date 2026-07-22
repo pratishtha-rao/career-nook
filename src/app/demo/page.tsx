@@ -8,12 +8,11 @@ import DemoMaterials from "@/components/demo/DemoMaterials";
 
 export default function DemoPage(){
 
-
 return (
 
 <main className="
 min-h-screen
-bg-slate-100
+bg-[#f5f9ff]
 ">
 
 
@@ -26,14 +25,17 @@ py-12
 
 
 <div className="
-rounded-xl
+rounded-2xl
 bg-blue-600
+p-8
+shadow-lg
 text-white
-p-6
 ">
 
+
 <h1 className="
-text-3xl
+font-header
+text-4xl
 font-bold
 ">
 
@@ -42,17 +44,23 @@ Try Career Nook
 </h1>
 
 
+
 <p className="
-mt-2
+mt-3
+max-w-3xl
+text-lg
+text-blue-100
 ">
 
 This demo lets you organize jobs, contacts, tasks, and materials.
-Create an account to permanently save your information.
+Create an account to unlock more features and save your data.
 
 </p>
 
 
 </div>
+
+
 
 
 
@@ -62,38 +70,88 @@ grid
 gap-8
 ">
 
+
+<div>
+
 <DemoJobs/>
+
+</div>
+
+
+
+<div>
 
 <DemoContacts/>
 
+</div>
+
+
+
+<div>
+
 <DemoTasks/>
+
+</div>
+
+
+
+<div>
 
 <DemoMaterials/>
 
+</div>
+
+
+
+
 <div className="
-mt-10
+rounded-2xl
+border
+border-blue-100
+bg-white
+p-8
 text-center
+shadow-sm
 ">
 
-<p>
+
+<p className="
+text-slate-700
+">
+
 Enjoying Career Nook?
+
 </p>
 
 
+
 <a
+
 href="/signup"
+
 className="
+mt-3
+inline-block
+font-semibold
 text-blue-600
-font-bold
+hover:text-blue-800
+hover:underline
 "
+
 >
-Create an account and save your data
+
+Create an account and save your data →
+
 </a>
 
 
-</div>
 
 </div>
+
+
+
+</div>
+
 
 
 </div>

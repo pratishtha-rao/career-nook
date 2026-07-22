@@ -1,7 +1,7 @@
 import { Task } from "@/types/Task";
 
 
-type Props = {
+type Props={
 
 task:Task;
 
@@ -19,26 +19,36 @@ task,
 
 onEdit,
 
-onDelete,
+onDelete
 
 }:Props){
+
 
 
 return (
 
 <div className="
-rounded-xl
 border
+border-blue-100
 bg-white
 p-6
 shadow-sm
-text-black
+hover:shadow-lg
+transition
+">
+
+
+<div className="
+flex
+justify-between
+items-start
 ">
 
 
 <h2 className="
-text-xl
+text-2xl
 font-bold
+text-slate-950
 ">
 
 {task.title}
@@ -47,7 +57,30 @@ font-bold
 
 
 
-<p className="mt-2">
+<span className="
+bg-blue-100
+px-3
+py-1
+text-sm
+font-semibold
+text-blue-700
+">
+
+{task.status}
+
+</span>
+
+
+</div>
+
+
+
+
+
+<p className="
+mt-3
+text-slate-600
+">
 
 {task.description}
 
@@ -55,33 +88,54 @@ font-bold
 
 
 
-<p>
 
-Due: {task.dueDate}
 
+<div className="
+mt-5
+grid
+grid-cols-2
+gap-3
+text-sm
+">
+
+
+<div>
+
+<p className="text-slate-500">
+Due Date
 </p>
 
-
-
-<p>
-
-Priority: {task.priority}
-
+<p className="font-semibold">
+{task.dueDate}
 </p>
 
+</div>
 
 
-<p>
 
-Status: {task.status}
 
+<div>
+
+<p className="text-slate-500">
+Priority
 </p>
+
+<p className="font-semibold">
+{task.priority}
+</p>
+
+</div>
+
+
+
+</div>
+
 
 
 
 
 <div className="
-mt-5
+mt-6
 flex
 gap-3
 ">
@@ -92,11 +146,13 @@ gap-3
 onClick={()=>onEdit(task)}
 
 className="
-rounded-lg
-bg-yellow-500
-px-4
+bg-blue-600
+px-5
 py-2
+font-semibold
 text-white
+hover:bg-blue-700
+transition
 "
 
 >
@@ -106,16 +162,21 @@ Edit
 </button>
 
 
+
+
 <button
 
 onClick={()=>onDelete(task.id)}
 
 className="
-rounded-lg
-bg-red-600
-px-4
+border
+border-red-200
+px-5
 py-2
-text-white
+font-semibold
+text-red-600
+hover:bg-red-50
+transition
 "
 
 >
@@ -125,12 +186,12 @@ Delete
 </button>
 
 
-
 </div>
 
 
 </div>
 
 );
+
 
 }

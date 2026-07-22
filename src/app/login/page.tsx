@@ -1,10 +1,10 @@
 "use client";
 
-
-import {useState} from "react";
-import {createClient} from "@/lib/supabase";
-import {useRouter} from "next/navigation";
+import { useState } from "react";
+import { createClient } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
 import { getAuthErrorMessage } from "@/lib/authErrors";
+
 
 export default function LoginPage(){
 
@@ -20,7 +20,10 @@ const [password,setPassword] = useState("");
 
 const [error,setError] = useState("");
 
-const [loading,setLoading]=useState(false);
+const [loading,setLoading] = useState(false);
+
+
+
 
 
 async function login(e:React.FormEvent){
@@ -29,6 +32,8 @@ e.preventDefault();
 
 setLoading(true);
 setError("");
+
+
 
 const {
 error
@@ -39,6 +44,7 @@ email,
 password
 
 });
+
 
 
 
@@ -54,14 +60,17 @@ return;
 
 }
 
+
+
 setLoading(false);
 
 router.push("/jobs");
 
 router.refresh();
 
-
 }
+
+
 
 
 
@@ -72,8 +81,63 @@ min-h-screen
 flex
 items-center
 justify-center
-bg-slate-100
+bg-[#f5f9ff]
+px-6
 ">
+
+
+
+<div className="
+w-full
+max-w-md
+">
+
+
+
+<div className="
+rounded-2xl
+border
+border-blue-100
+bg-white
+p-8
+shadow-lg
+shadow-blue-100
+">
+
+
+
+<div className="
+text-center
+mb-8
+">
+
+
+<h1 className="
+text-4xl
+font-bold
+text-slate-950
+">
+
+Career Nook Login
+
+</h1>
+
+
+<p className="
+mt-3
+text-slate-600
+">
+
+Welcome back. Continue organizing your career journey.
+
+</p>
+
+
+</div>
+
+
+
+
 
 
 <form
@@ -81,55 +145,143 @@ bg-slate-100
 onSubmit={login}
 
 className="
-bg-white
-p-8
-rounded-xl
-shadow
-space-y-4
-w-96
+space-y-5
 "
 
 >
 
+
+
+<div>
+
+
+<label className="
+mb-2
+block
+text-sm
+font-semibold
+text-slate-700
+">
+
+Email
+
+</label>
+
+
+
 <input
 
-placeholder="Email"
-
 type="email"
+
+placeholder="you@example.com"
 
 value={email}
 
 onChange={(e)=>setEmail(e.target.value)}
 
 className="
-border
-rounded
-p-3
 w-full
+rounded-xl
+border
+border-slate-200
+p-3
+text-slate-900
+outline-none
+transition
+focus:border-blue-500
+focus:ring-2
+focus:ring-blue-100
 "
 
 />
 
 
+</div>
+
+
+
+
+
+
+
+<div>
+
+
+<label className="
+mb-2
+block
+text-sm
+font-semibold
+text-slate-700
+">
+
+Password
+
+</label>
+
+
 
 <input
 
-placeholder="Password"
-
 type="password"
+
+placeholder="Enter your password"
 
 value={password}
 
 onChange={(e)=>setPassword(e.target.value)}
 
 className="
-border
-rounded
-p-3
 w-full
+rounded-xl
+border
+border-slate-200
+p-3
+text-slate-900
+outline-none
+transition
+focus:border-blue-500
+focus:ring-2
+focus:ring-blue-100
 "
 
 />
+
+
+</div>
+
+
+
+
+
+
+
+
+{
+error && (
+
+<div className="
+rounded-lg
+bg-red-50
+border
+border-red-200
+p-3
+text-sm
+text-red-600
+">
+
+{error}
+
+</div>
+
+)
+
+}
+
+
+
+
+
 
 
 
@@ -138,48 +290,96 @@ w-full
 disabled={loading}
 
 className="
-bg-blue-600
-text-white
-rounded
-p-3
 w-full
+rounded-xl
+bg-blue-600
+py-3
+font-semibold
+text-white
+transition
+hover:bg-blue-700
+disabled:cursor-not-allowed
+disabled:opacity-60
 "
 
 >
 
 {
+
 loading
+
 ?
+
 "Logging in..."
+
 :
+
 "Login"
+
 }
+
 
 </button>
 
 
 
-{
-error && (
-
-<p className="
-text-red-500
-">
-
-{error}
-
-</p>
-
-)
-
-}
 
 
 </form>
 
 
+
+
+
+<div className="
+mt-6
+text-center
+text-sm
+text-slate-600
+">
+
+
+<p>
+
+Don&apos;t have an account?
+
+</p>
+
+
+<a
+
+href="/signup"
+
+className="
+mt-1
+inline-block
+font-semibold
+text-blue-600
+hover:text-blue-700
+"
+
+>
+
+Create one
+
+</a>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+</div>
+
+
 </main>
 
 );
+
 
 }

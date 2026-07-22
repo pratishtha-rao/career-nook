@@ -255,7 +255,7 @@ min-h-screen
 flex
 items-center
 justify-center
-bg-slate-100
+bg-[#f5f9ff]
 ">
 
 
@@ -284,13 +284,12 @@ return (
 
 <main className="
 min-h-screen
-bg-slate-100
+bg-[#f5f9ff]
 ">
-
 
 <div className="
 mx-auto
-max-w-6xl
+max-w-7xl
 px-8
 py-12
 ">
@@ -371,22 +370,12 @@ onCancel={()=>setEditingMaterial(null)}
 
 }
 
-
-
-
-
-
-
-
-
 <div className="
-mt-10
+mt-8
 grid
-gap-6
+gap-5
+md:grid-cols-2
 ">
-
-
-
 
 
 {

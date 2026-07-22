@@ -1,10 +1,10 @@
 "use client";
 
-import {useState} from "react";
-import {getDemoData,saveDemoData} from "@/lib/demoStorage";
+import { useState } from "react";
+import { getDemoData, saveDemoData } from "@/lib/demoStorage";
 
 
-type Contact={
+type Contact = {
 
 id:number;
 name:string;
@@ -21,18 +21,52 @@ notes?:string;
 export default function DemoContacts(){
 
 
-const [contacts,setContacts]=useState<Contact[]>(()=> 
+const [contacts,setContacts] = useState<Contact[]>(()=> 
 getDemoData<Contact>("demo_contacts")
 );
 
 
 
-const [name,setName]=useState("");
-const [company,setCompany]=useState("");
-const [role,setRole]=useState("");
-const [type,setType]=useState("Recruiter");
-const [email,setEmail]=useState("");
-const [notes,setNotes]=useState("");
+const [editingContact,setEditingContact] = useState<Contact | null>(null);
+
+
+
+const [name,setName] = useState("");
+const [company,setCompany] = useState("");
+const [role,setRole] = useState("");
+const [type,setType] = useState("Recruiter");
+const [email,setEmail] = useState("");
+const [notes,setNotes] = useState("");
+
+
+
+
+
+function resetForm(){
+
+setName("");
+setCompany("");
+setRole("");
+setType("Recruiter");
+setEmail("");
+setNotes("");
+
+}
+
+
+
+
+
+function saveData(updated:Contact[]){
+
+setContacts(updated);
+
+saveDemoData(
+"demo_contacts",
+updated
+);
+
+}
 
 
 
@@ -46,39 +80,107 @@ const contact:Contact={
 id:Date.now(),
 
 name,
+
 company,
+
 role,
+
 type,
+
 email,
+
 notes
 
 };
 
 
 
-const updated=[
+saveData([
 
 contact,
 ...contacts
 
-];
+]);
 
 
-setContacts(updated);
+resetForm();
+
+}
 
 
-saveDemoData(
-"demo_contacts",
-updated
+
+
+
+function startEdit(contact:Contact){
+
+
+setEditingContact(contact);
+
+
+setName(contact.name);
+
+setCompany(contact.company);
+
+setRole(contact.role);
+
+setType(contact.type);
+
+setEmail(contact.email ?? "");
+
+setNotes(contact.notes ?? "");
+
+}
+
+
+
+
+
+function saveEdit(){
+
+
+if(!editingContact) return;
+
+
+
+const updated = contacts.map(contact =>
+
+contact.id === editingContact.id
+
+?
+
+{
+
+...contact,
+
+name,
+
+company,
+
+role,
+
+type,
+
+email,
+
+notes
+
+}
+
+:
+
+contact
+
 );
 
 
 
-setName("");
-setCompany("");
-setRole("");
-setEmail("");
-setNotes("");
+saveData(updated);
+
+
+setEditingContact(null);
+
+resetForm();
+
 
 }
 
@@ -89,23 +191,17 @@ setNotes("");
 function deleteContact(id:number){
 
 
-const updated =
-contacts.filter(
-contact=>contact.id!==id
+const updated = contacts.filter(
+
+contact=>contact.id !== id
+
 );
 
 
-setContacts(updated);
-
-
-saveDemoData(
-"demo_contacts",
-updated
-);
+saveData(updated);
 
 
 }
-
 
 
 
@@ -116,97 +212,245 @@ return (
 <section>
 
 
-<h2 className="text-2xl font-bold">
+<h2 className="
+text-2xl
+font-bold
+text-slate-900
+">
+
 Contacts
+
 </h2>
 
 
 
+
+
 <div className="
-bg-white
-p-5
-rounded-xl
-space-y-3
 mt-4
+rounded-xl
+border
+border-blue-100
+bg-white
+p-6
+shadow-sm
+space-y-3
 ">
 
 
+
+
+
 <input
+
 placeholder="Name"
-className="border p-2 w-full"
+
 value={name}
+
 onChange={e=>setName(e.target.value)}
+
+className="
+w-full
+rounded-lg
+border
+border-slate-200
+p-3
+"
+
 />
 
 
+
+
 <input
+
 placeholder="Company"
-className="border p-2 w-full"
+
 value={company}
+
 onChange={e=>setCompany(e.target.value)}
+
+className="
+w-full
+rounded-lg
+border
+border-slate-200
+p-3
+"
+
 />
+
+
 
 
 <input
+
 placeholder="Role"
-className="border p-2 w-full"
+
 value={role}
+
 onChange={e=>setRole(e.target.value)}
+
+className="
+w-full
+rounded-lg
+border
+border-slate-200
+p-3
+"
+
 />
+
 
 
 
 <select
-className="border p-2 w-full"
+
 value={type}
+
 onChange={e=>setType(e.target.value)}
+
+className="
+w-full
+rounded-lg
+border
+border-slate-200
+p-3
+"
+
 >
 
 <option>Recruiter</option>
+
 <option>Hiring Manager</option>
+
 <option>Employee</option>
+
+<option>Friend</option>
+
 <option>Other</option>
 
 </select>
 
 
 
+
+
 <input
+
 placeholder="Email"
-className="border p-2 w-full"
+
 value={email}
+
 onChange={e=>setEmail(e.target.value)}
+
+className="
+w-full
+rounded-lg
+border
+border-slate-200
+p-3
+"
+
 />
+
 
 
 
 <textarea
+
 placeholder="Notes"
-className="border p-2 w-full"
+
 value={notes}
+
 onChange={e=>setNotes(e.target.value)}
+
+className="
+w-full
+rounded-lg
+border
+border-slate-200
+p-3
+"
+
 />
+
+
+
 
 
 
 <button
 
-onClick={addContact}
+onClick={
+editingContact
+?
+saveEdit
+:
+addContact
+}
 
 className="
-bg-blue-600
-hover:bg-blue-700
-text-white
-px-5
-py-2
 rounded-lg
+bg-blue-600
+px-5
+py-3
+font-semibold
+text-white
+hover:bg-blue-700
 "
 
 >
 
-Add Contact
+{
+editingContact
+?
+"Save Contact"
+:
+"Add Contact"
+}
 
 </button>
+
+
+
+
+
+{
+editingContact && (
+
+<button
+
+type="button"
+
+onClick={()=>{
+
+setEditingContact(null);
+
+resetForm();
+
+}}
+
+className="
+ml-3
+rounded-lg
+border
+px-5
+py-3
+font-semibold
+hover:bg-slate-50
+"
+
+>
+
+Cancel
+
+</button>
+
+)
+
+}
+
 
 
 </div>
@@ -215,7 +459,21 @@ Add Contact
 
 
 
+
+
+
+
+<div className="
+mt-8
+space-y-5
+">
+
+
+
+
+
 {
+
 contacts.map(contact=>(
 
 
@@ -224,41 +482,171 @@ contacts.map(contact=>(
 key={contact.id}
 
 className="
-bg-white
-mt-4
 border
-rounded-xl
-p-5
+border-blue-100
+bg-white
+p-6
+shadow-sm
+transition
+hover:-translate-y-1
+hover:shadow-lg
 "
 
 >
 
 
-<h3 className="font-bold text-lg">
+
+
+<div className="
+flex
+justify-between
+items-start
+">
+
+
+<div>
+
+
+<h3 className="
+text-xl
+font-bold
+text-slate-900
+">
 
 {contact.name}
 
 </h3>
 
 
-<p>{contact.company}</p>
 
-<p>{contact.role}</p>
+<p className="
+mt-1
+text-slate-600
+">
 
-<p>{contact.type}</p>
+{contact.company}
+
+</p>
+
+
+</div>
+
+
+
+<span className="
+rounded-full
+bg-blue-100
+px-3
+py-1
+text-xs
+font-semibold
+text-blue-700
+">
+
+{contact.type}
+
+</span>
+
+
+
+</div>
+
+
+
+
+
+
+
+<p className="
+mt-4
+text-slate-700
+">
+
+Role: {contact.role}
+
+</p>
+
+
+
+
+
 
 
 {
-contact.email &&
-<p>{contact.email}</p>
+contact.email && (
+
+<p className="
+mt-2
+text-slate-600
+">
+
+{contact.email}
+
+</p>
+
+)
+
 }
 
 
 
+
+
+
+
 {
-contact.notes &&
-<p>{contact.notes}</p>
+contact.notes && (
+
+<div className="
+mt-4
+rounded-lg
+bg-blue-50
+p-3
+text-slate-700
+">
+
+{contact.notes}
+
+</div>
+
+)
+
 }
+
+
+
+
+
+
+
+
+<div className="
+mt-5
+flex
+gap-3
+">
+
+
+
+<button
+
+onClick={()=>startEdit(contact)}
+
+className="
+rounded-lg
+border
+border-blue-200
+px-4
+py-2
+text-blue-600
+hover:bg-blue-50
+"
+
+>
+
+Edit
+
+</button>
 
 
 
@@ -268,14 +656,12 @@ contact.notes &&
 onClick={()=>deleteContact(contact.id)}
 
 className="
-mt-4
+rounded-lg
 bg-red-600
-hover:bg-red-700
-text-white
 px-4
 py-2
-rounded-lg
-font-semibold
+text-white
+hover:bg-red-700
 "
 
 >
@@ -286,11 +672,24 @@ Delete
 
 
 
+
+</div>
+
+
+
+
+
 </div>
 
 
 ))
+
 }
+
+
+
+
+</div>
 
 
 
@@ -300,3 +699,4 @@ Delete
 
 
 }
+

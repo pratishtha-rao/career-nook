@@ -1,10 +1,10 @@
 "use client";
 
-import {useState} from "react";
-import {getDemoData,saveDemoData} from "@/lib/demoStorage";
+import { useState } from "react";
+import { getDemoData, saveDemoData } from "@/lib/demoStorage";
 
 
-type Material={
+type Material = {
 
 id:number;
 name:string;
@@ -19,18 +19,51 @@ link?:string;
 export default function DemoMaterials(){
 
 
-const [materials,setMaterials]=useState<Material[]>(()=> 
+const [materials,setMaterials] = useState<Material[]>(()=> 
 getDemoData<Material>("demo_materials")
 );
 
 
 
-const [name,setName]=useState("");
-const [type,setType]=useState("Resume");
-const [description,setDescription]=useState("");
-const [link,setLink]=useState("");
+const [editingMaterial,setEditingMaterial] = useState<Material | null>(null);
 
 
+
+const [name,setName] = useState("");
+const [type,setType] = useState("Resume");
+const [description,setDescription] = useState("");
+const [link,setLink] = useState("");
+
+
+
+
+
+
+function resetForm(){
+
+setName("");
+
+setType("Resume");
+
+setDescription("");
+
+setLink("");
+
+}
+
+
+
+
+function saveData(updated:Material[]){
+
+setMaterials(updated);
+
+saveDemoData(
+"demo_materials",
+updated
+);
+
+}
 
 
 
@@ -55,29 +88,86 @@ link
 
 
 
-const updated=[
+saveData([
 
 material,
 ...materials
 
-];
+]);
+
+
+resetForm();
+
+}
 
 
 
-setMaterials(updated);
+
+
+function startEdit(material:Material){
+
+
+setEditingMaterial(material);
+
+
+setName(material.name);
+
+setType(material.type);
+
+setDescription(material.description ?? "");
+
+setLink(material.link ?? "");
+
+}
 
 
 
-saveDemoData(
-"demo_materials",
-updated
+
+
+function saveEdit(){
+
+
+if(!editingMaterial) return;
+
+
+
+const updated = materials.map(material =>
+
+
+material.id === editingMaterial.id
+
+?
+
+{
+
+...material,
+
+name,
+
+type,
+
+description,
+
+link
+
+}
+
+:
+
+material
+
+
 );
 
 
 
-setName("");
-setDescription("");
-setLink("");
+saveData(updated);
+
+
+setEditingMaterial(null);
+
+resetForm();
+
 
 }
 
@@ -88,20 +178,12 @@ setLink("");
 function deleteMaterial(id:number){
 
 
-const updated =
+saveData(
+
 materials.filter(
-material=>material.id!==id
-);
+material=>material.id !== id
+)
 
-
-
-setMaterials(updated);
-
-
-
-saveDemoData(
-"demo_materials",
-updated
 );
 
 
@@ -112,13 +194,36 @@ updated
 
 
 
+function formatLink(value:string){
+
+if(!value) return "";
+
+return value.startsWith("http")
+
+?
+
+value
+
+:
+
+`https://${value}`;
+
+}
+
+
+
+
 
 return (
 
 <section>
 
 
-<h2 className="text-2xl font-bold">
+<h2 className="
+text-2xl
+font-bold
+text-slate-900
+">
 
 Materials
 
@@ -129,11 +234,14 @@ Materials
 
 
 <div className="
-bg-white
-p-5
-rounded-xl
-space-y-3
 mt-4
+rounded-xl
+border
+border-blue-100
+bg-white
+p-6
+shadow-sm
+space-y-3
 ">
 
 
@@ -142,20 +250,21 @@ mt-4
 
 <input
 
-placeholder="Name"
+placeholder="Material name"
 
 value={name}
 
 onChange={e=>setName(e.target.value)}
 
 className="
-border
-p-2
 w-full
+rounded-lg
+border
+border-slate-200
+p-3
 "
 
 />
-
 
 
 
@@ -168,33 +277,24 @@ value={type}
 onChange={e=>setType(e.target.value)}
 
 className="
-border
-p-2
 w-full
+rounded-lg
+border
+border-slate-200
+p-3
 "
 
 >
 
+<option>Resume</option>
 
-<option>
-Resume
-</option>
+<option>Cover Letter</option>
 
+<option>Portfolio</option>
 
-<option>
-Cover Letter
-</option>
-
-
-<option>
-Portfolio
-</option>
-
-
+<option>Other</option>
 
 </select>
-
-
 
 
 
@@ -209,14 +309,14 @@ value={description}
 onChange={e=>setDescription(e.target.value)}
 
 className="
-border
-p-2
 w-full
+rounded-lg
+border
+border-slate-200
+p-3
 "
 
 />
-
-
 
 
 
@@ -224,21 +324,21 @@ w-full
 
 <input
 
-placeholder="Link"
+placeholder="Link / URL"
 
 value={link}
 
 onChange={e=>setLink(e.target.value)}
 
 className="
-border
-p-2
 w-full
+rounded-lg
+border
+border-slate-200
+p-3
 "
 
 />
-
-
 
 
 
@@ -247,29 +347,87 @@ w-full
 
 <button
 
-onClick={addMaterial}
+onClick={
+editingMaterial
+?
+saveEdit
+:
+addMaterial
+}
 
 className="
-bg-blue-600
-hover:bg-blue-700
-text-white
-px-5
-py-2
 rounded-lg
+bg-blue-600
+px-5
+py-3
+font-semibold
+text-white
+hover:bg-blue-700
 "
 
 >
 
-Add Material
+{
+editingMaterial
+?
+"Save Material"
+:
+"Add Material"
+}
 
 </button>
 
 
 
 
+
+{
+editingMaterial && (
+
+<button
+
+onClick={()=>{
+
+setEditingMaterial(null);
+
+resetForm();
+
+}}
+
+className="
+ml-3
+rounded-lg
+border
+px-5
+py-3
+"
+
+>
+
+Cancel
+
+</button>
+
+)
+
+}
+
+
+
 </div>
 
 
+
+
+
+
+
+
+
+<div className="
+mt-8
+space-y-5
+">
 
 
 
@@ -285,20 +443,35 @@ materials.map(material=>(
 key={material.id}
 
 className="
-bg-white
 border
-rounded-xl
-p-5
-mt-4
+border-blue-100
+bg-white
+p-6
+shadow-sm
+transition
+hover:-translate-y-1
+hover:shadow-lg
 "
 
 >
 
 
 
+
+<div className="
+flex
+justify-between
+items-start
+">
+
+
+<div>
+
+
 <h3 className="
+text-xl
 font-bold
-text-lg
+text-slate-900
 ">
 
 {material.name}
@@ -307,34 +480,129 @@ text-lg
 
 
 
+<p className="
+mt-1
+text-blue-600
+font-medium
+">
 
-<p>
-Type: {material.type}
+{material.type}
+
 </p>
+
+
+
+</div>
+
+
+
+<span className="
+rounded-full
+bg-blue-50
+px-3
+py-1
+text-xs
+font-semibold
+text-blue-600
+">
+
+Material
+
+</span>
+
+
+</div>
+
+
+
+
 
 
 
 
 {
-material.description &&
-<p>
+material.description && (
+
+<p className="
+mt-4
+text-slate-600
+">
+
 {material.description}
+
 </p>
+
+)
+
 }
+
+
 
 
 
 
 
 {
-material.link &&
-<p>
-{material.link}
-</p>
+material.link && (
+
+<a
+
+href={formatLink(material.link)}
+
+target="_blank"
+
+rel="noopener noreferrer"
+
+className="
+mt-4
+block
+font-medium
+text-blue-600
+hover:underline
+"
+
+>
+
+Open Resource →
+
+</a>
+
+)
+
 }
 
 
 
+
+
+
+
+<div className="
+mt-5
+flex
+gap-3
+">
+
+
+<button
+
+onClick={()=>startEdit(material)}
+
+className="
+rounded-lg
+border
+border-blue-200
+px-4
+py-2
+text-blue-600
+hover:bg-blue-50
+"
+
+>
+
+Edit
+
+</button>
 
 
 
@@ -344,14 +612,12 @@ material.link &&
 onClick={()=>deleteMaterial(material.id)}
 
 className="
-mt-4
+rounded-lg
 bg-red-600
-hover:bg-red-700
-text-white
 px-4
 py-2
-rounded-lg
-font-semibold
+text-white
+hover:bg-red-700
 "
 
 >
@@ -359,6 +625,9 @@ font-semibold
 Delete
 
 </button>
+
+
+</div>
 
 
 
@@ -374,9 +643,14 @@ Delete
 
 
 
+</div>
+
+
+
 </section>
 
 );
 
 
 }
+

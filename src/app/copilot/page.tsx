@@ -1,154 +1,272 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase";
+
 
 export default function CopilotPage() {
 
-  return (
 
-    <main className="
-    min-h-screen
-    bg-slate-100
-    ">
+const router = useRouter();
 
-      <div className="
-      max-w-7xl
-      mx-auto
-      px-8
-      py-12
-      ">
+const supabase = createClient();
 
-        <h1 className="
-        text-4xl
-        font-bold
-        ">
-          Nook Copilot
-        </h1>
 
-        <p className="
-        mt-3
-        text-slate-600
-        ">
-          AI-powered career tools designed to help you create stronger applications,
-          optimize your resume, and evaluate how competitive you are for specific
-          opportunities.
-        </p>
 
-        <div className="
-        grid
-        md:grid-cols-2
-        xl:grid-cols-3
-        gap-6
-        mt-10
-        ">
+useEffect(()=>{
 
-          {/* Cover Letter */}
 
-          <Link
+async function checkAuth(){
 
-            href="/copilot/cover-letter"
 
-            className="
-            bg-white
-            rounded-xl
-            p-8
-            shadow
-            hover:shadow-lg
-            transition
-            "
+const {
+data
+} = await supabase.auth.getUser();
 
-          >
 
-            <h2 className="
-            text-2xl
-            font-bold
-            ">
-              Cover Letter Generator
-            </h2>
 
-            <p className="
-            mt-3
-            text-slate-600
-            ">
-              Generate personalized cover letters tailored to a specific job
-              description using your experience and an optional draft.
-            </p>
+if(!data.user){
 
-          </Link>
+router.push("/login");
 
-          {/* Resume */}
+}
 
-          <Link
 
-            href="/copilot/resume-optimizer"
+}
 
-            className="
-            bg-white
-            rounded-xl
-            p-8
-            shadow
-            hover:shadow-lg
-            transition
-            "
 
-          >
+checkAuth();
 
-            <h2 className="
-            text-2xl
-            font-bold
-            ">
-              Resume Optimizer
-            </h2>
 
-            <p className="
-            mt-3
-            text-slate-600
-            ">
-              Improve your resume by comparing it against a job description and
-              receiving an optimized version tailored to the position.
-            </p>
+},[router,supabase]);
 
-          </Link>
 
-          {/* Match Analyzer */}
 
-          <Link
 
-            href="/copilot/application-match"
 
-            className="
-            bg-white
-            rounded-xl
-            p-8
-            shadow
-            hover:shadow-lg
-            transition
-            "
+return (
 
-          >
+<main className="
+min-h-screen
+bg-[#f5f9ff]
+">
 
-            <h2 className="
-            text-2xl
-            font-bold
-            ">
-              Application Match Analyzer
-            </h2>
 
-            <p className="
-            mt-3
-            text-slate-600
-            ">
-              Compare your resume against a job description to receive an AI-generated
-              match score, identify your strengths, uncover skill gaps, and get
-              actionable recommendations to improve your chances.
-            </p>
+<div className="
+mx-auto
+max-w-7xl
+px-8
+py-16
+">
 
-          </Link>
 
-        </div>
 
-      </div>
+<div className="
+max-w-3xl
+">
 
-    </main>
 
-  );
+<h1 className="
+mt-4
+text-5xl
+font-bold
+text-slate-950
+">
+
+Nook Copilot
+
+</h1>
+
+
+
+<p className="
+mt-5
+text-lg
+leading-relaxed
+text-slate-600
+">
+
+AI-powered career tools that help you create stronger applications,
+improve your resume, and understand how competitive you are for
+specific opportunities.
+
+</p>
+
+
+</div>
+
+
+
+
+
+<div className="
+mt-12
+grid
+gap-5
+md:grid-cols-2
+xl:grid-cols-3
+">
+
+
+<CopilotCard
+
+href="/copilot/cover-letter"
+
+title="Cover Letter Generator"
+
+text="Create personalized cover letters using your experience and the job description."
+
+/>
+
+
+
+
+<CopilotCard
+
+href="/copilot/resume-optimizer"
+
+title="Resume Optimizer"
+
+text="Improve your resume by comparing it with a position and generating targeted improvements."
+
+/>
+
+
+
+
+
+<CopilotCard
+
+href="/copilot/application-match"
+
+title="Application Match Analyzer"
+
+text="Analyze your resume against a job description, find gaps, and receive improvement suggestions."
+
+/>
+
+
+
+</div>
+
+
+
+</div>
+
+
+</main>
+
+);
+
+
+}
+
+
+
+
+
+
+
+function CopilotCard({
+href,
+title,
+text,
+}:{
+href:string;
+title:string;
+text:string;
+}){
+
+
+return (
+
+<Link
+
+href={href}
+
+className="
+group
+relative
+overflow-hidden
+border
+border-slate-200
+bg-white
+p-7
+transition
+hover:-translate-y-1
+hover:border-blue-300
+hover:shadow-xl
+hover:shadow-blue-100
+"
+
+>
+
+
+<div className="
+absolute
+right-0
+top-0
+h-32
+w-32
+bg-blue-200/40
+blur-3xl
+group-hover:bg-blue-300/50
+transition
+"/>
+
+
+
+<div className="
+relative
+">
+
+
+<h2 className="
+mt-6
+text-2xl
+font-bold
+text-slate-950
+">
+
+{title}
+
+</h2>
+
+
+
+<p className="
+mt-3
+leading-relaxed
+text-slate-600
+">
+
+{text}
+
+</p>
+
+
+
+
+<p className="
+mt-6
+text-sm
+font-semibold
+text-blue-600
+">
+
+Open Tool →
+
+</p>
+
+
+</div>
+
+
+</Link>
+
+);
+
 
 }

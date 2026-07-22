@@ -1,57 +1,83 @@
 "use client";
 
-
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
-import { Task, CreateTask } from "@/types/Task";
+import {
+Task,
+CreateTask
+} from "@/types/Task";
 
 import TaskCard from "@/components/tasks/TaskCard";
-
 import TaskForm from "@/components/tasks/TaskForm";
-
 import EditTaskForm from "@/components/tasks/EditTaskForm";
-
-import { useRouter } from "next/navigation";
 
 
 export default function TasksPage(){
 
 
 const [tasks,setTasks]=useState<Task[]>([]);
-const router = useRouter();
 
 const [editingTask,setEditingTask]=useState<Task | null>(null);
 
+const router = useRouter();
 
 
-useEffect(() => {
 
-  async function loadTasks() {
+useEffect(()=>{
 
-    const response = await fetch("/api/tasks");
 
-    const data = await response.json();
+async function loadTasks(){
 
-    if (response.status === 401) {
-      router.push("/login");
-      return;
-    }
+const response = await fetch("/api/tasks");
 
-    if (!response.ok) {
-      console.error(data);
-      setTasks([]);
-      return;
-    }
+const data = await response.json();
 
-    setTasks(Array.isArray(data) ? data : []);
 
-  }
 
-  loadTasks();
+if(response.status===401){
 
-}, [router]);
+router.push("/login");
+
+return;
+
+}
+
+
+
+if(!response.ok){
+
+setTasks([]);
+
+return;
+
+}
+
+
+
+setTasks(
+Array.isArray(data)
+?
+data
+:
+[]
+);
+
+
+}
+
+
+loadTasks();
+
+
+},[router]);
+
+
+
+
 
 async function addTask(task:CreateTask){
+
 
 const response = await fetch("/api/tasks",{
 
@@ -66,18 +92,24 @@ body:JSON.stringify(task)
 });
 
 
-const savedTask = await response.json();
+const saved = await response.json();
+
 
 
 setTasks(previous=>[
-...previous,
-savedTask
+saved,
+...previous
 ]);
+
 
 }
 
 
+
+
+
 async function deleteTask(id:number){
+
 
 await fetch(`/api/tasks/${id}`,{
 
@@ -86,25 +118,25 @@ method:"DELETE"
 });
 
 
-setTasks(previous =>
+setTasks(previous=>
 
 previous.filter(
-
-(task)=>task.id !== id
-
+task=>task.id!==id
 )
 
 );
+
 
 }
 
 
 
 
-async function saveEditedTask(updatedTask:Task){
+
+async function saveEditedTask(task:Task){
 
 
-await fetch(`/api/tasks/${updatedTask.id}`,{
+await fetch(`/api/tasks/${task.id}`,{
 
 method:"PUT",
 
@@ -112,25 +144,21 @@ headers:{
 "Content-Type":"application/json"
 },
 
-body:JSON.stringify(updatedTask)
+body:JSON.stringify(task)
 
 });
 
 
 
-setTasks(previous =>
+setTasks(previous=>
 
-previous.map(task =>
+previous.map(item=>
 
-task.id === updatedTask.id
-
+item.id===task.id
 ?
-
-updatedTask
-
-:
-
 task
+:
+item
 
 )
 
@@ -143,11 +171,15 @@ setEditingTask(null);
 
 }
 
+
+
+
+
 return (
 
 <main className="
 min-h-screen
-bg-slate-100
+bg-[#f5f9ff]
 ">
 
 
@@ -155,14 +187,17 @@ bg-slate-100
 mx-auto
 max-w-6xl
 px-8
-py-12
+py-10
 ">
+
+
+<div className="mb-8">
 
 
 <h1 className="
 text-4xl
 font-bold
-text-black
+text-slate-950
 ">
 
 Tasks
@@ -170,20 +205,19 @@ Tasks
 </h1>
 
 
-
 <p className="
-mt-3
+mt-2
 text-slate-600
 ">
 
-Stay organized during your job search.
+Organize deadlines, priorities, and career progress.
 
 </p>
 
 
+</div>
 
 
-<div className="mt-8">
 
 
 <TaskForm
@@ -193,15 +227,13 @@ onAddTask={addTask}
 />
 
 
-</div>
-
-
 
 
 
 {
-
 editingTask && (
+
+<div className="mt-6">
 
 <EditTaskForm
 
@@ -213,6 +245,8 @@ onCancel={()=>setEditingTask(null)}
 
 />
 
+</div>
+
 )
 
 }
@@ -220,16 +254,18 @@ onCancel={()=>setEditingTask(null)}
 
 
 
+
 <div className="
-mt-10
+mt-8
 grid
-gap-6
+gap-5
+md:grid-cols-2
 ">
 
 
 {
-
 tasks.map(task=>(
+
 
 <TaskCard
 
@@ -237,11 +273,7 @@ key={task.id}
 
 task={task}
 
-onEdit={(task)=>
-
-setEditingTask(task)
-
-}
+onEdit={setEditingTask}
 
 onDelete={deleteTask}
 
@@ -253,9 +285,7 @@ onDelete={deleteTask}
 }
 
 
-
 </div>
-
 
 
 </div>
@@ -267,4 +297,3 @@ onDelete={deleteTask}
 
 
 }
-

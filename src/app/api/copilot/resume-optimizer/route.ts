@@ -4,7 +4,7 @@ import { openai } from "@/lib/openai";
 
 import {
 RESUME_OPTIMIZER_SYSTEM_PROMPT
-} from "@/lib/prompts/copilotPrompts";
+} from "@/lib/copilotPrompts";
 
 
 

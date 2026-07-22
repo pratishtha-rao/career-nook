@@ -13,6 +13,7 @@
     "@supabase/ssr": "^0.12.3",
     "@supabase/supabase-js": "^2.110.7",
     "bcrypt": "^6.0.0",
+    "lucide-react": "^1.25.0",
     "next": "16.2.10",
     "next-auth": "^4.24.15",
     "openai": "^6.48.0",

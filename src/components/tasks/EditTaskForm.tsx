@@ -1,258 +1,329 @@
 "use client";
 
-
 import { useState } from "react";
 
 import {
-Task,
-TaskPriority,
-TaskStatus
+  Task,
+  TaskPriority,
+  TaskStatus,
 } from "@/types/Task";
 
 
-type Props={
-
-task:Task;
-
-onSave:(task:Task)=>void;
-
-onCancel:()=>void;
-
+type Props = {
+  task: Task;
+  onSave: (task: Task) => void;
+  onCancel: () => void;
 };
 
 
-
 export default function EditTaskForm({
+  task,
+  onSave,
+  onCancel,
+}: Props) {
 
-task,
 
-onSave,
+  const [title, setTitle] = useState(task.title);
 
-onCancel
+  const [description, setDescription] = useState(
+    task.description ?? ""
+  );
 
-}:Props){
+  const [dueDate, setDueDate] = useState(task.dueDate);
 
+  const [priority, setPriority] =
+    useState<TaskPriority>(task.priority);
 
-const [title,setTitle]=useState(task.title);
+  const [status, setStatus] =
+    useState<TaskStatus>(task.status);
 
-const [description,setDescription]=useState(task.description ?? "");
 
-const [dueDate,setDueDate]=useState(task.dueDate);
 
-const [priority,setPriority]=useState<TaskPriority>(task.priority);
+  function submit(e: React.FormEvent) {
 
-const [status,setStatus]=useState<TaskStatus>(task.status);
+    e.preventDefault();
 
 
+    onSave({
+      ...task,
+      title,
+      description,
+      dueDate,
+      priority,
+      status,
+    });
 
-function submit(e:React.FormEvent){
+  }
 
-e.preventDefault();
 
 
-onSave({
+  return (
 
-...task,
+    <form
+      onSubmit={submit}
+      className="
+        border
+        border-blue-100
+        bg-white
+        p-6
+        shadow-sm
+      "
+    >
 
-title,
 
-description,
+      <div className="
+        mb-6
+        flex
+        items-center
+        justify-between
+      ">
 
-dueDate,
+        <h2 className="
+          text-2xl
+          font-bold
+          text-slate-900
+        ">
+          Edit Task
+        </h2>
 
-priority,
 
-status
+        <span className="
+          bg-blue-50
+          px-3
+          py-1
+          text-sm
+          font-medium
+          text-blue-600
+        ">
+          Update
+        </span>
 
-});
 
+      </div>
 
-}
 
 
 
-return (
+      <div className="
+        grid
+        gap-4
+      ">
 
-<form
 
-onSubmit={submit}
+        <input
 
-className="
-rounded-xl
-border
-bg-white
-p-6
-space-y-4
-"
+          value={title}
 
->
+          onChange={(e)=>setTitle(e.target.value)}
 
+          placeholder="Task title"
 
-<h2 className="
-text-xl
-font-bold
-text-black
-">
+          className="
+            border
+            border-slate-200
+            p-3
+            outline-none
+            transition
+            focus:border-blue-500
+          "
 
-Edit Task
+        />
 
-</h2>
 
 
 
-<input
+        <textarea
 
-value={title}
+          value={description}
 
-onChange={(e)=>setTitle(e.target.value)}
+          onChange={(e)=>setDescription(e.target.value)}
 
-className="
-w-full
-rounded-lg
-border
-p-3
-text-black
-"
+          placeholder="Description"
 
-/>
+          className="
+            min-h-[120px]
+            border
+            border-slate-200
+            p-3
+            outline-none
+            transition
+            focus:border-blue-500
+          "
 
+        />
 
 
-<textarea
 
-value={description}
 
-onChange={(e)=>setDescription(e.target.value)}
+        <div className="
+          grid
+          gap-4
+          md:grid-cols-3
+        ">
 
-className="
-w-full
-rounded-lg
-border
-p-3
-text-black
-"
 
-/>
+          <input
 
+            type="date"
 
+            value={dueDate}
 
-<input
+            onChange={(e)=>setDueDate(e.target.value)}
 
-type="date"
+            className="
+              border
+              border-slate-200
+              p-3
+              outline-none
+              focus:border-blue-500
+            "
 
-value={dueDate}
+          />
 
-onChange={(e)=>setDueDate(e.target.value)}
 
-className="
-w-full
-rounded-lg
-border
-p-3
-text-black
-"
 
-/>
 
+          <select
 
+            value={priority}
 
-<select
+            onChange={(e)=>
+              setPriority(
+                e.target.value as TaskPriority
+              )
+            }
 
-value={priority}
+            className="
+              border
+              border-slate-200
+              p-3
+              outline-none
+              focus:border-blue-500
+            "
 
-onChange={(e)=>setPriority(e.target.value as TaskPriority)}
+          >
 
-className="
-w-full
-rounded-lg
-border
-p-3
-text-black
-"
+            <option>
+              Low
+            </option>
 
->
+            <option>
+              Medium
+            </option>
 
-<option>Low</option>
+            <option>
+              High
+            </option>
 
-<option>Medium</option>
+          </select>
 
-<option>High</option>
 
-</select>
 
 
 
+          <select
 
-<select
+            value={status}
 
-value={status}
+            onChange={(e)=>
+              setStatus(
+                e.target.value as TaskStatus
+              )
+            }
 
-onChange={(e)=>setStatus(e.target.value as TaskStatus)}
+            className="
+              border
+              border-slate-200
+              p-3
+              outline-none
+              focus:border-blue-500
+            "
 
-className="
-w-full
-rounded-lg
-border
-p-3
-text-black
-"
+          >
 
->
+            <option>
+              Not Started
+            </option>
 
-<option>Not Started</option>
+            <option>
+              In Progress
+            </option>
 
-<option>In Progress</option>
+            <option>
+              Completed
+            </option>
 
-<option>Completed</option>
+          </select>
 
-</select>
 
+        </div>
 
 
-<button
+      </div>
 
-className="
-rounded-lg
-bg-blue-600
-px-5
-py-2
-text-white
-"
 
->
 
-Save
 
-</button>
 
 
+      <div className="
+        mt-6
+        flex
+        gap-3
+      ">
 
-<button
 
-type="button"
+        <button
 
-onClick={onCancel}
+          type="submit"
 
-className="
-ml-3
-rounded-lg
-border
-px-5
-py-2
-text-black
-"
+          className="
+            bg-blue-600
+            px-7
+            py-3
+            font-semibold
+            text-white
+            transition
+            hover:bg-blue-700
+          "
 
->
+        >
+          Save Changes
 
-Cancel
+        </button>
 
-</button>
 
 
 
-</form>
+        <button
 
-);
+          type="button"
 
+          onClick={onCancel}
+
+          className="
+            border
+            border-slate-300
+            px-7
+            py-3
+            font-semibold
+            text-slate-700
+            transition
+            hover:border-blue-500
+            hover:text-blue-600
+          "
+
+        >
+          Cancel
+
+        </button>
+
+
+      </div>
+
+
+    </form>
+
+  );
 
 }

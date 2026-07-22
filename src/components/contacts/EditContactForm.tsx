@@ -1,18 +1,16 @@
 "use client";
 
-
 import { useState } from "react";
-
 import { Contact, ContactType } from "@/types/Contact";
 
 
-type Props={
+type Props = {
 
-contact:Contact;
+  contact: Contact;
 
-onSave:(contact:Contact)=>void;
+  onSave:(contact:Contact)=>void;
 
-onCancel:()=>void;
+  onCancel:()=>void;
 
 };
 
@@ -29,17 +27,18 @@ onCancel
 }:Props){
 
 
-const [name,setName]=useState(contact.name);
+const [name,setName] = useState(contact.name);
 
-const [company,setCompany]=useState(contact.company);
+const [company,setCompany] = useState(contact.company);
 
-const [role,setRole]=useState(contact.role);
+const [role,setRole] = useState(contact.role);
 
-const [type,setType]=useState<ContactType>(contact.type);
+const [type,setType] = useState<ContactType>(contact.type);
 
-const [email,setEmail]=useState(contact.email ?? "");
+const [email,setEmail] = useState(contact.email ?? "");
 
-const [notes,setNotes]=useState(contact.notes ?? "");
+const [notes,setNotes] = useState(contact.notes ?? "");
+
 
 
 
@@ -72,6 +71,8 @@ notes
 
 
 
+
+
 return (
 
 <form
@@ -79,63 +80,105 @@ return (
 onSubmit={submit}
 
 className="
-rounded-xl
 border
+border-blue-100
 bg-white
 p-6
-space-y-4
+shadow-sm
 "
 
 >
 
 
-<h2 className="text-xl font-bold text-black">
+<h2 className="
+text-2xl
+font-bold
+mb-5
+text-slate-950
+">
+
 Edit Contact
+
 </h2>
 
 
 
+
+<div className="
+grid
+gap-4
+md:grid-cols-2
+">
+
+
+
 <input
+
 value={name}
-onChange={(e)=>setName(e.target.value)}
-className="w-full rounded-lg border p-3 text-black"
+
+onChange={
+e=>setName(e.target.value)
+}
+
+placeholder="Name"
+
+className="
+border
+border-slate-200
+p-3
+outline-none
+focus:border-blue-500
+"
+
 />
 
 
 
+
 <input
+
 value={company}
-onChange={(e)=>setCompany(e.target.value)}
-className="w-full rounded-lg border p-3 text-black"
+
+onChange={
+e=>setCompany(e.target.value)
+}
+
+placeholder="Company"
+
+className="
+border
+border-slate-200
+p-3
+outline-none
+focus:border-blue-500
+"
+
 />
+
 
 
 
 <input
+
 value={role}
-onChange={(e)=>setRole(e.target.value)}
-className="w-full rounded-lg border p-3 text-black"
+
+onChange={
+e=>setRole(e.target.value)
+}
+
+placeholder="Role"
+
+className="
+border
+border-slate-200
+p-3
+outline-none
+focus:border-blue-500
+"
+
 />
 
 
-
-<select
-
-value={type}
-
-onChange={(e)=>setType(e.target.value as ContactType)}
-
-className="w-full rounded-lg border p-3 text-black"
-
->
-
-<option>Recruiter</option>
-<option>Hiring Manager</option>
-<option>Employee</option>
-<option>Friend</option>
-<option>Other</option>
-
-</select>
 
 
 
@@ -143,11 +186,73 @@ className="w-full rounded-lg border p-3 text-black"
 
 value={email}
 
-onChange={(e)=>setEmail(e.target.value)}
+onChange={
+e=>setEmail(e.target.value)
+}
 
-className="w-full rounded-lg border p-3 text-black"
+placeholder="Email"
+
+className="
+border
+border-slate-200
+p-3
+outline-none
+focus:border-blue-500
+"
 
 />
+
+
+
+
+
+<select
+
+value={type}
+
+onChange={
+e=>setType(e.target.value as ContactType)
+}
+
+className="
+border
+border-slate-200
+p-3
+outline-none
+focus:border-blue-500
+"
+
+>
+
+<option>
+Recruiter
+</option>
+
+<option>
+Hiring Manager
+</option>
+
+<option>
+Employee
+</option>
+
+<option>
+Friend
+</option>
+
+<option>
+Other
+</option>
+
+
+</select>
+
+
+
+</div>
+
+
+
 
 
 
@@ -155,29 +260,58 @@ className="w-full rounded-lg border p-3 text-black"
 
 value={notes}
 
-onChange={(e)=>setNotes(e.target.value)}
+onChange={
+e=>setNotes(e.target.value)
+}
 
-className="w-full rounded-lg border p-3 text-black"
+placeholder="Notes"
+
+className="
+mt-4
+h-28
+w-full
+border
+border-slate-200
+p-3
+outline-none
+focus:border-blue-500
+"
 
 />
 
 
 
+
+
+
+<div className="
+mt-5
+flex
+gap-3
+">
+
+
 <button
 
+type="submit"
+
 className="
-rounded-lg
 bg-blue-600
-px-5
-py-2
+px-7
+py-3
+font-semibold
 text-white
+hover:bg-blue-700
+transition
 "
 
 >
 
-Save
+Save Changes
 
 </button>
+
+
 
 
 
@@ -188,12 +322,14 @@ type="button"
 onClick={onCancel}
 
 className="
-ml-3
-rounded-lg
 border
-px-5
-py-2
-text-black
+border-slate-300
+px-7
+py-3
+font-semibold
+text-slate-700
+hover:bg-slate-50
+transition
 "
 
 >
@@ -203,9 +339,15 @@ Cancel
 </button>
 
 
+
+</div>
+
+
+
 </form>
 
 );
 
 
 }
+

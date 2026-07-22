@@ -1,23 +1,30 @@
 "use client";
 
+
 import { useState } from "react";
 import { CreateContact, ContactType } from "@/types/Contact";
+
 
 type Props = {
   onAddContact:(contact:CreateContact)=>void;
 };
 
+
+
 export default function ContactForm({
-  onAddContact
+
+onAddContact
+
 }:Props){
 
 
-const [name,setName] = useState("");
-const [company,setCompany] = useState("");
-const [role,setRole] = useState("");
-const [type,setType] = useState<ContactType>("Recruiter");
-const [email,setEmail] = useState("");
-const [notes,setNotes] = useState("");
+const [name,setName]=useState("");
+const [company,setCompany]=useState("");
+const [role,setRole]=useState("");
+const [type,setType]=useState<ContactType>("Recruiter");
+const [email,setEmail]=useState("");
+const [notes,setNotes]=useState("");
+
 
 
 
@@ -26,25 +33,16 @@ function submit(e:React.FormEvent){
 e.preventDefault();
 
 
-const newContact:CreateContact = {
-  
+onAddContact({
+
 name,
-
 company,
-
 role,
-
 type,
-
 email,
+notes
 
-notes,
-
-};
-
-
-onAddContact(newContact);
-
+});
 
 
 setName("");
@@ -64,20 +62,21 @@ return (
 onSubmit={submit}
 
 className="
-rounded-xl
 border
+border-blue-100
 bg-white
 p-6
-space-y-4
+shadow-sm
 "
 
 >
 
 
 <h2 className="
-text-xl
+text-2xl
 font-bold
-text-black
+mb-5
+text-slate-950
 ">
 
 Add Contact
@@ -86,20 +85,30 @@ Add Contact
 
 
 
+
+<div className="
+grid
+gap-4
+md:grid-cols-2
+">
+
+
 <input
 
 placeholder="Name"
 
 value={name}
 
-onChange={(e)=>setName(e.target.value)}
+onChange={
+e=>setName(e.target.value)
+}
 
 className="
-w-full
-rounded-lg
 border
+border-slate-200
 p-3
-text-black
+outline-none
+focus:border-blue-500
 "
 
 />
@@ -112,14 +121,16 @@ placeholder="Company"
 
 value={company}
 
-onChange={(e)=>setCompany(e.target.value)}
+onChange={
+e=>setCompany(e.target.value)
+}
 
 className="
-w-full
-rounded-lg
 border
+border-slate-200
 p-3
-text-black
+outline-none
+focus:border-blue-500
 "
 
 />
@@ -132,14 +143,38 @@ placeholder="Role"
 
 value={role}
 
-onChange={(e)=>setRole(e.target.value)}
+onChange={
+e=>setRole(e.target.value)
+}
 
 className="
-w-full
-rounded-lg
 border
+border-slate-200
 p-3
-text-black
+outline-none
+focus:border-blue-500
+"
+
+/>
+
+
+
+<input
+
+placeholder="Email"
+
+value={email}
+
+onChange={
+e=>setEmail(e.target.value)
+}
+
+className="
+border
+border-slate-200
+p-3
+outline-none
+focus:border-blue-500
 "
 
 />
@@ -150,14 +185,16 @@ text-black
 
 value={type}
 
-onChange={(e)=>setType(e.target.value as ContactType)}
+onChange={
+e=>setType(e.target.value as ContactType)
+}
 
 className="
-w-full
-rounded-lg
 border
+border-slate-200
 p-3
-text-black
+outline-none
+focus:border-blue-500
 "
 
 >
@@ -186,24 +223,9 @@ Other
 
 
 
+</div>
 
-<input
 
-placeholder="Email"
-
-value={email}
-
-onChange={(e)=>setEmail(e.target.value)}
-
-className="
-w-full
-rounded-lg
-border
-p-3
-text-black
-"
-
-/>
 
 
 
@@ -213,28 +235,39 @@ placeholder="Notes"
 
 value={notes}
 
-onChange={(e)=>setNotes(e.target.value)}
+onChange={
+e=>setNotes(e.target.value)
+}
 
 className="
+mt-4
+h-28
 w-full
-rounded-lg
 border
+border-slate-200
 p-3
-text-black
+outline-none
+focus:border-blue-500
 "
 
 />
 
 
 
+
 <button
 
+type="submit"
+
 className="
-rounded-lg
+mt-5
 bg-blue-600
-px-5
-py-2
+px-8
+py-3
+font-semibold
 text-white
+hover:bg-blue-700
+transition
 "
 
 >

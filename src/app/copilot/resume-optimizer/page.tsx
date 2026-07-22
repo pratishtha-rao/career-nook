@@ -1,6 +1,10 @@
 "use client";
 
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase";
+
 import ResumeOptimizer from "@/components/copilot/ResumeOptimizer";
 
 
@@ -8,11 +12,48 @@ import ResumeOptimizer from "@/components/copilot/ResumeOptimizer";
 export default function ResumeOptimizerPage(){
 
 
+const router = useRouter();
+
+const supabase = createClient();
+
+
+
+useEffect(()=>{
+
+
+async function checkAuth(){
+
+
+const {
+data
+}=await supabase.auth.getUser();
+
+
+
+if(!data.user){
+
+router.push("/login");
+
+}
+
+
+}
+
+
+checkAuth();
+
+
+},[router,supabase]);
+
+
+
+
+
 return (
 
 <main className="
 min-h-screen
-bg-slate-100
+bg-[#f5f9ff]
 ">
 
 
@@ -25,9 +66,9 @@ py-12
 
 
 <h1 className="
-text-4xl
+text-5xl
 font-bold
-text-slate-900
+text-slate-950
 ">
 
 Resume Optimizer
@@ -37,13 +78,15 @@ Resume Optimizer
 
 
 <p className="
-mt-3
+mt-4
+text-lg
 text-slate-600
 ">
 
 Improve your resume for specific job applications using Nook Copilot.
 
 </p>
+
 
 
 
@@ -56,12 +99,12 @@ mt-8
 </div>
 
 
+
 </div>
 
 
 </main>
 
 );
-
 
 }

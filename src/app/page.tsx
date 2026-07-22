@@ -1,236 +1,124 @@
 export default function Home() {
-
   return (
-
-    <main className="min-h-screen bg-slate-100">
+    <main className="min-h-screen bg-[#f5f9ff] text-slate-950">
 
 
       {/* HERO */}
 
       <section className="
-        mx-auto
-        max-w-7xl
-        px-8
-        py-20
-        text-center
-      ">
-
-
-        <h1 className="
-          text-5xl
-          font-bold
-          tracking-tight
-          text-slate-900
-        ">
-          Your Career Search,
-          <br />
-          Organized in One Place.
-        </h1>
-
-
-
-        <p className="
-          mx-auto
-          mt-6
-          max-w-2xl
-          text-lg
-          text-slate-600
-        ">
-          Career Nook helps you manage job applications,
-          professional contacts, tasks, and career materials
-          from one powerful dashboard.
-        </p>
-
-
-
-        <div className="mt-8 flex justify-center gap-4">
-
-
-          <a
-            href="/jobs"
-            className="
-              rounded-lg
-              bg-blue-600
-              px-6
-              py-3
-              font-semibold
-              text-white
-              hover:bg-blue-700
-            "
-          >
-            Start Tracking Jobs
-          </a>
-
-
-
-          <a
-            href="/tasks"
-            className="
-              rounded-lg
-              border
-              border-slate-300
-              bg-white
-              px-6
-              py-3
-              font-semibold
-              text-slate-700
-              hover:bg-slate-50
-            "
-          >
-            Manage Tasks
-          </a>
-
-
-        </div>
-
-
-      </section>
-
-
-
-
-
-      {/* FEATURES */}
-
-
-      <section className="
-        mx-auto
-        max-w-7xl
-        px-8
-        py-16
-      ">
-
-
-        <h2 className="
-          text-center
-          text-3xl
-          font-bold
-        ">
-          Everything You Need For Your Career Search
-        </h2>
-
-
-
-
-        <div className="
-          mt-10
-          grid
-          gap-6
-          md:grid-cols-2
-          lg:grid-cols-4
-        ">
-
-
-
-          <FeatureCard
-
-            title="Job Tracking"
-
-            description="Track applications, interviews, offers, and opportunities."
-
-          />
-
-
-
-          <FeatureCard
-
-            title="Networking"
-
-            description="Manage recruiters, mentors, and professional contacts."
-
-          />
-
-
-
-          <FeatureCard
-
-            title="Task Management"
-
-            description="Never miss deadlines, interviews, or follow-ups."
-
-          />
-
-
-
-          <FeatureCard
-
-            title="Career Materials"
-
-            description="Organize resumes, cover letters, and portfolios."
-
-          />
-
-
-
-        </div>
-
-
-      </section>
-
-
-
-
-
-      {/* HOW IT WORKS */}
-
-
-
-      <section className="
-        bg-white
-        px-8
-        py-16
+        relative
+        overflow-hidden
       ">
 
 
         <div className="
+          absolute
+          right-0
+          top-10
+          h-[450px]
+          w-[450px]
+          bg-blue-200/40
+          blur-3xl
+        "/>
+
+
+        <div className="
+          absolute
+          left-0
+          bottom-0
+          h-[300px]
+          w-[300px]
+          bg-sky-200/30
+          blur-3xl
+        "/>
+
+
+
+        <div className="
+          relative
           mx-auto
-          max-w-5xl
+          max-w-7xl
+          px-8
+          pt-20
+          pb-16
         ">
 
-
-          <h2 className="
-            text-center
-            text-3xl
+          <h1 className="
+            mt-6
+            max-w-5xl
+            text-6xl
+            md:text-7xl
             font-bold
+            leading-[1.05]
+            tracking-tight
           ">
-            How Career Nook Works
-          </h2>
+
+            Your career search,
+            <br />
+            organized intelligently.
+
+          </h1>
+
+
+
+          <p className="
+            mt-6
+            max-w-2xl
+            text-lg
+            leading-relaxed
+            text-slate-600
+          ">
+
+            Manage applications, tasks, contacts,
+            materials, and AI career tools in one
+            professional workspace.
+
+          </p>
 
 
 
           <div className="
-            mt-10
-            grid
-            gap-8
-            md:grid-cols-3
+            mt-9
+            flex
+            gap-5
           ">
 
 
-            <Step
+            <a
+              href="/signup"
+              className="
+                bg-blue-600
+                px-9
+                py-4
+                text-white
+                font-semibold
+                shadow-xl
+                shadow-blue-200
+                hover:bg-blue-700
+                transition
+              "
+            >
+              Start Tracking
+            </a>
 
-              number="1"
-
-              text="Save your opportunities"
-
-            />
 
 
-            <Step
-
-              number="2"
-
-              text="Organize your career workflow"
-
-            />
-
-
-            <Step
-
-              number="3"
-
-              text="Use AI tools to improve"
-
-            />
+            <a
+              href="/copilot"
+              className="
+                border
+                border-blue-200
+                bg-white
+                px-9
+                py-4
+                font-semibold
+                hover:border-blue-500
+                hover:text-blue-600
+                transition
+              "
+            >
+              Explore Copilot
+            </a>
 
 
           </div>
@@ -245,77 +133,230 @@ export default function Home() {
 
 
 
-      {/* AI SECTION */}
+
+
+      {/* FEATURES */}
+
+
+      <section
+        id="features"
+        className="
+          mx-auto
+          max-w-7xl
+          px-8
+          pt-8
+          pb-12
+        "
+      >
+
+
+        <div className="mb-8">
+
+          <h2 className="
+            mt-3
+            text-4xl
+            font-bold
+            tracking-tight
+          ">
+            Everything you need for your career search.
+          </h2>
+
+
+
+          <p className="
+            mt-3
+            max-w-xl
+            text-slate-600
+          ">
+            A single workspace to manage applications,
+            workflow, and professional growth.
+          </p>
+
+
+        </div>
+
+
+
+
+
+        <div className="
+          grid
+          gap-5
+          md:grid-cols-2
+        ">
+
+
+          <FeatureCard
+            number="01"
+            title="Job Applications"
+            text="Track every opportunity from saved to offer with deadlines, interviews, notes, and progress."
+          />
+
+
+
+          <FeatureCard
+            number="02"
+            title="Career Materials"
+            text="Organize resumes, cover letters, portfolios, and important career documents."
+          />
+
+
+
+          <FeatureCard
+            number="03"
+            title="Networking"
+            text="Manage recruiters, mentors, referrals, and professional conversations."
+          />
+
+
+
+          <FeatureCard
+            number="04"
+            title="Nook Copilot"
+            text="Optimize resumes, generate cover letters, and analyze opportunities with AI."
+          />
+
+
+        </div>
+
+
+      </section>
+
+
+
+
+
+
+
+      {/* CTA */}
 
 
       <section className="
-        mx-auto
-        max-w-5xl
+        bg-white
+        border-t
+        border-blue-100
         px-8
-        py-16
+        py-14
         text-center
       ">
 
 
         <h2 className="
-          text-3xl
+          text-4xl
+          md:text-5xl
           font-bold
+          tracking-tight
         ">
-          AI Career Assistant Coming Soon
+          Build your career workspace today.
         </h2>
+
 
 
         <p className="
           mt-4
           text-slate-600
         ">
-          Future AI features will help improve resumes,
-          analyze job descriptions, and generate personalized
-          career materials.
+          Keep your applications, materials, and career growth organized.
         </p>
+
+
+
+        <a
+          href="/signup"
+          className="
+            inline-block
+            mt-7
+            bg-blue-600
+            px-10
+            py-4
+            text-white
+            font-semibold
+            shadow-xl
+            shadow-blue-200
+            hover:bg-blue-700
+            transition
+          "
+        >
+          Create Account
+        </a>
 
 
       </section>
 
 
     </main>
-
   );
-
 }
 
 
 
 
 
+
+
 function FeatureCard({
-
-title,
-
-description
-
+  number,
+  title,
+  text
 }:{
-
-title:string;
-
-description:string;
-
+  number:string;
+  title:string;
+  text:string;
 }){
 
 
 return (
 
 <div className="
-rounded-xl
+group
+relative
+overflow-hidden
 border
-bg-white
-p-6
-shadow-sm
+border-blue-300/30
+bg-[#172554]
+p-7
+text-white
+transition
+hover:-translate-y-1
+hover:shadow-xl
+hover:shadow-blue-300/20
 ">
 
 
+<div className="
+absolute
+right-0
+top-0
+h-32
+w-32
+bg-blue-400/20
+blur-3xl
+"/>
+
+
+
+<div className="
+relative
+flex
+h-10
+w-10
+items-center
+justify-center
+bg-blue-500
+font-bold
+">
+
+{number}
+
+</div>
+
+
+
+
+
 <h3 className="
-text-xl
+mt-6
+text-2xl
 font-bold
 ">
 
@@ -324,70 +365,12 @@ font-bold
 </h3>
 
 
+
+
 <p className="
 mt-3
-text-slate-600
-">
-
-{description}
-
-</p>
-
-
-</div>
-
-);
-
-
-}
-
-
-
-
-
-function Step({
-
-number,
-
-text
-
-}:{
-
-number:string;
-
-text:string;
-
-}){
-
-
-return (
-
-<div className="
-text-center
-">
-
-
-<div className="
-mx-auto
-flex
-h-12
-w-12
-items-center
-justify-center
-rounded-full
-bg-blue-600
-font-bold
-text-white
-">
-
-{number}
-
-</div>
-
-
-<p className="
-mt-4
-font-medium
+text-blue-100
+leading-relaxed
 ">
 
 {text}
@@ -395,9 +378,22 @@ font-medium
 </p>
 
 
+
+<div className="
+mt-5
+text-sm
+font-semibold
+text-blue-300
+">
+
+Learn more →
+
+</div>
+
+
+
 </div>
 
 );
-
 
 }

@@ -1,10 +1,10 @@
 "use client";
 
-import {useState} from "react";
-import {getDemoData,saveDemoData} from "@/lib/demoStorage";
+import { useState } from "react";
+import { getDemoData, saveDemoData } from "@/lib/demoStorage";
 
 
-type Task={
+type Task = {
 
 id:number;
 title:string;
@@ -20,18 +20,50 @@ status:string;
 export default function DemoTasks(){
 
 
-const [tasks,setTasks]=useState<Task[]>(()=> 
+const [tasks,setTasks] = useState<Task[]>(()=> 
 getDemoData<Task>("demo_tasks")
 );
 
 
 
-const [title,setTitle]=useState("");
-const [description,setDescription]=useState("");
-const [dueDate,setDueDate]=useState("");
-const [priority,setPriority]=useState("Medium");
-const [status,setStatus]=useState("Pending");
+const [editingTask,setEditingTask] = useState<Task | null>(null);
 
+
+
+const [title,setTitle] = useState("");
+const [description,setDescription] = useState("");
+const [dueDate,setDueDate] = useState("");
+const [priority,setPriority] = useState("Medium");
+const [status,setStatus] = useState("Not Started");
+
+
+
+
+
+function resetForm(){
+
+setTitle("");
+setDescription("");
+setDueDate("");
+setPriority("Medium");
+setStatus("Not Started");
+
+}
+
+
+
+
+
+function saveData(updated:Task[]){
+
+setTasks(updated);
+
+saveDemoData(
+"demo_tasks",
+updated
+);
+
+}
 
 
 
@@ -58,27 +90,89 @@ status
 
 
 
-const updated=[
+saveData([
 
 task,
 ...tasks
 
-];
+]);
 
 
-setTasks(updated);
+resetForm();
+
+}
 
 
-saveDemoData(
-"demo_tasks",
-updated
+
+
+
+function startEdit(task:Task){
+
+
+setEditingTask(task);
+
+setTitle(task.title);
+
+setDescription(task.description);
+
+setDueDate(task.dueDate);
+
+setPriority(task.priority);
+
+setStatus(task.status);
+
+}
+
+
+
+
+
+function saveEdit(){
+
+
+if(!editingTask) return;
+
+
+
+const updated = tasks.map(task =>
+
+
+task.id === editingTask.id
+
+?
+
+{
+
+...task,
+
+title,
+
+description,
+
+dueDate,
+
+priority,
+
+status
+
+}
+
+:
+
+task
+
+
 );
 
 
 
-setTitle("");
-setDescription("");
-setDueDate("");
+saveData(updated);
+
+
+setEditingTask(null);
+
+resetForm();
+
 
 }
 
@@ -89,25 +183,38 @@ setDueDate("");
 function deleteTask(id:number){
 
 
-const updated =
+saveData(
+
 tasks.filter(
-task=>task.id!==id
-);
+task=>task.id !== id
+)
 
-
-
-setTasks(updated);
-
-
-
-saveDemoData(
-"demo_tasks",
-updated
 );
 
 
 }
 
+
+
+
+
+function priorityColor(value:string){
+
+
+if(value==="High")
+
+return "bg-red-100 text-red-700";
+
+
+if(value==="Medium")
+
+return "bg-yellow-100 text-yellow-700";
+
+
+return "bg-green-100 text-green-700";
+
+
+}
 
 
 
@@ -118,7 +225,11 @@ return (
 <section>
 
 
-<h2 className="text-2xl font-bold">
+<h2 className="
+text-2xl
+font-bold
+text-slate-900
+">
 
 Tasks
 
@@ -127,31 +238,40 @@ Tasks
 
 
 
+
 <div className="
-bg-white
-p-5
-rounded-xl
-space-y-3
 mt-4
+rounded-xl
+border
+border-blue-100
+bg-white
+p-6
+shadow-sm
+space-y-3
 ">
+
+
 
 
 
 <input
 
-placeholder="Title"
+placeholder="Task title"
 
 value={title}
 
 onChange={e=>setTitle(e.target.value)}
 
 className="
-border
-p-2
 w-full
+rounded-lg
+border
+border-slate-200
+p-3
 "
 
 />
+
 
 
 
@@ -165,9 +285,11 @@ value={description}
 onChange={e=>setDescription(e.target.value)}
 
 className="
-border
-p-2
 w-full
+rounded-lg
+border
+border-slate-200
+p-3
 "
 
 />
@@ -178,16 +300,18 @@ w-full
 
 <input
 
-placeholder="Due Date"
+type="date"
 
 value={dueDate}
 
 onChange={e=>setDueDate(e.target.value)}
 
 className="
-border
-p-2
 w-full
+rounded-lg
+border
+border-slate-200
+p-3
 "
 
 />
@@ -203,28 +327,23 @@ value={priority}
 onChange={e=>setPriority(e.target.value)}
 
 className="
-border
-p-2
 w-full
+rounded-lg
+border
+border-slate-200
+p-3
 "
 
 >
 
+<option>Low</option>
 
-<option>
-Low
-</option>
+<option>Medium</option>
 
-<option>
-Medium
-</option>
-
-<option>
-High
-</option>
-
+<option>High</option>
 
 </select>
+
 
 
 
@@ -237,22 +356,20 @@ value={status}
 onChange={e=>setStatus(e.target.value)}
 
 className="
-border
-p-2
 w-full
+rounded-lg
+border
+border-slate-200
+p-3
 "
 
 >
 
+<option>Not Started</option>
 
-<option>
-Pending
-</option>
+<option>In Progress</option>
 
-<option>
-Completed
-</option>
-
+<option>Completed</option>
 
 </select>
 
@@ -260,25 +377,74 @@ Completed
 
 
 
+
+
 <button
 
-onClick={addTask}
+onClick={
+editingTask
+?
+saveEdit
+:
+addTask
+}
 
 className="
-bg-blue-600
-hover:bg-blue-700
-text-white
-px-5
-py-2
 rounded-lg
+bg-blue-600
+px-5
+py-3
+font-semibold
+text-white
+hover:bg-blue-700
 "
 
 >
 
-Add Task
+{
+editingTask
+?
+"Save Task"
+:
+"Add Task"
+}
 
 </button>
 
+
+
+
+
+{
+editingTask && (
+
+<button
+
+onClick={()=>{
+
+setEditingTask(null);
+
+resetForm();
+
+}}
+
+className="
+ml-3
+rounded-lg
+border
+px-5
+py-3
+"
+
+>
+
+Cancel
+
+</button>
+
+)
+
+}
 
 
 
@@ -288,6 +454,13 @@ Add Task
 
 
 
+
+
+
+<div className="
+mt-8
+space-y-5
+">
 
 
 {
@@ -300,42 +473,127 @@ tasks.map(task=>(
 key={task.id}
 
 className="
-bg-white
 border
-rounded-xl
-p-5
-mt-4
+border-blue-100
+bg-white
+p-6
+shadow-sm
+transition
+hover:-translate-y-1
+hover:shadow-lg
 "
 
 >
 
 
-<h3 className="font-bold text-lg">
+<div className="
+flex
+justify-between
+items-start
+">
+
+
+<h3 className="
+text-xl
+font-bold
+text-slate-900
+">
 
 {task.title}
 
 </h3>
 
 
-<p>
+
+<span className={`
+rounded-full
+px-3
+py-1
+text-xs
+font-semibold
+${priorityColor(task.priority)}
+`}>
+
+{task.priority}
+
+</span>
+
+
+</div>
+
+
+
+
+
+<p className="
+mt-3
+text-slate-600
+">
+
 {task.description}
+
 </p>
 
 
-<p>
+
+
+
+<p className="
+mt-3
+text-sm
+text-slate-600
+">
+
 Due: {task.dueDate}
+
 </p>
 
 
-<p>
-Priority: {task.priority}
-</p>
 
 
-<p>
+<p className="
+mt-1
+text-sm
+font-medium
+text-blue-600
+">
+
 Status: {task.status}
+
 </p>
 
+
+
+
+
+
+
+<div className="
+mt-5
+flex
+gap-3
+">
+
+
+<button
+
+onClick={()=>startEdit(task)}
+
+className="
+rounded-lg
+border
+border-blue-200
+px-4
+py-2
+text-blue-600
+hover:bg-blue-50
+"
+
+>
+
+Edit
+
+</button>
 
 
 
@@ -345,14 +603,12 @@ Status: {task.status}
 onClick={()=>deleteTask(task.id)}
 
 className="
-mt-4
+rounded-lg
 bg-red-600
-hover:bg-red-700
-text-white
 px-4
 py-2
-rounded-lg
-font-semibold
+text-white
+hover:bg-red-700
 "
 
 >
@@ -366,9 +622,17 @@ Delete
 </div>
 
 
+
+</div>
+
+
 ))
 
 }
+
+
+
+</div>
 
 
 

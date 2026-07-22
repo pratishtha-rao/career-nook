@@ -52,7 +52,7 @@ onAddJob(newJob);
 
 
       <h2 className="mb-6 text-2xl font-bold">
-        Add Job Application
+        Add Application
       </h2>
 
 
@@ -84,23 +84,57 @@ onAddJob(newJob);
           onChange={(e)=>setStatus(e.target.value as JobStatus)}
           className="rounded-lg border p-3"
         >
+          <option>
+            Interested
+          </option>
+
+          <option>
+            Not Started
+          </option>
+
+          <option>
+            In Progress
+          </option>
 
           <option>
             Applied
           </option>
 
           <option>
-            Interview
+            Interview Scheduled
           </option>
 
           <option>
-            Offer
+            Interview 1
+          </option>
+
+          <option>
+            Interview 2
+          </option>
+
+          <option>
+            Interview 3
+          </option>
+
+          <option>
+            Finished Interview(s)
+          </option>
+
+          <option>
+            Waiting for Response
+          </option>
+
+          <option>
+            Offer Received
           </option>
 
           <option>
             Rejected
           </option>
 
+          <option>
+            Ghosted
+          </option>
 
         </select>
 

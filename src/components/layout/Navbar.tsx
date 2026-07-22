@@ -29,11 +29,11 @@ const privateLinks = [
     href: "/dashboard",
   },
   {
-    name: "Jobs",
+    name: "Applications",
     href: "/jobs",
   },
   {
-    name: "Contacts",
+    name: "Network",
     href: "/contacts",
   },
   {

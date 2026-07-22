@@ -1,7 +1,7 @@
 import { Contact } from "@/types/Contact";
 
 
-type Props = {
+type Props={
 
 contact:Contact;
 
@@ -19,26 +19,39 @@ contact,
 
 onEdit,
 
-onDelete,
+onDelete
 
 }:Props){
+
 
 
 return (
 
 <div className="
-rounded-xl
 border
+border-blue-100
 bg-white
 p-6
 shadow-sm
-text-black
+hover:shadow-lg
+transition
 ">
 
 
+<div className="
+flex
+justify-between
+items-start
+">
+
+
+<div>
+
+
 <h2 className="
-text-xl
+text-2xl
 font-bold
+text-slate-950
 ">
 
 {contact.name}
@@ -46,50 +59,86 @@ font-bold
 </h2>
 
 
+<p className="
+mt-1
+text-blue-600
+font-medium
+">
 
-<p className="mt-2">
-Company: {contact.company}
+{contact.role}
+
 </p>
 
 
-<p>
-Role: {contact.role}
+<p className="
+text-slate-500
+">
+
+{contact.company}
+
 </p>
 
 
-<p>
-Type: {contact.type}
-</p>
+</div>
 
 
 
-{
-contact.email && (
+<span className="
+bg-blue-100
+text-blue-700
+px-3
+py-1
+text-sm
+font-semibold
+">
 
-<p>
-Email: {contact.email}
-</p>
+{contact.type}
 
-)
-}
+</span>
 
 
+</div>
 
-{
-contact.notes && (
-
-<p>
-Notes: {contact.notes}
-</p>
-
-)
-}
 
 
 
 
 <div className="
 mt-5
+space-y-2
+text-slate-600
+">
+
+
+{
+contact.email &&
+<p>
+{contact.email}
+</p>
+}
+
+
+
+{
+contact.notes &&
+<p className="
+text-sm
+">
+
+{contact.notes}
+
+</p>
+}
+
+
+</div>
+
+
+
+
+
+<div className="
+mt-6
 flex
 gap-3
 ">
@@ -100,11 +149,13 @@ gap-3
 onClick={()=>onEdit(contact)}
 
 className="
-rounded-lg
-bg-yellow-500
-px-4
+bg-blue-600
+px-5
 py-2
 text-white
+font-semibold
+hover:bg-blue-700
+transition
 "
 
 >
@@ -113,16 +164,21 @@ Edit
 
 </button>
 
+
+
 <button
 
 onClick={()=>contact.id && onDelete(contact.id)}
 
 className="
-rounded-lg
-bg-red-600
-px-4
+border
+border-red-200
+px-5
 py-2
-text-white
+text-red-600
+font-semibold
+hover:bg-red-50
+transition
 "
 
 >
@@ -135,9 +191,10 @@ Delete
 </div>
 
 
-
 </div>
 
 );
 
+
 }
+

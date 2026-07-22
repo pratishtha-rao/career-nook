@@ -4,7 +4,7 @@ import { openai } from "@/lib/openai";
 
 import {
   COVER_LETTER_SYSTEM_PROMPT
-} from "@/lib/prompts/copilotPrompts";
+} from "@/lib/copilotPrompts";
 
 
 
