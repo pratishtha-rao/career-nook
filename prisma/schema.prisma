@@ -28,7 +28,6 @@ model Job {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-
   @@index([userId])
   @@index([userId, id])
 }
@@ -55,7 +54,7 @@ model Contact {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
-  @@index([userId,id])
+  @@index([userId, id])
 }
 
 model Task {
@@ -76,12 +75,12 @@ model Task {
   userId String
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId])
-  @@index([userId,id])
+  @@index([userId, id])
 }
 
 model Material {
-
   id Int @id @default(autoincrement())
 
   name String
@@ -100,10 +99,8 @@ model Material {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-
   @@index([userId])
   @@index([userId, id])
-
 }
 
 model User {
@@ -122,18 +119,18 @@ model User {
   tasks Task[]
 
   materials Material[]
+
+  aiUsages AIUsage[]
 }
 
 model AIUsage {
+  id Int @id @default(autoincrement())
 
-id Int @id @default(autoincrement())
+  userId String
 
-userId String
+  feature String
 
-feature String
+  createdAt DateTime @default(now())
 
-createdAt DateTime @default(now())
-
-user User @relation(fields:[userId], references:[id], onDelete:Cascade)
-
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

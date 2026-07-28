@@ -93,11 +93,29 @@ new Date(user.created_at)
 
 const response = await fetch("/api/profile");
 
-const data = await response.json();
+
+let data = null;
 
 
+try {
 
-if(response.ok){
+  data = await response.json();
+
+}
+
+catch(error){
+
+  console.error(
+    "Profile API returned invalid JSON"
+  );
+
+  setProfileError(
+    "Could not load profile"
+  );
+
+}
+
+if(response.ok && data){
 
 setName(data.name ?? "");
 

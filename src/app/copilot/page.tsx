@@ -148,6 +148,11 @@ text="Analyze your resume against a job description, find gaps, and receive impr
 />
 
 
+<CopilotCard
+  href="/copilot/career-counselor"
+  title="Career Counselor"
+  text="Receive personalized career guidance, roadmaps, interview advice, resume feedback, and long-term planning based on your Career Nook profile."
+/>
 
 </div>
 

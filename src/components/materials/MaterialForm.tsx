@@ -97,21 +97,6 @@ Add Material
 
 </h2>
 
-
-<span className="
-bg-blue-50
-px-3
-py-1
-text-sm
-font-medium
-text-blue-600
-">
-
-Library
-
-</span>
-
-
 </div>
 
 

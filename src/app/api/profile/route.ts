@@ -2,7 +2,6 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/getUser";
 
 
-
 export async function GET(){
 
 
@@ -25,7 +24,8 @@ status:401
 
 
 
-const profile = await prisma.user.findUnique({
+
+let profile = await prisma.user.findUnique({
 
 where:{
 id:user.id
@@ -44,7 +44,32 @@ createdAt:true
 
 
 
-return Response.json(profile);
+
+// Create Prisma profile if missing
+
+if(!profile){
+
+
+profile = await prisma.user.create({
+
+data:{
+
+id:user.id,
+
+email:user.email ?? "",
+
+},
+
+select:{
+
+id:true,
+name:true,
+email:true,
+createdAt:true
+
+}
+
+});
 
 
 }
@@ -52,6 +77,10 @@ return Response.json(profile);
 
 
 
+return Response.json(profile);
+
+
+}
 
 export async function PUT(request:Request){
 
