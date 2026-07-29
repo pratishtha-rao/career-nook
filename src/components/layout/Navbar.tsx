@@ -33,7 +33,7 @@ const privateLinks = [
     href: "/jobs",
   },
   {
-    name: "Network",
+    name: "Contacts",
     href: "/contacts",
   },
   {
@@ -44,9 +44,15 @@ const privateLinks = [
     name: "Materials",
     href: "/materials",
   },
+  /*
   {
     name: "Nook Copilot",
     href: "/copilot",
+  },
+  */
+    {
+    name: "Archive",
+    href: "/archive",
   },
   {
     name:"Profile",
@@ -113,106 +119,68 @@ subscription.unsubscribe();
 
 
 return (
+  <nav className="border-b bg-white overflow-x-hidden">
+    <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
 
-<nav className="border-b bg-white">
+      {/* Top row */}
+      <div className="flex items-center justify-between">
+        <Link
+          href="/"
+          className="text-2xl font-bold text-blue-600 whitespace-nowrap"
+        >
+          Career Nook
+        </Link>
 
+        {loggedIn && <SignOutButton />}
+      </div>
 
-<div className="
-mx-auto 
-flex 
-max-w-7xl 
-items-center 
-justify-between 
-px-8 
-py-5
-">
+      {/* Navigation */}
+      <div
+        className="
+          mt-4
+          flex
+          flex-wrap
+          justify-center
+          gap-x-8
+          gap-y-3
+          text-sm
+          font-medium
+        "
+      >
+        {loggedIn ? (
+          privateLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="
+                whitespace-nowrap
+                text-slate-600
+                transition
+                hover:text-blue-600
+              "
+            >
+              {link.name}
+            </Link>
+          ))
+        ) : (
+          publicLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="
+                whitespace-nowrap
+                text-slate-600
+                transition
+                hover:text-blue-600
+              "
+            >
+              {link.name}
+            </Link>
+          ))
+        )}
+      </div>
 
-
-<Link
-href="/"
-className="text-2xl font-bold text-blue-600"
->
-Career Nook
-</Link>
-
-
-
-<div className="flex items-center gap-8 text-sm font-medium">
-
-
-{
-loggedIn ? (
-
-<>
-
-{
-privateLinks.map(link=>(
-
-<Link
-key={link.href}
-href={link.href}
-className="
-text-slate-600 
-transition 
-hover:text-blue-600
-"
->
-
-{link.name}
-
-</Link>
-
-))
-
-}
-
-
-<SignOutButton />
-
-</>
-
-
-) : (
-
-<>
-
-{
-publicLinks.map(link=>(
-
-<Link
-key={link.href}
-href={link.href}
-className="
-text-slate-600 
-transition 
-hover:text-blue-600
-"
->
-
-{link.name}
-
-</Link>
-
-))
-
-}
-
-</>
-
-)
-
-}
-
-
-</div>
-
-
-</div>
-
-
-</nav>
-
+    </div>
+  </nav>
 );
-
-
 }

@@ -23,15 +23,22 @@ status:401
 
 
 const contacts = await prisma.contact.findMany({
+  where: {
+    userId: user.id,
+      archived: false,
+  },
 
-where:{
-userId:user.id
-},
+  orderBy: {
+    order: "asc",
+  },
 
-orderBy:{
-id:"desc"
-}
-
+  include: {
+    folderContacts: {
+      include: {
+        folder: true,
+      },
+    },
+  },
 });
 
 
@@ -66,18 +73,43 @@ status:401
 const body = await request.json();
 
 
-const contact = await prisma.contact.create({
+const { folderIds = [], ...contactData } = body;
 
-data:{
 
-...body,
-
-userId:user.id
-
-}
-
+const lastContact = await prisma.contact.findFirst({
+  where: {
+    userId: user.id,
+  },
+  orderBy: {
+    order: "desc",
+  },
 });
 
+const contact = await prisma.contact.create({
+  data: {
+    ...contactData,
+    userId: user.id,
+    order: (lastContact?.order ?? -1) + 1,
+
+    folderContacts: {
+      create: folderIds.map((folderId: number) => ({
+        folder: {
+          connect: {
+            id: folderId,
+          },
+        },
+      })),
+    },
+  },
+
+  include: {
+    folderContacts: {
+      include: {
+        folder: true,
+      },
+    },
+  },
+});
 
 return Response.json(contact);
 

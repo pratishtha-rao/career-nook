@@ -1,88 +1,71 @@
-import { prisma } from "@/lib/prisma";
-
 import { getCurrentUser } from "@/lib/getUser";
-import { createJob } from "@/services/jobService";
+import {
+  getJobs,
+  createJob,
+} from "@/services/jobService";
 
+export async function GET() {
+  const user = await getCurrentUser();
 
+  if (!user) {
+    return Response.json(
+      {
+        error: "Unauthorized",
+      },
+      {
+        status: 401,
+      }
+    );
+  }
 
-export async function GET(){
+const jobs = await getJobs(user.id);
 
+const activeJobs = jobs.filter(job => !job.archived);
 
-const user = await getCurrentUser();
-
-
-if(!user){
-
-return Response.json(
-{
-error:"Unauthorized"
-},
-{
-status:401
-}
-);
-
-}
-
-
-
-const jobs = await prisma.job.findMany({
-
-where:{
-userId:user.id
-},
-
-orderBy:{
-id:"desc"
-}
-
-});
-
-
-return Response.json(jobs);
-
+return Response.json(activeJobs);
 
 }
 
+export async function POST(request: Request) {
+  const user = await getCurrentUser();
 
+  if (!user) {
+    return Response.json(
+      {
+        error: "Unauthorized",
+      },
+      {
+        status: 401,
+      }
+    );
+  }
 
+  const body = await request.json();
 
+  const job = await createJob(user.id, {
+    company: body.company,
+    position: body.position,
+    status: body.status,
 
-export async function POST(request:Request){
+dateApplied: new Date(body.dateApplied),
 
+    salary: body.salary,
+    salaryNotes: body.salaryNotes,
 
-const user = await getCurrentUser();
+    location: body.location,
 
+    officeType: body.officeType,
 
+    url: body.url,
 
-if(!user){
+    description: body.description,
 
-return Response.json(
+    notes: body.notes,
 
-{
-error:"Unauthorized"
-},
+    referredBy: body.referredBy,
 
-{
-status:401
-}
+    folderIds: body.folderIds ?? [],
+  });
 
-);
-
-}
-
-
-
-
-const body = await request.json();
-
-const job = await createJob(
-user.id,
-body
-);
-
-
-return Response.json(job);
-
-
+  return Response.json(job);
 }

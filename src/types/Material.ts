@@ -21,6 +21,8 @@ export type Material = {
 
   userId:string;
 
+  archived: boolean;
+
 };
 
 

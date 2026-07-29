@@ -25,17 +25,14 @@ status:401
 
 
 const tasks = await prisma.task.findMany({
-
-where:{
-userId:user.id
-},
-
-orderBy:{
-id:"desc"
-}
-
+  where: {
+    userId: user.id,
+    archived: false,
+  },
+  orderBy: {
+    id: "desc",
+  },
 });
-
 
 return Response.json(tasks);
 
@@ -64,28 +61,22 @@ status:401
 
 }
 
-
-
 const body = await request.json();
 
-
-
 const task = await prisma.task.create({
+  data: {
+    title: body.title,
+    description: body.description || null,
+    priority: body.priority,
+    status: body.status,
 
-data:{
+    dueDate: body.dueDate
+      ? new Date(body.dueDate)
+      : null,
 
-
-...body,
-
-
-userId:user.id
-
-
-}
-
+    userId: user.id,
+  },
 });
-
-
 
 return Response.json(task);
 

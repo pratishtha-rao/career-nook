@@ -18,29 +18,53 @@ export async function PUT(
   const { id } = await params;
 
   const body = await request.json();
+const { folderIds = [], ...contactData } = body;
 
-  const contact = await prisma.contact.findFirst({
-    where: {
-      id: Number(id),
-      userId: user.id,
+const contact = await prisma.contact.findFirst({
+  where: {
+    id: Number(id),
+    userId: user.id,
+  },
+});
+
+if (!contact) {
+  return Response.json(
+    { error: "Contact not found" },
+    { status: 404 }
+  );
+}
+
+const updated = await prisma.contact.update({
+  where: {
+    id: contact.id,
+  },
+
+  data: {
+    ...contactData,
+
+    folderContacts: {
+      deleteMany: {},
+
+      create: folderIds.map((folderId: number) => ({
+        folder: {
+          connect: {
+            id: folderId,
+          },
+        },
+      })),
     },
-  });
+  },
 
-  if (!contact) {
-    return Response.json(
-      { error: "Contact not found" },
-      { status: 404 }
-    );
-  }
-
-  const updated = await prisma.contact.update({
-    where: {
-      id: contact.id,
+  include: {
+    folderContacts: {
+      include: {
+        folder: true,
+      },
     },
-    data: body,
-  });
+  },
+});
 
-  return Response.json(updated);
+return Response.json(updated);
 }
 
 

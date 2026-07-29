@@ -12,72 +12,199 @@ model Job {
 
   userId String
 
-  company String
-
+  company  String
   position String
 
   status String
 
-  dateApplied String
+  dateApplied DateTime
+
+  salary String?
+
+  salaryNotes String?
+
+  location String?
+
+  officeType OfficeType?
 
   url String?
 
-  notes String?
+  description String? @db.Text
+
+  notes String? @db.Text
+
+  referredBy String?
+
+  archived Boolean @default(false)
+
+  folders FolderJob[]
 
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  contacts  JobContact[]
+  tasks     JobTask[]
+  materials JobMaterial[]
+
+order Int @default(0)
+
   @@index([userId])
-  @@index([userId, id])
+  @@index([userId, archived])
+  @@index([userId, status])
+}
+
+enum OfficeType {
+  REMOTE
+  HYBRID
+  ONSITE
+}
+
+model JobContact {
+  jobId Int
+  contactId Int
+
+  role String? // Recruiter, Referral, Hiring Manager, Interviewer
+
+  notes String? @db.Text
+
+  createdAt DateTime @default(now())
+
+  job Job @relation(
+    fields: [jobId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  contact Contact @relation(
+    fields: [contactId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  @@id([jobId, contactId])
+  @@index([contactId])
+}
+
+model JobTask {
+  jobId Int
+  taskId Int
+
+  createdAt DateTime @default(now())
+
+  job Job @relation(
+    fields: [jobId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  task Task @relation(
+    fields: [taskId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  @@id([jobId, taskId])
+  @@index([taskId])
+}
+
+model JobMaterial {
+  jobId Int
+  materialId Int
+
+  purpose String? // Resume, Cover Letter, Portfolio, Transcript
+
+  createdAt DateTime @default(now())
+
+  job Job @relation(
+    fields: [jobId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  material Material @relation(
+    fields: [materialId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  @@id([jobId, materialId])
+  @@index([materialId])
 }
 
 model Contact {
   id Int @id @default(autoincrement())
 
+  userId String
+
   name String
-
   company String
-
   role String
 
   type String
 
   email String?
+  phone String?
+  linkedin String?
 
-  notes String?
+  location String?
+
+  website String?
+  twitter String?
+
+  referredBy String?
+
+  relationship String? // Recruiter, Hiring Manager, Mentor, Alumni, Friend
+
+  lastContact DateTime?
+  nextFollowUp DateTime?
+
+  notes String? @db.Text
+
+  favorite Boolean @default(false)
+
+  order Int @default(0)
 
   createdAt DateTime @default(now())
-
-  userId String
+updatedAt DateTime @default(now()) @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  jobs JobContact[]
+  folderContacts FolderContact[]
+
+  archived    Boolean  @default(false)
+@@index([userId, archived])
+
   @@index([userId])
-  @@index([userId, id])
+  @@index([userId, order])
+  @@index([userId, favorite])
 }
 
 model Task {
-  id Int @id @default(autoincrement())
-
-  title String
-
-  description String
-
-  dueDate String
-
-  priority String
-
-  status String
-
-  createdAt DateTime @default(now())
-
-  userId String
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String?      @db.Text
+  dueDate     DateTime?
+  completed   Boolean      @default(false)
+  jobs        JobTask[]
+  priority    String
+  status      String
+    order Int @default(0)
+  createdAt   DateTime     @default(now())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  folderTasks FolderTask[]
 
   @@index([userId])
   @@index([userId, id])
+
+updatedAt DateTime @updatedAt
+
+    archived    Boolean  @default(false)
+    @@index([userId, archived])
+
 }
 
 model Material {
@@ -87,17 +214,32 @@ model Material {
 
   type String
 
-  description String?
+  description String? @db.Text
 
   link String?
 
   source String?
 
+  fileName String?
+
+  version String?
+
+  order Int @default(0)
+
+  jobs JobMaterial[]
+
   createdAt DateTime @default(now())
+
+updatedAt DateTime @updatedAt
 
   userId String
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  archived    Boolean  @default(false)
+
+@@index([userId, archived])
+
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  folderMaterials FolderMaterial[]
 
   @@index([userId])
   @@index([userId, id])
@@ -121,6 +263,8 @@ model User {
   materials Material[]
 
   aiUsages AIUsage[]
+
+  folders Folder[]
 }
 
 model AIUsage {
@@ -133,4 +277,93 @@ model AIUsage {
   createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Folder {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  description String? @db.Text
+
+  color String?
+
+  icon String?
+
+  order Int @default(0)
+
+  collapsed Boolean @default(false)
+
+  favorite Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  userId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  jobs FolderJob[]
+
+  contacts FolderContact[]
+
+  tasks FolderTask[]
+
+  materials FolderMaterial[]
+
+  @@index([userId])
+  @@index([userId, order])
+  @@index([userId, favorite])
+}
+
+model FolderJob {
+  folderId Int
+  jobId    Int
+
+  folder Folder @relation(fields: [folderId], references: [id])
+  job    Job    @relation(fields: [jobId], references: [id])
+
+  @@id([folderId, jobId])
+}
+
+model FolderContact {
+  folderId Int
+
+  contactId Int
+
+  folder Folder @relation(fields: [folderId], references: [id], onDelete: Cascade)
+
+  contact Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  @@id([folderId, contactId])
+  @@index([contactId])
+}
+
+model FolderTask {
+  folderId Int
+
+  taskId Int
+
+  folder Folder @relation(fields: [folderId], references: [id], onDelete: Cascade)
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@id([folderId, taskId])
+  @@index([taskId])
+}
+
+model FolderMaterial {
+  folderId Int
+
+  materialId Int
+
+  folder Folder @relation(fields: [folderId], references: [id], onDelete: Cascade)
+
+  material Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
+
+  @@id([folderId, materialId])
+  @@index([materialId])
 }

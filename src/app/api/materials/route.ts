@@ -30,6 +30,7 @@ const materials = await prisma.material.findMany({
 
 where:{
 userId:user.id,
+  archived: false,
 },
 
 orderBy:{

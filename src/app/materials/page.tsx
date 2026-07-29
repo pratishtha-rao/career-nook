@@ -1,440 +1,255 @@
 "use client";
 
-
-import { useEffect, useState } from "react";
-
-import MaterialCard from "@/components/materials/MaterialCard";
-
-import MaterialForm from "@/components/materials/MaterialForm";
-
-import EditMaterialForm from "@/components/materials/EditMaterialForm";
-
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { Material, CreateMaterial } from "@/types/Material";
+import MaterialCard from "@/components/materials/MaterialCard";
+import MaterialForm from "@/components/materials/MaterialForm";
+import EditMaterialForm from "@/components/materials/EditMaterialForm";
+import SearchBar from "@/components/common/SearchBar";
+import { useSearchParams } from "next/navigation";
 
-export default function MaterialsPage(){
+import type {
+  Material,
+  CreateMaterial,
+} from "@/types/Material";
 
-const [materials,setMaterials] = useState<Material[]>([]);
-const router = useRouter();
+export default function MaterialsPage() {
+  const router = useRouter();
 
-const [editingMaterial,setEditingMaterial] = useState<Material | null>(null);
+  const [materials, setMaterials] = useState<Material[]>([]);
+  const [editingMaterial, setEditingMaterial] =
+    useState<Material | null>(null);
 
-const [loading,setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
 
+  const searchParams = useSearchParams();
 
+const selectedMaterial =
+  searchParams.get("material");
 
-
-useEffect(() => {
+  
+  useEffect(() => {
+    void loadMaterials();
+  }, []);
 
   async function loadMaterials() {
-
     try {
-
       const response = await fetch("/api/materials", {
-        cache:"no-store",
+        cache: "no-store",
       });
 
+      if (response.status === 401) {
+        router.push("/login");
+        return;
+      }
 
       const data = await response.json();
 
-
-
-      if (response.status === 401) {
-
-        router.push("/login");
-
-        return;
-
-      }
-
-
-
       if (!response.ok) {
-
         console.error(data);
-
         setMaterials([]);
-
         return;
-
       }
 
-
-
-      setMaterials(
-        Array.isArray(data)
-        ? data
-        : []
-      );
-
-
-    } catch(error){
-
-      console.error(
-        "Failed loading materials:",
-        error
-      );
-
+      setMaterials(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error("Failed loading materials:", error);
       setMaterials([]);
-
-    }
-    finally {
-
+    } finally {
       setLoading(false);
-
     }
-
-
   }
 
+  async function addMaterial(
+    material: CreateMaterial
+  ) {
+    const response = await fetch("/api/materials", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(material),
+    });
 
-  loadMaterials();
+    if (!response.ok) return;
 
+    await loadMaterials();
+  }
 
-},[router]);
+  async function deleteMaterial(id: number) {
+    const response = await fetch(
+      `/api/materials/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
 
-async function addMaterial(material:CreateMaterial){
+    if (!response.ok) return;
 
+    await loadMaterials();
+  }
 
-const response = await fetch("/api/materials",{
+  async function saveEditedMaterial(
+    material: Material
+  ) {
+    const response = await fetch(
+      `/api/materials/${material.id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(material),
+      }
+    );
 
-method:"POST",
+    if (!response.ok) return;
 
-headers:{
-"Content-Type":"application/json"
-},
+    await loadMaterials();
+    setEditingMaterial(null);
+  }
 
-body:JSON.stringify(material)
+  async function archiveMaterial(id: number) {
+  const response = await fetch(
+    `/api/materials/archived/${id}`,
+    {
+      method: "PATCH",
+    }
+  );
 
-});
+  if (!response.ok) return;
 
-
-const savedMaterial = await response.json();
-
-
-if(!response.ok){
-
-console.log(savedMaterial);
-
-return;
-
+  await loadMaterials();
 }
 
-
-setMaterials(previous=>[
-savedMaterial,
-...previous
-]);
-
-}
-
-
-async function deleteMaterial(id:number){
-
-
-
-await fetch(`/api/materials/${id}`,{
-
-
-method:"DELETE",
-
-
-});
-
-
-
-
-setMaterials(previous=>
-
-previous.filter(
-
-(material)=>material.id !== id
-
-)
-
-);
-
-
-
-}
-
-
-
-
-
-
-
-
-
-async function saveEditedMaterial(updatedMaterial:Material){
-
-
-
-const response = await fetch(
-
-`/api/materials/${updatedMaterial.id}`,
-
-{
-
-
-method:"PUT",
-
-
-headers:{
-
-
-"Content-Type":"application/json",
-
-
-},
-
-
-body:JSON.stringify(updatedMaterial),
-
-
-}
-
-);
-
-
-
-
-const savedMaterial = await response.json();
-
-
-
-
-
-setMaterials(previous=>
-
-
-previous.map(material=>
-
-
-material.id === savedMaterial.id
-
-?
-
-savedMaterial
-
-:
-
-material
-
-
-)
-
-);
-
-
-
-
-
-setEditingMaterial(null);
-
-
-
-}
-
-
-
-
-
-
-
-
-
-if(loading){
-
-
-return (
-
-<main className="
-min-h-screen
-flex
-items-center
-justify-center
-bg-[#f5f9ff]
-">
-
-
-<p className="text-lg text-black">
-
-Loading materials...
-
-</p>
-
-
-</main>
-
-);
-
-
-}
-
-
-
-
-
-
-
-
-return (
-
-<main className="
-min-h-screen
-bg-[#f5f9ff]
-">
-
-<div className="
-mx-auto
-max-w-7xl
-px-8
-py-12
-">
-
-
-
-<h1 className="
-text-4xl
-font-bold
-text-black
-">
-
-Application Materials
-
-</h1>
-
-
-
-
-
-<p className="
-mt-3
-text-slate-600
-">
-
-Manage resumes, cover letters, and portfolio items.
-
-</p>
-
-
-
-
-
-
-
-
-
-<div className="mt-8">
-
-
-<MaterialForm
-
-onAddMaterial={addMaterial}
-
-/>
-
-
-</div>
-
-
-
-
-
-
-
-
-{
-
-editingMaterial && (
-
-<div className="mt-8">
-
-
-<EditMaterialForm
-
-material={editingMaterial}
-
-onSave={saveEditedMaterial}
-
-onCancel={()=>setEditingMaterial(null)}
-
-/>
-
-
-</div>
-
-)
-
-}
-
-<div className="
-mt-8
-grid
-gap-5
-md:grid-cols-2
-">
-
-
-{
-
-materials.map(material=>(
-
-
-
-<MaterialCard
-
-
-key={material.id}
-
-
-material={material}
-
-
-
-onEdit={(material)=>
-
-
-setEditingMaterial(material)
-
-
-}
-
-
-
-onDelete={deleteMaterial}
-
-
-/>
-
-
-
-))
-
-
-}
-
-
-
-
-
-
-</div>
-
-
-
-
-
-
-</div>
-
-
-</main>
-
-);
-
-
-
+const displayedMaterials = useMemo(() => {
+  let filtered = materials;
+
+  if (search.trim()) {
+    const term = search.toLowerCase();
+
+    filtered = filtered.filter((material) =>
+      `${material.name}
+       ${material.type}
+       ${material.description ?? ""}
+       ${material.link ?? ""}`
+        .toLowerCase()
+        .includes(term)
+    );
+  }
+
+  return filtered;
+}, [materials, search]);
+
+useEffect(() => {
+  if (!selectedMaterial) return;
+
+  const element = document.getElementById(
+    `material-${selectedMaterial}`
+  );
+
+  if (element) {
+    element.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+  }
+}, [selectedMaterial, displayedMaterials]);
+
+  if (loading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[#f5f9ff]">
+        <p className="text-lg text-slate-700">
+          Loading materials...
+        </p>
+      </main>
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-[#f5f9ff] py-8">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-6">
+        <div className="text-center">
+          <h1 className="text-5xl font-bold text-slate-950">
+            Application Materials
+          </h1>
+
+          <p className="mt-2 text-lg text-slate-600">
+            Manage resumes, cover letters,
+            portfolios, and other application
+            materials.
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+          <MaterialForm
+            onAddMaterial={addMaterial}
+          />
+        </div>
+
+        <SearchBar
+          value={search}
+          onChange={setSearch}
+          placeholder="Search materials..."
+        />
+
+        {editingMaterial && (
+          <div className="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+            <EditMaterialForm
+              material={editingMaterial}
+              onSave={saveEditedMaterial}
+              onCancel={() =>
+                setEditingMaterial(null)
+              }
+            />
+          </div>
+        )}
+
+        <div className="flex items-end justify-between">
+          <div>
+            <h2 className="text-3xl font-bold text-slate-900">
+              Materials
+            </h2>
+
+            <p className="mt-1 text-slate-500">
+              {displayedMaterials.length} material
+              {displayedMaterials.length !== 1 &&
+                "s"}
+            </p>
+          </div>
+        </div>
+
+        {displayedMaterials.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-blue-200 bg-white p-12 text-center">
+            <h3 className="text-2xl font-bold text-slate-900">
+              No materials found
+            </h3>
+
+            <p className="mt-3 text-slate-500">
+              Add a material or adjust your
+              search.
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-5 md:grid-cols-2">
+{displayedMaterials.map((material) => (
+  <div
+    key={material.id}
+    id={`material-${material.id}`}
+  >
+    <MaterialCard
+      material={material}
+      onEdit={setEditingMaterial}
+      onDelete={deleteMaterial}
+      onArchive={archiveMaterial}
+    />
+  </div>
+))}
+          </div>
+        )}
+      </div>
+    </main>
+  );
 }

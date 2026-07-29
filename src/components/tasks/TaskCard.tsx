@@ -1,197 +1,147 @@
 import { Task } from "@/types/Task";
 
+type Props = {
+  task: Task;
 
-type Props={
-
-task:Task;
-
-onEdit:(task:Task)=>void;
-
-onDelete:(id:number)=>void;
-
+  onEdit: (task: Task) => void;
+  onDelete: (id: number) => void;
+  onArchive: (id: number) => void;
 };
 
-
-
 export default function TaskCard({
-
-task,
-
-onEdit,
-
-onDelete
-
-}:Props){
-
-
-
-return (
-
-<div className="
-border
-border-blue-100
-bg-white
-p-6
-shadow-sm
-hover:shadow-lg
-transition
-">
-
-
-<div className="
-flex
-justify-between
-items-start
-">
-
-
-<h2 className="
-text-2xl
-font-bold
-text-slate-950
-">
-
-{task.title}
-
-</h2>
-
-
-
-<span className="
-bg-blue-100
-px-3
-py-1
-text-sm
-font-semibold
-text-blue-700
-">
-
-{task.status}
-
-</span>
-
-
-</div>
-
-
-
-
-
-<p className="
-mt-3
-text-slate-600
-">
-
-{task.description}
-
-</p>
-
-
-
-
-
-<div className="
-mt-5
-grid
-grid-cols-2
-gap-3
-text-sm
-">
-
-
-<div>
-
-<p className="text-slate-500">
-Due Date
-</p>
-
-<p className="font-semibold">
-{task.dueDate}
-</p>
-
-</div>
-
-
-
-
-<div>
-
-<p className="text-slate-500">
-Priority
-</p>
-
-<p className="font-semibold">
-{task.priority}
-</p>
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-<div className="
-mt-6
-flex
-gap-3
-">
-
-
-<button
-
-onClick={()=>onEdit(task)}
-
-className="
-bg-blue-600
-px-5
-py-2
-font-semibold
-text-white
-hover:bg-blue-700
-transition
-"
-
->
-
-Edit
-
-</button>
-
-
-
-
-<button
-
-onClick={()=>onDelete(task.id)}
-
-className="
-border
-border-red-200
-px-5
-py-2
-font-semibold
-text-red-600
-hover:bg-red-50
-transition
-"
-
->
-
-Delete
-
-</button>
-
-
-</div>
-
-
-</div>
-
-);
-
-
+  task,
+  onEdit,
+  onDelete,
+  onArchive,
+}: Props) {
+  return (
+    <div
+      className="
+        w-full rounded-xl border border-blue-100
+        bg-white p-4 shadow-sm transition
+        hover:shadow-lg sm:p-6
+      "
+    >
+      {/* Header */}
+
+      <div
+        className="
+          flex flex-col gap-3
+          sm:flex-row sm:items-start
+          sm:justify-between
+        "
+      >
+        <h2
+          className="
+            break-words text-xl font-bold
+            text-slate-950 sm:text-2xl
+          "
+        >
+          {task.title}
+        </h2>
+
+        <span
+          className="
+            w-fit rounded bg-blue-100
+            px-3 py-1 text-sm
+            font-semibold text-blue-700
+          "
+        >
+          {task.status}
+        </span>
+      </div>
+
+      {/* Description */}
+
+      <p
+        className="
+          mt-3 break-words
+          text-slate-600
+        "
+      >
+        {task.description}
+      </p>
+
+      {/* Details */}
+
+      <div
+        className="
+          mt-5 grid grid-cols-1
+          gap-4 text-sm
+          sm:grid-cols-2
+        "
+      >
+        <div>
+          <p className="text-slate-500">
+            Due Date
+          </p>
+
+          <p className="font-semibold break-words">
+            {task.dueDate
+              ? new Date(
+                  task.dueDate
+                ).toLocaleDateString()
+              : "No due date"}
+          </p>
+        </div>
+
+        <div>
+          <p className="text-slate-500">
+            Priority
+          </p>
+
+          <p className="font-semibold break-words">
+            {task.priority}
+          </p>
+        </div>
+      </div>
+
+      {/* Actions */}
+
+      <div
+        className="
+          mt-6 flex flex-col
+          gap-2
+        "
+      >
+        <button
+          onClick={() => onEdit(task)}
+          className="
+            w-full rounded bg-blue-600
+            px-4 py-2 text-sm font-semibold
+            text-white transition
+            hover:bg-blue-700
+          "
+        >
+          Edit
+        </button>
+
+        <button
+          onClick={() => onArchive(task.id)}
+          className="
+            w-full rounded border
+            border-yellow-300 px-4 py-2
+            text-sm font-semibold
+            text-yellow-700 transition
+            hover:bg-yellow-50
+          "
+        >
+          Archive
+        </button>
+
+        <button
+          onClick={() => onDelete(task.id)}
+          className="
+            w-full rounded border
+            border-red-200 px-4 py-2
+            text-sm font-semibold
+            text-red-600 transition
+            hover:bg-red-50
+          "
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  );
 }
