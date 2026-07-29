@@ -9,20 +9,22 @@ return prisma.task.findMany();
 
 
 
-export async function createTask(data:{
-title:string;
-description:string;
-dueDate:string;
-priority:string;
-status:string;
-}){
-
-return prisma.task.create({
-
-data
-
-});
-
+export async function createTask(
+  userId: string,
+  data: {
+    title: string;
+    description: string;
+    dueDate: string;
+    priority: string;
+    status: string;
+  }
+) {
+  return prisma.task.create({
+    data: {
+      ...data,
+      userId,
+    },
+  });
 }
 
 
