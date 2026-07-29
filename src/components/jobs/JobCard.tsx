@@ -39,7 +39,6 @@ export default function JobCard({
 
   const [expanded, setExpanded] = useState(false);
 
-  const [showContacts, setShowContacts] =
   useState(false);
 
   const [showContactPicker, setShowContactPicker] = useState(false);

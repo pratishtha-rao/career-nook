@@ -5,7 +5,6 @@ import { useState } from "react";
 import { JOB_STATUSES } from "@/constants/job-statuses";
 
 import type { Folder } from "@/types/Folder";
-import type { Contact } from "@/types/Contact";
 
 import {
   Job,

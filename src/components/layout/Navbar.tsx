@@ -119,8 +119,6 @@ subscription.unsubscribe();
 },[]);
 
 
-
-
 return (
   <nav className="border-b bg-white overflow-x-hidden">
     <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">

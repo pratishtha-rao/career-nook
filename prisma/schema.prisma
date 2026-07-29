@@ -71,17 +71,9 @@ model JobContact {
 
   createdAt DateTime @default(now())
 
-  job Job @relation(
-    fields: [jobId],
-    references: [id],
-    onDelete: Cascade
-  )
+  job Job @relation( fields: [jobId], references: [id], onDelete: Cascade)
 
-  contact Contact @relation(
-    fields: [contactId],
-    references: [id],
-    onDelete: Cascade
-  )
+  contact Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
 
   @@id([jobId, contactId])
   @@index([contactId])
@@ -93,17 +85,9 @@ model JobTask {
 
   createdAt DateTime @default(now())
 
-  job Job @relation(
-    fields: [jobId],
-    references: [id],
-    onDelete: Cascade
-  )
+  job Job @relation(fields: [jobId], references: [id], onDelete: Cascade)
 
-  task Task @relation(
-    fields: [taskId],
-    references: [id],
-    onDelete: Cascade
-  )
+  task Task @relation( fields: [taskId], references: [id], onDelete: Cascade)
 
   @@id([jobId, taskId])
   @@index([taskId])
@@ -117,17 +101,9 @@ model JobMaterial {
 
   createdAt DateTime @default(now())
 
-  job Job @relation(
-    fields: [jobId],
-    references: [id],
-    onDelete: Cascade
-  )
+  job Job @relation(fields: [jobId], references: [id], onDelete: Cascade)
 
-  material Material @relation(
-    fields: [materialId],
-    references: [id],
-    onDelete: Cascade
-  )
+  material Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
 
   @@id([jobId, materialId])
   @@index([materialId])
@@ -200,7 +176,7 @@ model Task {
   @@index([userId])
   @@index([userId, id])
 
-updatedAt DateTime @updatedAt
+updatedAt DateTime @default(now()) @updatedAt
 
     archived    Boolean  @default(false)
     @@index([userId, archived])
@@ -230,7 +206,7 @@ model Material {
 
   createdAt DateTime @default(now())
 
-updatedAt DateTime @updatedAt
+updatedAt DateTime @default(now()) @updatedAt
 
   userId String
 

@@ -18,7 +18,6 @@ export default function FolderSidebar({
   onSelect,
   onCreate,
     onDelete,
-  onToggleCollapse,
 
 }: Props) {
   const [name, setName] = useState("");
