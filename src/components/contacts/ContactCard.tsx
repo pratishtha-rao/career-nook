@@ -229,21 +229,21 @@ export default function ContactCard({
       <div className="mt-6 flex flex-wrap gap-3">
         <Button
           onClick={() => onEdit(contact)}
-          className="border border-slate-300 bg-white text-slate-700 hover:bg-slate-100"
+          className="bg-blue-800 text-white text-slate-700 hover:bg-blue-900"
         >
           Edit
         </Button>
 
 <Button
   onClick={() => onArchive(contact.id)}
-  className="border border-yellow-300 bg-white text-yellow-700 hover:bg-yellow-50"
+  className="border border-yellow-300 bg-yellow-600 px-5 py-2 text-black-700 hover:bg-yellow-700"
 >
   Archive
 </Button>
 
         <Button
           onClick={() => onDelete(contact.id)}
-          className="bg-red-600 text-white hover:bg-red-700"
+          className="bg-red-800 text-white hover:bg-red-600"
         >
           Delete
         </Button>

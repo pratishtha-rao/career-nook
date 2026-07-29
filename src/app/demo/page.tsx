@@ -4,6 +4,7 @@ import DemoJobs from "@/components/demo/DemoJobs";
 import DemoContacts from "@/components/demo/DemoContact";
 import DemoTasks from "@/components/demo/DemoTasks";
 import DemoMaterials from "@/components/demo/DemoMaterials";
+import DemoBanner from "@/components/common/DemoBanner";
 
 
 export default function DemoPage(){
@@ -23,45 +24,7 @@ px-8
 py-12
 ">
 
-
-<div className="
-rounded-2xl
-bg-blue-600
-p-8
-shadow-lg
-text-white
-">
-
-
-<h1 className="
-font-header
-text-4xl
-font-bold
-">
-
-Try Career Nook
-
-</h1>
-
-
-
-<p className="
-mt-3
-max-w-3xl
-text-lg
-text-blue-100
-">
-
-This demo lets you organize jobs, contacts, tasks, and materials.
-Create an account to unlock more features and save your data.
-
-</p>
-
-
-</div>
-
-
-
+<DemoBanner/>
 
 
 <div className="

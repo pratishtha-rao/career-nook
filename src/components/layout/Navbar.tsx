@@ -1,5 +1,4 @@
 "use client";
-// src/components/layout/Navbar.tsx
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -8,9 +7,13 @@ import SignOutButton from "@/components/SignOut";
 
 
 const publicLinks = [
+    {
+    name: "Home",
+    href: "/",
+  },
   {
-    name:"Try Demo",
-    href:"/demo"
+    name: "Demo",
+    href: "/demo",
   },
   {
     name: "Sign Up",
@@ -28,7 +31,7 @@ const privateLinks = [
     name: "Dashboard",
     href: "/dashboard",
   },
-  {
+      {
     name: "Applications",
     href: "/jobs",
   },
@@ -44,13 +47,14 @@ const privateLinks = [
     name: "Materials",
     href: "/materials",
   },
+
   /*
   {
     name: "Nook Copilot",
     href: "/copilot",
   },
   */
-    {
+  {
     name: "Archive",
     href: "/archive",
   },
@@ -66,8 +70,7 @@ export default function Navbar() {
 
 const [loggedIn,setLoggedIn] = useState(false);
 
-const supabase = createClient();
-
+const [supabase] = useState(() => createClient());
 
 
 useEffect(()=>{

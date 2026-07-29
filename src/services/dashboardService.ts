@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma";
 
 export async function getDashboardStats(userId: string) {
-
   const totalJobs = await prisma.job.count({
     where: {
       userId,
@@ -10,29 +9,52 @@ export async function getDashboardStats(userId: string) {
 
   const applied = await prisma.job.count({
     where: {
-      status: "Applied",
       userId,
-    },
-  });
-
-  const interviews = await prisma.job.count({
-    where: {
-      status: "Interview",
-      userId,
+      status: {
+        in: [
+          "Applied",
+          "OA",
+          "Phone Screen",
+          "Recruiter Call",
+          "Technical Interview",
+          "Behavioral Interview",
+          "Interview",
+          "Final Interview",
+          "Reference Check",
+          "Offer",
+          "Negotiating",
+          "Accepted",
+          "Rejected",
+          "Ghosted",
+          "Withdrawn",
+        ],
+      },
     },
   });
 
   const offers = await prisma.job.count({
     where: {
-      status: "Offer",
       userId,
+      status: {
+        in: [
+          "Offer",
+          "Negotiating",
+          "Accepted",
+        ],
+      },
     },
   });
 
   const rejected = await prisma.job.count({
     where: {
-      status: "Rejected",
       userId,
+      status: {
+        in: [
+          "Rejected",
+          "Ghosted",
+          "Withdrawn",
+        ],
+      },
     },
   });
 
@@ -44,8 +66,8 @@ export async function getDashboardStats(userId: string) {
 
   const completedTasks = await prisma.task.count({
     where: {
-      status: "Completed",
       userId,
+      status: "Completed",
     },
   });
 
@@ -59,22 +81,22 @@ export async function getDashboardStats(userId: string) {
 
   const resumes = await prisma.material.count({
     where: {
-      type: "Resume",
       userId,
+      type: "Resume",
     },
   });
 
   const coverLetters = await prisma.material.count({
     where: {
-      type: "Cover Letter",
       userId,
+      type: "Cover Letter",
     },
   });
 
   const portfolios = await prisma.material.count({
     where: {
-      type: "Portfolio",
       userId,
+      type: "Portfolio",
     },
   });
 
@@ -91,14 +113,13 @@ export async function getDashboardStats(userId: string) {
   return {
     totalJobs,
     applied,
-    interviews,
     offers,
     rejected,
 
-    interviewRate:
-      totalJobs === 0
+    successRate:
+      applied === 0
         ? 0
-        : Math.round((interviews / totalJobs) * 100),
+        : Math.round((offers / applied) * 100),
 
     totalTasks,
     completedTasks,

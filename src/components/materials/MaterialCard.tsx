@@ -108,13 +108,9 @@ export default function MaterialCard({
       >
         <button
           onClick={() => onEdit(material)}
-          className="
-            w-full rounded border
-            border-blue-200 px-4 py-2
-            text-sm font-medium
-            text-blue-600 transition
-            hover:bg-blue-50
-          "
+          className="bg-blue-800 
+          text-white text-slate-700 
+          hover:bg-blue-900"
         >
           Edit
         </button>
@@ -122,11 +118,7 @@ export default function MaterialCard({
         <button
           onClick={() => onArchive(material.id)}
           className="
-            w-full rounded border
-            border-yellow-300 px-4 py-2
-            text-sm font-semibold
-            text-yellow-700 transition
-            hover:bg-yellow-50
+            border border-yellow-300 bg-yellow-600 px-5 py-2 text-black-700 hover:bg-yellow-700
           "
         >
           Archive
@@ -135,10 +127,7 @@ export default function MaterialCard({
         <button
           onClick={() => onDelete(material.id)}
           className="
-            w-full rounded bg-red-500
-            px-4 py-2 text-sm
-            font-medium text-white
-            transition hover:bg-red-600
+            bg-red-800 text-white hover:bg-red-600
           "
         >
           Delete

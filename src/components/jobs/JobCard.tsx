@@ -671,21 +671,21 @@ async function attachMaterial(materialId: number) {
 
       <Button
         onClick={() => onEdit(job)}
-        className="border border-slate-300 bg-white text-slate-700"
+        className="bg-blue-800 text-white text-slate-700 hover:bg-blue-900"
       >
         Edit
       </Button>
 
 <button
   onClick={() => onArchive(job.id)}
-  className="border border-yellow-300 px-5 py-2 text-yellow-700 hover:bg-yellow-50"
+  className="border border-yellow-300 bg-yellow-600 px-5 py-2 text-black-700 hover:bg-yellow-700"
 >
   Archive
 </button>
 
       <Button
         onClick={() => onDelete(job.id)}
-        className="bg-red-600 text-white hover:bg-red-700"
+        className="bg-red-800 text-white hover:bg-red-600"
       >
         Delete
       </Button>

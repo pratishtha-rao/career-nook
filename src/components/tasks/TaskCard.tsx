@@ -107,11 +107,8 @@ export default function TaskCard({
         <button
           onClick={() => onEdit(task)}
           className="
-            w-full rounded bg-blue-600
-            px-4 py-2 text-sm font-semibold
-            text-white transition
-            hover:bg-blue-700
-          "
+            bg-blue-800 text-white text-slate-700 
+            hover:bg-blue-900"
         >
           Edit
         </button>
@@ -119,11 +116,7 @@ export default function TaskCard({
         <button
           onClick={() => onArchive(task.id)}
           className="
-            w-full rounded border
-            border-yellow-300 px-4 py-2
-            text-sm font-semibold
-            text-yellow-700 transition
-            hover:bg-yellow-50
+            border border-yellow-300 bg-yellow-600 px-5 py-2 text-black-700 hover:bg-yellow-700
           "
         >
           Archive
@@ -132,11 +125,7 @@ export default function TaskCard({
         <button
           onClick={() => onDelete(task.id)}
           className="
-            w-full rounded border
-            border-red-200 px-4 py-2
-            text-sm font-semibold
-            text-red-600 transition
-            hover:bg-red-50
+            bg-red-800 text-white hover:bg-red-600
           "
         >
           Delete

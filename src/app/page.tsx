@@ -378,20 +378,6 @@ leading-relaxed
 </p>
 
 
-
-<div className="
-mt-5
-text-sm
-font-semibold
-text-blue-300
-">
-
-Learn more →
-
-</div>
-
-
-
 </div>
 
 );

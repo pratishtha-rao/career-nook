@@ -6,25 +6,15 @@ export type MaterialType =
 
 
 export type Material = {
-
-  id:number;
-
-  name:string;
-
-  type:MaterialType;
-
-  description?:string;
-
-  link?:string;
-
-  createdAt:string;
-
-  userId:string;
-
+  id: number;
+  name: string;
+  type: MaterialType;
+  description: string | null;
+  link: string | null;
+  createdAt: Date;     
+  userId: string;
   archived: boolean;
-
 };
-
 
 
 export type CreateMaterial = {
