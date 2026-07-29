@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import OpenAI from "openai";
+import { getOpenAI } from "@/lib/openai";
 
 export async function POST(request: NextRequest) {
-  if (!process.env.OPENAI_API_KEY) {
+  const client = getOpenAI();
+
+  if (!client) {
     return NextResponse.json(
       {
         error: "AI features are currently unavailable.",
@@ -12,10 +14,6 @@ export async function POST(request: NextRequest) {
       }
     );
   }
-
-  const client = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
 
   try {
     const body = await request.json();

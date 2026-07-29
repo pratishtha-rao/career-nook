@@ -1,189 +1,129 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { getOpenAI } from "@/lib/openai";
 
-import { openai } from "@/lib/openai";
+export async function POST(request: NextRequest) {
+  try {
+    const client = getOpenAI();
 
-import {
-  COVER_LETTER_SYSTEM_PROMPT
-} from "@/lib/copilotPrompts";
+    if (!client) {
+      return NextResponse.json(
+        {
+          error: "AI features are currently unavailable.",
+        },
+        {
+          status: 503,
+        }
+      );
+    }
 
+    const body = await request.json();
 
+    const {
+      question,
+      resume,
+      targetJob,
+      experience,
+    } = body;
 
-export async function POST(request: Request){
+    if (!question || question.trim() === "") {
+      return NextResponse.json(
+        {
+          error: "Question is required.",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
 
+    const prompt = `
+You are Career Nook's AI Career Counselor.
 
-try{
+Your job is to act like a professional career coach.
 
+The user may ask ANY career-related question including:
 
-const body = await request.json();
+• Career planning
+• Resume advice
+• Internship advice
+• Salary negotiation
+• Networking
+• Interview preparation
+• Choosing majors
+• Graduate school
+• Certifications
+• Career switching
+• Promotion planning
+• Job searching
+• LinkedIn optimization
+• Building projects
+• Learning roadmaps
+• Technical interview preparation
+• Behavioral interview preparation
 
+If the user provides a resume, analyze it carefully.
 
+If they provide a target job, compare their resume against the job.
 
-const {
-company,
-position,
-jobDescription,
-draft
+If they ask how to become something, provide a complete roadmap.
 
-}=body;
+Always be encouraging while remaining honest.
 
+Format responses using markdown.
 
+Whenever appropriate, use the following sections:
 
+# Summary
 
-if(!jobDescription){
+# Strengths
 
-return NextResponse.json(
+# Weaknesses
 
-{
-error:"Job description is required"
-},
+# Recommended Roadmap
 
-{
-status:400
-}
+# Skills to Learn
 
-);
+# Projects to Build
 
-}
+# Resume Improvements
 
+# Interview Preparation
 
+# Networking Advice
 
+# Next Steps
 
-if(
-!process.env.OPENAI_API_KEY ||
-process.env.OPENAI_API_KEY === "replace_with_key_later"
-){
+User Question:
+${question}
 
+Target Job:
+${targetJob || "Not provided"}
 
-return NextResponse.json(
-
-{
-error:"AI service is not configured yet."
-},
-
-{
-status:503
-}
-
-);
-
-
-}
-
-
-
-
-const completion =
-await openai.chat.completions.create({
-
-
-model:"gpt-4.1-mini",
-
-
-
-messages:[
-
-
-
-{
-role:"system",
-
-content:COVER_LETTER_SYSTEM_PROMPT
-
-},
-
-
-
-{
-
-
-role:"user",
-
-content:
-
-`
-
-Create a personalized cover letter using the information below.
-
-
-Company:
-
-${company || "Not provided"}
-
-
-
-Position:
-
-${position || "Not provided"}
-
-
-
-Job Description:
-
-${jobDescription}
-
-
-
-Existing Draft:
-
-${draft || "No existing draft provided"}
-
-`
-
-}
-
-
-
-]
-
-});
-
-
-
-
-
-const letter =
-completion
-.choices[0]
-.message
-.content;
-
-
-
-
-return NextResponse.json({
-
-letter
-
-});
-
-
-
-
-
-}catch(error){
-
-
-console.error(
-"Cover Letter Generation Error:",
-error
-);
-
-
-
-return NextResponse.json(
-
-{
-error:"Failed to generate cover letter"
-},
-
-{
-status:500
-}
-
-);
-
-
-}
-
-
+Experience:
+${experience || "Not provided"}
+
+Resume:
+${resume || "Not provided"}
+`;
+
+    const response = await client.responses.create({
+      model: "gpt-5",
+      input: prompt,
+    });
+
+    return NextResponse.json({
+      answer: response.output_text,
+    });
+  } catch (error) {
+    console.error("Career Counselor Error:", error);
+
+    return NextResponse.json(
+      {
+        error: "Failed to generate career advice.",
+      },
+      {
+        status: 500,
+      }
+    );
+  }
 }
