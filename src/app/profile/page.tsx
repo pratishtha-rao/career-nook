@@ -1,751 +1,228 @@
 "use client";
 
-
 import { useEffect, useState } from "react";
-
 import { createClient } from "@/lib/supabase";
-
 import { useRouter } from "next/navigation";
 
+export default function ProfilePage() {
+  const router = useRouter();
+  const supabase = createClient();
 
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [createdAt, setCreatedAt] = useState("");
 
-export default function ProfilePage(){
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [profileMessage, setProfileMessage] = useState("");
+  const [profileError, setProfileError] = useState("");
 
-const router = useRouter();
+  const [emailMessage, setEmailMessage] = useState("");
+  const [emailError, setEmailError] = useState("");
 
-const supabase = createClient();
+  const [passwordMessage, setPasswordMessage] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    async function loadProfile() {
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
 
-const [name,setName]=useState("");
+        if (!session?.user) {
+          router.push("/login");
+          return;
+        }
 
-const [email,setEmail]=useState("");
+        const user = session.user;
+        setEmail(user.email ?? "");
+        setCreatedAt(new Date(user.created_at).toLocaleDateString());
 
+        const response = await fetch("/api/profile", {
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+        });
 
-const [createdAt,setCreatedAt]=useState("");
+        if (response.ok) {
+          const data = await response.json();
+          setName(data.name ?? "");
+        } else {
+          const errorData = await response.json().catch(() => null);
+          console.error("Profile load failed:", errorData);
+          setProfileError("Could not load profile");
+        }
+      } catch (error) {
+        console.error("Profile API error:", error);
+        setProfileError("Could not load profile");
+      } finally {
+        setLoading(false);
+      }
+    }
 
+    loadProfile();
+  }, [router, supabase]);
 
+  async function updateProfile() {
+    setProfileMessage("");
+    setProfileError("");
 
-const [newPassword,setNewPassword]=useState("");
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
-const [confirmPassword,setConfirmPassword]=useState("");
+      const response = await fetch("/api/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.access_token ?? ""}`,
+        },
+        body: JSON.stringify({ name }),
+      });
 
+      if (response.ok) {
+        setProfileMessage("Profile updated successfully");
+      } else {
+        setProfileError("Could not update profile");
+      }
+    } catch {
+      setProfileError("Could not update profile");
+    }
+  }
 
+  async function updatePassword() {
+    setPasswordMessage("");
+    setPasswordError("");
 
-const [profileMessage,setProfileMessage]=useState("");
+    if (newPassword.length < 6) {
+      setPasswordError("Password must be at least 6 characters");
+      return;
+    }
 
-const [profileError,setProfileError]=useState("");
+    if (newPassword !== confirmPassword) {
+      setPasswordError("Passwords do not match");
+      return;
+    }
 
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
 
+    if (error) {
+      setPasswordError(error.message);
+      return;
+    }
 
-const [emailMessage,setEmailMessage]=useState("");
+    setNewPassword("");
+    setConfirmPassword("");
+    setPasswordMessage("Password changed successfully");
+  }
 
-const [emailError,setEmailError]=useState("");
+  async function signOut() {
+    await supabase.auth.signOut();
+    router.push("/login");
+  }
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading profile...
+      </div>
+    );
+  }
 
+  return (
+    <main className="min-h-screen bg-slate-100">
+      <div className="mx-auto max-w-3xl px-8 py-12">
+        <h1 className="text-4xl font-bold text-black">Profile Settings</h1>
+        <p className="mt-2 text-slate-600">
+          Manage your account information and security.
+        </p>
 
-const [passwordMessage,setPasswordMessage]=useState("");
+        <section className="mt-8 rounded-xl bg-white p-8 shadow-sm">
+          <h2 className="text-xl font-bold">Personal Information</h2>
 
-const [passwordError,setPasswordError]=useState("");
+          <div className="mt-6 space-y-5">
+            <label className="block text-sm font-medium">Name</label>
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="border rounded-lg p-3 w-full"
+            />
 
+            <label className="block text-sm font-medium">Email</label>
+            <input
+              value={email}
+              disabled
+              className="border rounded-lg p-3 w-full bg-slate-100"
+            />
 
+            {emailMessage && <p className="text-green-600">{emailMessage}</p>}
+            {emailError && <p className="text-red-600">{emailError}</p>}
 
-const [loading,setLoading]=useState(true);
+            <button
+              type="button"
+              onClick={updateProfile}
+              className="bg-blue-600 text-white rounded-lg px-5 py-3"
+            >
+              Save Profile
+            </button>
 
+            {profileMessage && <p className="text-green-600">{profileMessage}</p>}
+            {profileError && <p className="text-red-600">{profileError}</p>}
+          </div>
+        </section>
 
+        <section className="mt-8 rounded-xl bg-white p-8 shadow-sm">
+          <h2 className="text-xl font-bold">Security</h2>
 
+          <div className="mt-6 space-y-5">
+            <input
+              type="password"
+              placeholder="New Password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              className="border rounded-lg p-3 w-full"
+            />
 
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="border rounded-lg p-3 w-full"
+            />
 
-useEffect(()=>{
+            <button
+              type="button"
+              onClick={updatePassword}
+              className="border border-blue-600 text-blue-600 rounded-lg px-5 py-3"
+            >
+              Update Password
+            </button>
 
+            {passwordMessage && <p className="text-green-600">{passwordMessage}</p>}
+            {passwordError && <p className="text-red-600">{passwordError}</p>}
+          </div>
+        </section>
 
-async function loadProfile(){
+        <section className="mt-8 rounded-xl bg-white p-8 shadow-sm">
+          <h2 className="text-xl font-bold">Account Actions</h2>
 
-
-const {
-data:{
-user
-}
-
-}=await supabase.auth.getUser();
-
-
-
-if(!user){
-
-router.push("/login");
-
-return;
-
-}
-
-
-
-setEmail(user.email ?? "");
-
-setCreatedAt(
-new Date(user.created_at)
-.toLocaleDateString()
-);
-
-
-
-const response = await fetch("/api/profile");
-
-
-let data = null;
-
-
-try {
-
-  data = await response.json();
-
-}
-
-catch(error){
-
-  console.error(
-    "Profile API returned invalid JSON"
+          <button
+            type="button"
+            onClick={signOut}
+            className="mt-5 text-red-600 border border-red-600 rounded-lg px-5 py-3"
+          >
+            Sign Out
+          </button>
+        </section>
+      </div>
+    </main>
   );
-
-  setProfileError(
-    "Could not load profile"
-  );
-
-}
-
-if(response.ok && data){
-
-setName(data.name ?? "");
-
-}
-
-else{
-
-setProfileError(
-"Could not load profile"
-);
-
-}
-
-
-
-setLoading(false);
-
-
-}
-
-
-
-loadProfile();
-
-
-},[router]);
-
-
-
-
-
-
-
-
-
-async function updateProfile(){
-
-
-setProfileMessage("");
-
-setProfileError("");
-
-
-
-const response = await fetch("/api/profile",{
-
-method:"PUT",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-
-name
-
-})
-
-});
-
-
-
-if(response.ok){
-
-setProfileMessage(
-"Profile updated successfully"
-);
-
-}
-
-else{
-
-setProfileError(
-"Could not update profile"
-);
-
-}
-
-
-
-}
-
-
-async function updatePassword(){
-
-
-setPasswordMessage("");
-
-setPasswordError("");
-
-
-
-if(newPassword.length < 6){
-
-setPasswordError(
-"Password must be at least 6 characters"
-);
-
-return;
-
-}
-
-
-
-if(newPassword !== confirmPassword){
-
-setPasswordError(
-"Passwords do not match"
-);
-
-return;
-
-}
-
-
-
-
-
-const {
-error
-
-}=await supabase.auth.updateUser({
-
-password:newPassword
-
-});
-
-
-
-if(error){
-
-setPasswordError(error.message);
-
-return;
-
-}
-
-
-
-setNewPassword("");
-
-setConfirmPassword("");
-
-
-
-setPasswordMessage(
-"Password changed successfully"
-);
-
-
-}
-
-
-
-
-
-
-
-
-
-
-async function signOut(){
-
-
-await supabase.auth.signOut();
-
-
-router.push("/login");
-
-
-}
-
-
-
-
-
-
-
-
-if(loading){
-
-return (
-
-<div className="
-min-h-screen
-flex
-items-center
-justify-center
-">
-
-Loading profile...
-
-</div>
-
-);
-
-}
-
-
-
-
-
-
-return (
-
-<main className="
-min-h-screen
-bg-slate-100
-">
-
-
-<div className="
-mx-auto
-max-w-3xl
-px-8
-py-12
-">
-
-
-<h1 className="
-text-4xl
-font-bold
-text-black
-">
-
-Profile Settings
-
-</h1>
-
-
-<p className="
-mt-2
-text-slate-600
-">
-
-Manage your account information and security.
-
-</p>
-
-
-
-
-
-
-
-
-
-<section className="
-mt-8
-rounded-xl
-bg-white
-p-8
-shadow-sm
-">
-
-
-<h2 className="
-text-xl
-font-bold
-">
-
-Personal Information
-
-</h2>
-
-
-
-<div className="
-mt-6
-space-y-5
-">
-
-
-
-<label className="
-block
-text-sm
-font-medium
-">
-
-Name
-
-</label>
-
-
-<input
-
-value={name}
-
-onChange={(e)=>setName(e.target.value)}
-
-className="
-border
-rounded-lg
-p-3
-w-full
-"
-
-/>
-
-
-
-
-
-<label className="
-block
-text-sm
-font-medium
-">
-
-Email
-
-</label>
-
-
-<input
-
-value={email}
-
-disabled
-
-className="
-border
-rounded-lg
-p-3
-w-full
-bg-slate-100
-"
-
-/>
-
-{
-emailMessage && (
-
-<p className="
-text-green-600
-">
-
-{emailMessage}
-
-</p>
-
-)
-
-}
-
-
-
-{
-emailError && (
-
-<p className="
-text-red-600
-">
-
-{emailError}
-
-</p>
-
-)
-
-}
-
-<button
-
-type="button"
-
-onClick={updateProfile}
-
-className="
-bg-blue-600
-text-white
-rounded-lg
-px-5
-py-3
-"
-
->
-
-Save Profile
-
-</button>
-
-
-
-{
-profileMessage && (
-
-<p className="
-text-green-600
-">
-
-{profileMessage}
-
-</p>
-
-)
-
-}
-
-
-
-{
-profileError && (
-
-<p className="
-text-red-600
-">
-
-{profileError}
-
-</p>
-
-)
-
-}
-
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-
-
-
-
-
-
-<section className="
-mt-8
-rounded-xl
-bg-white
-p-8
-shadow-sm
-">
-
-
-<h2 className="
-text-xl
-font-bold
-">
-
-Security
-
-</h2>
-
-
-
-<div className="
-mt-6
-space-y-5
-">
-
-
-<input
-
-type="password"
-
-placeholder="New Password"
-
-value={newPassword}
-
-onChange={(e)=>setNewPassword(e.target.value)}
-
-className="
-border
-rounded-lg
-p-3
-w-full
-"
-
-/>
-
-
-
-<input
-
-type="password"
-
-placeholder="Confirm Password"
-
-value={confirmPassword}
-
-onChange={(e)=>setConfirmPassword(e.target.value)}
-
-className="
-border
-rounded-lg
-p-3
-w-full
-"
-
-/>
-
-
-
-<button
-
-type="button"
-
-onClick={updatePassword}
-
-className="
-border
-border-blue-600
-text-blue-600
-rounded-lg
-px-5
-py-3
-"
-
->
-
-Update Password
-
-</button>
-
-
-
-
-{
-passwordMessage && (
-
-<p className="
-text-green-600
-">
-
-{passwordMessage}
-
-</p>
-
-)
-
-}
-
-
-
-{
-passwordError && (
-
-<p className="
-text-red-600
-">
-
-{passwordError}
-
-</p>
-
-)
-
-}
-
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<section className="
-mt-8
-rounded-xl
-bg-white
-p-8
-shadow-sm
-">
-
-
-<h2 className="
-text-xl
-font-bold
-">
-
-Account Actions
-
-</h2>
-
-
-
-<button
-
-type="button"
-
-onClick={signOut}
-
-className="
-mt-5
-text-red-600
-border
-border-red-600
-rounded-lg
-px-5
-py-3
-"
-
->
-
-Sign Out
-
-</button>
-
-
-</section>
-
-
-
-
-
-
-
-</div>
-
-
-</main>
-
-);
-
-
 }
