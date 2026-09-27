@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import type { OfficeType } from "@prisma/client";
+import type { OfficeType, Prisma } from "@prisma/client";
 
 type JobData = {
   company: string;
@@ -190,10 +190,20 @@ export async function deleteJob(
   id: number,
   userId: string
 ) {
-  return prisma.job.delete({
-    where: {
-      id,
-      userId,
-    },
+  return prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    // 1. Delete folder associations
+    await tx.folderJob.deleteMany({
+      where: {
+        jobId: id,
+      },
+    });
+
+    // 2. Delete the job record
+    return tx.job.delete({
+      where: {
+        id,
+        userId,
+      },
+    });
   });
 }

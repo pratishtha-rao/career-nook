@@ -9,7 +9,7 @@ export async function POST(request: Request) {
   ) {
     return NextResponse.json(
       {
-        error: "AI service is not configured yet.",
+        error: "AI features are currently unavailable.",
       },
       {
         status: 503,

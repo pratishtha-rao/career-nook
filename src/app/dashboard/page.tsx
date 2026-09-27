@@ -98,13 +98,6 @@ export default function DashboardPage() {
             >
               Add Application
             </a>
-
-            <a
-              href="/copilot"
-              className="border border-blue-200 bg-white px-5 py-3 font-semibold transition hover:text-blue-600"
-            >
-              Open Copilot
-            </a>
           </div>
         </div>
 

@@ -3,19 +3,24 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  const response = NextResponse.next();
+  let response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  });
+
   const pathname = request.nextUrl.pathname;
 
   // Public pages
-const isPublicRoute =
-  pathname === "/" ||
-  pathname === "/login" ||
-  pathname.startsWith("/login/") ||
-  pathname === "/signup" ||
-  pathname.startsWith("/signup/") ||
-  pathname === "/demo" ||
-  pathname.startsWith("/demo/");
-  
+  const isPublicRoute =
+    pathname === "/" ||
+    pathname === "/login" ||
+    pathname.startsWith("/login/") ||
+    pathname === "/signup" ||
+    pathname.startsWith("/signup/") ||
+    pathname === "/demo" ||
+    pathname.startsWith("/demo/");
+
   // Skip auth for public pages
   if (isPublicRoute) {
     return response;
@@ -33,18 +38,24 @@ const isPublicRoute =
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => {
             request.cookies.set(name, value);
-            response.cookies.set(name, value);
+          });
+          response = NextResponse.next({
+            request,
+          });
+          cookiesToSet.forEach(({ name, value, options }) => {
+            response.cookies.set(name, value, options);
           });
         },
       },
     }
   );
 
+  // Use getUser() to authenticate and trigger token refresh if needed
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  if (!session) {
+  if (!user) {
     return NextResponse.redirect(
       new URL("/login", request.url)
     );
@@ -55,6 +66,6 @@ const isPublicRoute =
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+    "/((?!_next/static|_next/image|favicon.ico).*)",
   ],
 };
