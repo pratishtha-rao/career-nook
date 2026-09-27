@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import ContactCard from "@/components/contacts/ContactCard";
@@ -18,7 +18,7 @@ import type {
 
 import type { Folder } from "@/types/Folder";
 
-export default function ContactsPage() {
+function ContactsContent() {
   const router = useRouter();
 
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -26,7 +26,7 @@ export default function ContactsPage() {
 
   const searchParams = useSearchParams();
 
-const selectedContact = searchParams.get("contact");
+  const selectedContact = searchParams.get("contact");
 
   const [search, setSearch] = useState("");
 
@@ -38,10 +38,10 @@ const selectedContact = searchParams.get("contact");
 
   const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-  void loadContacts();
-  void loadFolders();
-}, []);
+  useEffect(() => {
+    void loadContacts();
+    void loadFolders();
+  }, []);
 
   async function loadContacts() {
     try {
@@ -128,17 +128,17 @@ useEffect(() => {
   }
 
   async function archiveContact(id: number) {
-  const response = await fetch(
-    `/api/contacts/archived/${id}`,
-    {
-      method: "PATCH",
-    }
-  );
+    const response = await fetch(
+      `/api/contacts/archived/${id}`,
+      {
+        method: "PATCH",
+      }
+    );
 
-  if (!response.ok) return;
+    if (!response.ok) return;
 
-  await loadContacts();
-}
+    await loadContacts();
+  }
 
   async function toggleCollapse(
     folder: Folder
@@ -172,21 +172,21 @@ useEffect(() => {
     );
   }
 
-async function addContact(contact: CreateContact) {
-  const response = await fetch("/api/contacts", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(contact),
-  });
+  async function addContact(contact: CreateContact) {
+    const response = await fetch("/api/contacts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(contact),
+    });
 
-  if (!response.ok) return;
+    if (!response.ok) return;
 
-  await response.json();
+    await response.json();
 
-  await loadContacts();
-}
+    await loadContacts();
+  }
 
   async function deleteContact(
     id: number
@@ -200,29 +200,28 @@ async function addContact(contact: CreateContact) {
 
     if (!response.ok) return;
 
-await response.json();
+    await response.json();
 
-await loadContacts();
+    await loadContacts();
+  }
 
-}
+  async function saveEditedContact(contact: Contact) {
+    const response = await fetch(
+      `/api/contacts/${contact.id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(contact),
+      }
+    );
 
-async function saveEditedContact(contact: Contact) {
-  const response = await fetch(
-    `/api/contacts/${contact.id}`,
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(contact),
-    }
-  );
+    if (!response.ok) return;
 
-  if (!response.ok) return;
-
-  await loadContacts();
-  setEditingContact(null);
-}
+    await loadContacts();
+    setEditingContact(null);
+  }
 
   async function moveContact(
     id: number,
@@ -247,54 +246,53 @@ async function saveEditedContact(contact: Contact) {
     loadContacts();
   }
 
-const displayedContacts = useMemo(() => {
-  let filtered = contacts;
+  const displayedContacts = useMemo(() => {
+    let filtered = contacts;
 
-  // Folder filter
-  if (selectedFolder !== null) {
-    filtered = filtered.filter((contact) =>
-      contact.folderContacts.some(
-        (folder) => folder.folderId === selectedFolder
-      )
-    );
-  }
+    // Folder filter
+    if (selectedFolder !== null) {
+      filtered = filtered.filter((contact) =>
+        contact.folderContacts.some(
+          (folder) => folder.folderId === selectedFolder
+        )
+      );
+    }
 
-  // Search filter
-  if (search.trim()) {
-    const term = search.toLowerCase();
+    // Search filter
+    if (search.trim()) {
+      const term = search.toLowerCase();
 
-    filtered = filtered.filter((contact) =>
-      `${contact.name}
-       ${contact.company}
-       ${contact.role}
-       ${contact.email ?? ""}
-       ${contact.location ?? ""}
-       ${contact.type}`
-        .toLowerCase()
-        .includes(term)
-    );
-  }
+      filtered = filtered.filter((contact) =>
+        `${contact.name}
+         ${contact.company}
+         ${contact.role}
+         ${contact.email ?? ""}
+         ${contact.location ?? ""}
+         ${contact.type}`
+          .toLowerCase()
+          .includes(term)
+      );
+    }
 
-  return filtered;
-}, [contacts, selectedFolder, search]);
+    return filtered;
+  }, [contacts, selectedFolder, search]);
 
   useEffect(() => {
-  if (!selectedContact) return;
+    if (!selectedContact) return;
 
-  const element = document.getElementById(
-    `contact-${selectedContact}`
-  );
+    const element = document.getElementById(
+      `contact-${selectedContact}`
+    );
 
-  if (element) {
-    element.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
-  }
-}, [selectedContact, displayedContacts]);
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [selectedContact, displayedContacts]);
 
-
-if (loading) {
+  if (loading) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#f5f9ff]">
         <p className="text-slate-600 font-medium">
@@ -329,11 +327,11 @@ if (loading) {
           />
         </div>
 
-<SearchBar
-  value={search}
-  onChange={setSearch}
-  placeholder="Search contacts..."
-/>
+        <SearchBar
+          value={search}
+          onChange={setSearch}
+          placeholder="Search contacts..."
+        />
 
         {/* Folder Section */}
 
@@ -387,7 +385,8 @@ if (loading) {
             </p>
           </div>
         </div>
-                {/* Contacts */}
+
+        {/* Contacts */}
 
         {displayedContacts.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-blue-200 bg-white p-12 text-center">
@@ -401,33 +400,49 @@ if (loading) {
           </div>
         ) : (
           <div className="grid gap-5 md:grid-cols-2">
-{displayedContacts.map((contact, index) => (
-  <div
-    key={contact.id}
-    id={`contact-${contact.id}`}
-  >
-    <ContactCard
-      contact={contact}
-      onEdit={setEditingContact}
-      onDelete={deleteContact}
-      onArchive={archiveContact}
-      onMoveUp={
-        index > 0
-          ? () => moveContact(contact.id, "up")
-          : undefined
-      }
-      onMoveDown={
-        index < displayedContacts.length - 1
-          ? () => moveContact(contact.id, "down")
-          : undefined
-      }
-    />
-  </div>
+            {displayedContacts.map((contact, index) => (
+              <div
+                key={contact.id}
+                id={`contact-${contact.id}`}
+              >
+                <ContactCard
+                  contact={contact}
+                  onEdit={setEditingContact}
+                  onDelete={deleteContact}
+                  onArchive={archiveContact}
+                  onMoveUp={
+                    index > 0
+                      ? () => moveContact(contact.id, "up")
+                      : undefined
+                  }
+                  onMoveDown={
+                    index < displayedContacts.length - 1
+                      ? () => moveContact(contact.id, "down")
+                      : undefined
+                  }
+                />
+              </div>
             ))}
           </div>
         )}
 
       </div>
     </main>
+  );
+}
+
+export default function ContactsPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="flex min-h-screen items-center justify-center bg-[#f5f9ff]">
+          <p className="text-slate-600 font-medium">
+            Loading contacts...
+          </p>
+        </main>
+      }
+    >
+      <ContactsContent />
+    </Suspense>
   );
 }

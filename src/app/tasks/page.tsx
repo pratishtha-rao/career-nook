@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import SearchBar from "@/components/common/SearchBar";
@@ -13,12 +13,12 @@ import type {
   CreateTask,
 } from "@/types/Task";
 
-export default function TasksPage() {
+function TasksContent() {
   const router = useRouter();
 
   const searchParams = useSearchParams();
 
-const selectedTask = searchParams.get("task");
+  const selectedTask = searchParams.get("task");
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [editingTask, setEditingTask] =
@@ -62,18 +62,18 @@ const selectedTask = searchParams.get("task");
     }
   }
 
-async function archiveTask(id: number) {
-  const response = await fetch(
-    `/api/tasks/archived/${id}`,
-    {
-      method: "PATCH",
-    }
-  );
+  async function archiveTask(id: number) {
+    const response = await fetch(
+      `/api/tasks/archived/${id}`,
+      {
+        method: "PATCH",
+      }
+    );
 
-  if (!response.ok) return;
+    if (!response.ok) return;
 
-  await loadTasks();
-}
+    await loadTasks();
+  }
 
   async function addTask(task: CreateTask) {
     const response = await fetch("/api/tasks", {
@@ -147,19 +147,19 @@ async function archiveTask(id: number) {
   }, [tasks, search]);
 
   useEffect(() => {
-  if (!selectedTask) return;
+    if (!selectedTask) return;
 
-  const element = document.getElementById(
-    `task-${selectedTask}`
-  );
+    const element = document.getElementById(
+      `task-${selectedTask}`
+    );
 
-  if (element) {
-    element.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
-  }
-}, [selectedTask, displayedTasks]);
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [selectedTask, displayedTasks]);
 
   if (loading) {
     return (
@@ -279,3 +279,18 @@ async function archiveTask(id: number) {
   );
 }
 
+export default function TasksPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="flex min-h-screen items-center justify-center bg-[#f5f9ff]">
+          <p className="text-lg text-slate-600">
+            Loading tasks...
+          </p>
+        </main>
+      }
+    >
+      <TasksContent />
+    </Suspense>
+  );
+}

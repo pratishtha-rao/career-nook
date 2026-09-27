@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import MaterialCard from "@/components/materials/MaterialCard";
@@ -14,7 +14,7 @@ import type {
   CreateMaterial,
 } from "@/types/Material";
 
-export default function MaterialsPage() {
+function MaterialsContent() {
   const router = useRouter();
 
   const [materials, setMaterials] = useState<Material[]>([]);
@@ -26,10 +26,9 @@ export default function MaterialsPage() {
 
   const searchParams = useSearchParams();
 
-const selectedMaterial =
-  searchParams.get("material");
+  const selectedMaterial =
+    searchParams.get("material");
 
-  
   useEffect(() => {
     void loadMaterials();
   }, []);
@@ -112,51 +111,51 @@ const selectedMaterial =
   }
 
   async function archiveMaterial(id: number) {
-  const response = await fetch(
-    `/api/materials/archived/${id}`,
-    {
-      method: "PATCH",
-    }
-  );
-
-  if (!response.ok) return;
-
-  await loadMaterials();
-}
-
-const displayedMaterials = useMemo(() => {
-  let filtered = materials;
-
-  if (search.trim()) {
-    const term = search.toLowerCase();
-
-    filtered = filtered.filter((material) =>
-      `${material.name}
-       ${material.type}
-       ${material.description ?? ""}
-       ${material.link ?? ""}`
-        .toLowerCase()
-        .includes(term)
+    const response = await fetch(
+      `/api/materials/archived/${id}`,
+      {
+        method: "PATCH",
+      }
     );
+
+    if (!response.ok) return;
+
+    await loadMaterials();
   }
 
-  return filtered;
-}, [materials, search]);
+  const displayedMaterials = useMemo(() => {
+    let filtered = materials;
 
-useEffect(() => {
-  if (!selectedMaterial) return;
+    if (search.trim()) {
+      const term = search.toLowerCase();
 
-  const element = document.getElementById(
-    `material-${selectedMaterial}`
-  );
+      filtered = filtered.filter((material) =>
+        `${material.name}
+         ${material.type}
+         ${material.description ?? ""}
+         ${material.link ?? ""}`
+          .toLowerCase()
+          .includes(term)
+      );
+    }
 
-  if (element) {
-    element.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
-  }
-}, [selectedMaterial, displayedMaterials]);
+    return filtered;
+  }, [materials, search]);
+
+  useEffect(() => {
+    if (!selectedMaterial) return;
+
+    const element = document.getElementById(
+      `material-${selectedMaterial}`
+    );
+
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [selectedMaterial, displayedMaterials]);
 
   if (loading) {
     return (
@@ -234,22 +233,38 @@ useEffect(() => {
           </div>
         ) : (
           <div className="grid gap-5 md:grid-cols-2">
-{displayedMaterials.map((material) => (
-  <div
-    key={material.id}
-    id={`material-${material.id}`}
-  >
-    <MaterialCard
-      material={material}
-      onEdit={setEditingMaterial}
-      onDelete={deleteMaterial}
-      onArchive={archiveMaterial}
-    />
-  </div>
-))}
+            {displayedMaterials.map((material) => (
+              <div
+                key={material.id}
+                id={`material-${material.id}`}
+              >
+                <MaterialCard
+                  material={material}
+                  onEdit={setEditingMaterial}
+                  onDelete={deleteMaterial}
+                  onArchive={archiveMaterial}
+                />
+              </div>
+            ))}
           </div>
         )}
       </div>
     </main>
+  );
+}
+
+export default function MaterialsPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="flex min-h-screen items-center justify-center bg-[#f5f9ff]">
+          <p className="text-lg text-slate-700">
+            Loading materials...
+          </p>
+        </main>
+      }
+    >
+      <MaterialsContent />
+    </Suspense>
   );
 }
