@@ -64,6 +64,16 @@ export async function createJob(
 ) {
   const { folderIds = [], ...jobData } = data;
 
+  // Guarantee that the User record exists before connecting the job
+  await prisma.user.upsert({
+    where: { id: userId },
+    update: {},
+    create: {
+      id: userId,
+      email: "",
+    },
+  });
+
   return prisma.job.create({
     data: {
       ...jobData,
