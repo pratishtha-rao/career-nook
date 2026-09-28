@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { getCurrentUser } from "@/lib/getUser";
 import {
   getJobs,
@@ -18,12 +20,11 @@ export async function GET() {
     );
   }
 
-const jobs = await getJobs(user.id);
+  const jobs = await getJobs(user.id);
 
-const activeJobs = jobs.filter(job => !job.archived);
+  const activeJobs = jobs.filter(job => !job.archived);
 
-return Response.json(activeJobs);
-
+  return Response.json(activeJobs);
 }
 
 export async function POST(request: Request) {
@@ -47,7 +48,7 @@ export async function POST(request: Request) {
     position: body.position,
     status: body.status,
 
-dateApplied: new Date(body.dateApplied),
+    dateApplied: new Date(body.dateApplied),
 
     salary: body.salary,
     salaryNotes: body.salaryNotes,
